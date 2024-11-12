@@ -1,0 +1,46 @@
+{
+  "manifest_version": 3,
+  "name": "AID Tool Utils",
+  "version": "1.1",
+  "description": "A tool for testing webpages for the Accessibility Indicators Data (AID) Test.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "debugger"
+  ],
+  "devtools_page": "devtools.html",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "content_scripts": [
+    {
+      "js": [
+        "deps/tesseract.min.js",
+        "deps/getEventListeners.min.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "deps/dictionary.txt"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
+  "background": {
+    "service_worker": "sw.js"
+  }
+}
