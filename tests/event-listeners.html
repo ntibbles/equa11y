@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Tests</title>
+    <style>
+        .button {
+            border: 1px solid;
+            border-radius: 5px;
+            padding: 5px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <p class="button" onclick="javacript:alert('clicked');">This element has an onclick event</p>
+        <span class="button">This element has no events</span>
+        <div class="button" onmousedown="javacript:alert('mousedown');">This element has a mouse down event</div>
+        <span class="button" id="bind">This element has an mouse up event</span>
+        <button onclick="javacript:alert('clicked');">Just a normal button</button>
+    </main>
+    <script>
+        let btn = document.getElementById('bind').addEventListener('mouseup', evt => {
+            alert('mouseup');
+        });
+    </script>
+</body>
+</html>
