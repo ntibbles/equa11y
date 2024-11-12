@@ -21,8 +21,7 @@
   "content_scripts": [
     {
       "js": [
-        "deps/tesseract.min.js",
-        "deps/getEventListeners.min.js"
+        "deps/tesseract.min.js"
       ],
       "matches": [
         "<all_urls>"
