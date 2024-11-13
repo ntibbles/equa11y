@@ -32,12 +32,11 @@ function getFunction(name) {
     }
 }
 
-function setEventHandlers(tabId, event, id, func) {
+function setState(tabId, event, id) {
     const store = {};
     const isChecked = event.target.checked;
     store[tabId] = {id, isChecked};
     chrome.storage.sync.set( store );
-    loadScript(func, isChecked);
 }
 
 async function loadScript(func, isChecked) {
@@ -75,12 +74,14 @@ async function setEventListeners() {
         restoreState(id, cb);
         if(func === 'serviceWorker') {
             document.getElementById(cb.id).addEventListener('change', (event) => {
+                setState(id, event, cb.id);
                 sendSWMessage(event);
             });
         } else {
             // set the handlers
             document.getElementById(cb.id).addEventListener('change', (event) => {
-                setEventHandlers(id, event, cb.id, func);
+                setState(id, event, cb.id);
+                loadScript(func, cb.checked);
             });
         }
     }
