@@ -1,6 +1,6 @@
 export function toggleLandmarkOutlines(isChecked) {
     const landmarks = [
-        'header', 'nav', 'main', 'footer', 'aside', 'search', 'form'
+        'header', 'nav', 'main', 'footer', 'aside', 'search', 'form', '[role="region"]', '[role="complementary"]'
     ];
 
     if (isChecked) {
@@ -9,11 +9,12 @@ export function toggleLandmarkOutlines(isChecked) {
                 // Add border and label
                 element.style.border = '2px solid blue';
                 element.style.position = 'relative';
+                ariaLabel = element.getAttribute('aria-label');
 
                 // Check if label already exists
                 if (!element.querySelector('.landmark-label')) {
                     const label = document.createElement('div');
-                    label.textContent = landmark;
+                    label.textContent = ariaLabel ? `${ariaLabel} (${landmark})` : landmark;
                     label.classList.add('landmark-label');
                     label.style.position = 'absolute';
                     label.style.top = '0';
