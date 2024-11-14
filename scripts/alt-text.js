@@ -1,7 +1,7 @@
 export function toggleAltTextDisplay(isChecked) {
     const images = document.querySelectorAll('img');
     images.forEach(img => {
-        img.style.border = isChecked ? '2px solid red' : '';
+        img.style.border = isChecked ? '2px solid blue' : '';
         if (isChecked) {
             const altText = img.alt ? img.alt : '';
             const altTextElement = document.createElement('div');
