@@ -9,7 +9,6 @@
     "storage",
     "debugger"
   ],
-  "devtools_page": "devtools.html",
   "action": {
     "default_popup": "popup.html"
   },
