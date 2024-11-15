@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "AT3",
-  "version": "1.1",
+  "version": "1.1.2",
   "description": "A tool for testing webpages for the Accessibility Indicators Data (AID) Test.",
   "permissions": [
     "activeTab",
