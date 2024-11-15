@@ -5,8 +5,8 @@ Assistive Technology Testing Tools is a Chrome extensions with a set of utilies 
 - Display Alt Text - Outlines and labels images with their alternative text.
 - Display Landmark Regions - Outlines and labels landmark regions with there role and label.
 - Display Element Roles - Outlines and labels interactive elements with their role.
+- Display Heading Levels - Outlines and labels all headings on the page.
 - Reveal Viewport Tag - Displays the viewport tag.
-- Display Headings - Outlines and labels all headings on the page.
 - Zoom Text 200% - Zooms text-only on the page by 200%.
 
 ### Core Utility Limitations
