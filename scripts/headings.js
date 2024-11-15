@@ -18,25 +18,25 @@ export function toggleHeadingOutline(isChecked) {
                 if (!heading.querySelector('.heading-label')) {
                     // Create a label for the heading level
                     const label = document.createElement('div');
-                    label.className = 'heading-label';  // Assign a class for easy identification
+                    label.className = 'at3-label';  // Assign a class for easy identification
                     label.innerText = tag.toUpperCase();  // Heading level (e.g., H1, H2)
-                    label.style.position = 'absolute';
-                    label.style.top = '0';
-                    label.style.left = '0';
-                    label.style.backgroundColor = 'blue';  // Background for readability
-                    label.style.color = 'white';  // Text color
-                    label.style.padding = '2px 5px';  // Padding around the text
-                    label.style.fontSize = '12px';  // Smaller font size
-                    label.style.fontWeight = 'bold';
-                    label.style.zIndex = '1000';  // Ensure it's above other content
+                    // label.style.position = 'absolute';
+                    // label.style.top = '0';
+                    // label.style.left = '0';
+                    // label.style.backgroundColor = 'blue';  // Background for readability
+                    // label.style.color = 'white';  // Text color
+                    // label.style.padding = '2px 5px';  // Padding around the text
+                    // label.style.fontSize = '12px';  // Smaller font size
+                    // label.style.fontWeight = 'bold';
+                    // label.style.zIndex = '1000';  // Ensure it's above other content
 
                     // Append the label to the heading
-                    heading.appendChild(label);
+                    heading.prepend(label);
                 }
             } else {
                 // If isChecked is false, remove border and label
                 heading.style.border = '';  // Reset the border
-                const label = heading.querySelector('.heading-label');
+                const label = heading.querySelector('.at3-label');
                 if (label) {
                     heading.removeChild(label);  // Remove the label
                 }
