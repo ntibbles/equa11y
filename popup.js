@@ -117,6 +117,7 @@ function restoreState(tabId, checkbox) {
         if(result[tabId] && checkbox.id === result[tabId].id){
             checkbox.checked = result[tabId].isChecked;
             if(checkbox.checked && func !== "serviceWorker") {
+                injectCSS();
                 loadScript(func, checkbox.checked);
             }
         }

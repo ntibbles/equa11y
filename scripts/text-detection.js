@@ -26,17 +26,17 @@ export function processImages(isChecked) {
 
     if (isChecked) {
         // prevents reinit when the ext is closed and opened
-        if(!document.body.classList.contains('aid-text-detection')) {
+        if(!document.body.classList.contains('at3-text-detection')) {
             generateDialog();
             for (let i = 0; i < images.length; i++) {
                 const image = images[i];
                 image.setAttribute('crossorigin', 'anonymous');
                 toDataURL(image);
             }
-            document.body.classList.add('aid-text-detection');
+            document.body.classList.add('at3-text-detection');
         }
     } else {
-        document.body.classList.remove('aid-text-detection');
+        document.body.classList.remove('at3-text-detection');
         dialog.close();
         for (let i = 0; i < images.length; i++) {
             const image = images[i];
