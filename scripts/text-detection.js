@@ -26,17 +26,17 @@ export function processImages(isChecked) {
 
     if (isChecked) {
         // prevents reinit when the ext is closed and opened
-        if(!document.body.classList.contains('aid-text-detection')) {
+        if(!document.body.classList.contains('at3-text-detection')) {
             generateDialog();
             for (let i = 0; i < images.length; i++) {
                 const image = images[i];
                 image.setAttribute('crossorigin', 'anonymous');
                 toDataURL(image);
             }
-            document.body.classList.add('aid-text-detection');
+            document.body.classList.add('at3-text-detection');
         }
     } else {
-        document.body.classList.remove('aid-text-detection');
+        document.body.classList.remove('at3-text-detection');
         dialog.close();
         for (let i = 0; i < images.length; i++) {
             const image = images[i];
@@ -103,15 +103,7 @@ export function processImages(isChecked) {
                 const label = document.createElement('div');
                 //label.textContent = 'Embedded text: ' + filteredWords;
                 label.textContent = 'Embedded text';
-                label.class = 'aid-embed-label';
-                label.style.position = 'relative';
-                label.style.top = '20px';
-                label.style.textAlign= 'left';
-                label.style.color = 'white';
-                label.style.width = (image.width - 10) + 'px';
-                label.style.backgroundColor = 'rgba(0, 0, 255, 0.7)';
-                label.style.padding = '2px 5px';
-                label.style.fontSize = '12px';
+                label.className = 'at3-label';
         
                 // Add the label to the image or a container
                 image.parentNode.insertBefore(label, image); 
