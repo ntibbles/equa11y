@@ -25,6 +25,6 @@
   },
   "homepage": "https://github.com/ntibbles/Assistive-Technology-Testing-Tool#readme",
   "devDependencies": {
-    "http-server": "^14.1.1"
+    "copyfiles": "^2.4.1"
   }
 }
