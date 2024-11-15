@@ -36,12 +36,15 @@ async function getElements(tabId, nodeId, selector) {
 }
 
 async function getDocument(tabId) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
         chrome.debugger.sendCommand(
             { tabId: tabId },
             "DOM.getDocument",
             {},
             (resp) => {
+                if (chrome.runtime.lastError) {
+                    reject(chrome.runtime.lastError);
+                }
                 resolve(resp);
             })
     });
@@ -160,7 +163,9 @@ async function getListeners(tabId, objId) {
 async function getTabId() {
     return new Promise(resolve => {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-            resolve(tabs[0].id);
+            if(tabs[0]) {
+                resolve(tabs[0].id);
+            }
         });
     })
 }

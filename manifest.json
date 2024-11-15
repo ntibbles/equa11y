@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "AID Tool Utils",
+  "name": "AT3",
   "version": "1.1",
   "description": "A tool for testing webpages for the Accessibility Indicators Data (AID) Test.",
   "permissions": [
@@ -9,7 +9,6 @@
     "storage",
     "debugger"
   ],
-  "devtools_page": "devtools.html",
   "action": {
     "default_popup": "popup.html"
   },
@@ -21,8 +20,7 @@
   "content_scripts": [
     {
       "js": [
-        "deps/tesseract.min.js",
-        "deps/getEventListeners.min.js"
+        "deps/tesseract.min.js"
       ],
       "matches": [
         "<all_urls>"

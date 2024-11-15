@@ -7,43 +7,17 @@ import { toggleZoom } from "./scripts/text-zoom.js";
 import { processImages } from "./scripts/text-detection.js"
 import { highlightNonInteractiveElements } from './scripts/event-listeners.js';
 
-document.addEventListener('DOMContentLoaded', () => {
-    // grab all checkbox inputs
-    let allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+document.addEventListener('DOMContentLoaded', setEventListeners);
+// const extID = 'aohecdkegdlljlgcgjoibfhefomfokme';
+// chrome.runtime.connect(extID);
 
-    for (const cb of allCheckboxes) {
-        let func = getFunction(cb.dataset.func);
-        if(func === 'serviceWorker') {
-            document.getElementById(cb.id).addEventListener('change', (event) => {
-                chrome.runtime.sendMessage({target: 'sw', type: 'event-listeners', isChecked: event.target.checked },  () => {
-                    if(!event.target.checked) {
-                        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                            chrome.scripting.executeScript({
-                                target: { tabId: tabs[0].id },
-                                function: (function() {
-                                    document.location.reload();
-                                })
-                            });
-                        });
-                    }
-                });
-            });
-        } else {
-            // set the handlers
-            document.getElementById(cb.id).addEventListener('change', (event) => {
-                setEventHandlers(event, cb.id, func);
-            });
-        }
-
-        // Restore checkbox state
-        chrome.storage.sync.get(cb.id).then((result) => {
-            cb.checked = result[cb.id] || false;
-            if(cb.checked) {
-                loadScript(func, cb.checked);
-            }
+function getTabId() {
+    return new Promise(resolve => {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            resolve(tabs[0].id);
         });
-    }
-});
+    })
+}
 
 // explicitly converts function string name on data-func to a function
 function getFunction(name) {
@@ -60,21 +34,70 @@ function getFunction(name) {
     }
 }
 
-function setEventHandlers(event, id, func) {
+function setState(tabId, event, id) {
     const store = {};
     const isChecked = event.target.checked;
-    store[id] = isChecked;
-
+    store[tabId] = {id, isChecked};
     chrome.storage.sync.set( store );
-    loadScript(func, isChecked);
 }
 
-function loadScript(func, isChecked) {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        chrome.scripting.executeScript({
-            target: { tabId: tabs[0].id },
-            function: func,
-            args: [isChecked]
-        });
+async function loadScript(func, isChecked) {
+    const id = await getTabId();
+    chrome.scripting.executeScript({
+        target: { tabId: id },
+        function: func,
+        args: [isChecked]
     });
 } 
+
+async function sendSWMessage(event) {
+    const id = await getTabId();
+    await chrome.runtime.sendMessage({target: 'sw', type: 'event-listeners', isChecked: event.target.checked });
+    
+    if(!event.target.checked) {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            chrome.scripting.executeScript({
+                target: { tabId: id },
+                function: (function() {
+                    document.location.reload();
+                })
+            });
+        });
+    }
+}
+
+async function setEventListeners() {
+    const id = await getTabId();
+    // grab all checkbox inputs
+    let allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+
+    for (const cb of allCheckboxes) {
+        let func = getFunction(cb.dataset.func);
+        restoreState(id, cb);
+        if(func === 'serviceWorker') {
+            document.getElementById(cb.id).addEventListener('change', (event) => {
+                setState(id, event, cb.id);
+                sendSWMessage(event);
+            });
+        } else {
+            // set the handlers
+            document.getElementById(cb.id).addEventListener('change', (event) => {
+                setState(id, event, cb.id);
+                loadScript(func, cb.checked);
+            });
+        }
+    }
+}
+
+function restoreState(tabId, checkbox) {
+    // Restore checkbox state
+    const store = {};
+    chrome.storage.sync.get(store[tabId]).then((result) => {
+        if(result[tabId] && checkbox.id === result[tabId].id){
+            checkbox.checked = result[tabId].isChecked;
+            if(checkbox.checked && func) {
+                loadScript(func, checkbox.checked);
+            }
+        }
+    });
+}

@@ -1,0 +1,30 @@
+{
+  "name": "at3",
+  "version": "1.1.1",
+  "description": "A Chrome extension to help with accessibility testing.",
+  "main": "popup.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "build": "copyfiles scripts/* deps/* icons/* manifest.json about.html popup.html popup.js popup.css sw.js dist",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ntibbles/Assistive-Technology-Testing-Tool.git"
+  },
+  "keywords": [
+    "a11y",
+    "chrome-extension"
+  ],
+  "author": "Noel Tibbles",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ntibbles/Assistive-Technology-Testing-Tool/issues"
+  },
+  "homepage": "https://github.com/ntibbles/Assistive-Technology-Testing-Tool#readme",
+  "devDependencies": {
+    "copyfiles": "^2.4.1"
+  }
+}
