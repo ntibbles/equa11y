@@ -8,6 +8,8 @@ import { processImages } from "./scripts/text-detection.js"
 import { highlightNonInteractiveElements } from './scripts/event-listeners.js';
 
 document.addEventListener('DOMContentLoaded', setEventListeners);
+// const extID = 'aohecdkegdlljlgcgjoibfhefomfokme';
+// chrome.runtime.connect(extID);
 
 function getTabId() {
     return new Promise(resolve => {
@@ -50,18 +52,18 @@ async function loadScript(func, isChecked) {
 
 async function sendSWMessage(event) {
     const id = await getTabId();
-    chrome.runtime.sendMessage({target: 'sw', type: 'event-listeners', isChecked: event.target.checked },  () => {
-        if(!event.target.checked) {
-            chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                chrome.scripting.executeScript({
-                    target: { tabId: id },
-                    function: (function() {
-                        document.location.reload();
-                    })
-                });
+    await chrome.runtime.sendMessage({target: 'sw', type: 'event-listeners', isChecked: event.target.checked });
+    
+    if(!event.target.checked) {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            chrome.scripting.executeScript({
+                target: { tabId: id },
+                function: (function() {
+                    document.location.reload();
+                })
             });
-        }
-    });
+        });
+    }
 }
 
 async function setEventListeners() {
@@ -91,9 +93,9 @@ function restoreState(tabId, checkbox) {
     // Restore checkbox state
     const store = {};
     chrome.storage.sync.get(store[tabId]).then((result) => {
-        if(checkbox.id === result[tabId].id){
+        if(result[tabId] && checkbox.id === result[tabId].id){
             checkbox.checked = result[tabId].isChecked;
-            if(checkbox.checked) {
+            if(checkbox.checked && func) {
                 loadScript(func, checkbox.checked);
             }
         }
