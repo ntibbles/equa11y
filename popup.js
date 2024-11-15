@@ -5,11 +5,8 @@ import { toggleHeadingOutline } from "./scripts/headings.js";
 import { toggleInteractiveRoles } from "./scripts/roles.js";
 import { toggleZoom } from "./scripts/text-zoom.js";
 import { processImages } from "./scripts/text-detection.js"
-import { highlightNonInteractiveElements } from './scripts/event-listeners.js';
 
-document.addEventListener('DOMContentLoaded', setEventListeners);
-// const extID = 'aohecdkegdlljlgcgjoibfhefomfokme';
-// chrome.runtime.connect(extID);
+document.addEventListener('DOMContentLoaded', init);
 
 function getTabId() {
     return new Promise(resolve => {
@@ -18,6 +15,29 @@ function getTabId() {
         });
     })
 }
+
+function init() {
+    setEventListeners();
+}
+
+//insertCSS
+async function injectCSS() {
+    const id = await getTabId();
+    chrome.scripting.insertCSS({
+        target : {tabId : id},
+        files : ['extension.css'],
+    })
+}
+
+async function removeCSS() {
+    const id = await getTabId();
+    chrome.scripting.removeCSS({
+        target : {tabId : id},
+        files : ['extension.css'],
+    })
+}
+
+
 
 // explicitly converts function string name on data-func to a function
 function getFunction(name) {
@@ -29,7 +49,6 @@ function getFunction(name) {
         case 'toggleInteractiveRoles': return toggleInteractiveRoles;
         case 'toggleZoom': return toggleZoom;
         case 'processImages': return processImages;
-        case 'highlightNonInteractiveElements': return highlightNonInteractiveElements;
         default: return 'serviceWorker'
     }
 }
@@ -82,6 +101,7 @@ async function setEventListeners() {
         } else {
             // set the handlers
             document.getElementById(cb.id).addEventListener('change', (event) => {
+                (cb.checked) ? injectCSS() : removeCSS();
                 setState(id, event, cb.id);
                 loadScript(func, cb.checked);
             });
@@ -92,10 +112,11 @@ async function setEventListeners() {
 function restoreState(tabId, checkbox) {
     // Restore checkbox state
     const store = {};
+    const func = getFunction(checkbox.dataset.func);
     chrome.storage.sync.get(store[tabId]).then((result) => {
         if(result[tabId] && checkbox.id === result[tabId].id){
             checkbox.checked = result[tabId].isChecked;
-            if(checkbox.checked && func) {
+            if(checkbox.checked && func !== "serviceWorker") {
                 loadScript(func, checkbox.checked);
             }
         }

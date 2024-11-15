@@ -103,15 +103,7 @@ export function processImages(isChecked) {
                 const label = document.createElement('div');
                 //label.textContent = 'Embedded text: ' + filteredWords;
                 label.textContent = 'Embedded text';
-                label.class = 'aid-embed-label';
-                label.style.position = 'relative';
-                label.style.top = '20px';
-                label.style.textAlign= 'left';
-                label.style.color = 'white';
-                label.style.width = (image.width - 10) + 'px';
-                label.style.backgroundColor = 'rgba(0, 0, 255, 0.7)';
-                label.style.padding = '2px 5px';
-                label.style.fontSize = '12px';
+                label.className = 'at3-label';
         
                 // Add the label to the image or a container
                 image.parentNode.insertBefore(label, image); 
