@@ -4,7 +4,8 @@ import { toggleLandmarkOutlines } from "./scripts/landmarks.js";
 import { toggleHeadingOutline } from "./scripts/headings.js";
 import { toggleInteractiveRoles } from "./scripts/roles.js";
 import { toggleZoom } from "./scripts/text-zoom.js";
-import { processImages } from "./scripts/text-detection.js"
+import { processImages } from "./scripts/text-detection.js";
+import { grayscale } from "./scripts/grayscale.js";
 
 document.addEventListener('DOMContentLoaded', init);
 
@@ -49,7 +50,8 @@ function getFunction(name) {
         case 'toggleInteractiveRoles': return toggleInteractiveRoles;
         case 'toggleZoom': return toggleZoom;
         case 'processImages': return processImages;
-        default: return 'serviceWorker'
+        case 'grayscale' : return grayscale;
+        default: return 'serviceWorker';
     }
 }
 

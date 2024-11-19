@@ -3,17 +3,18 @@ function onAttach(tabId) {
     const nonInteractiveElements = ['div', 'span', 'p', 'section', 'article', 'header', 'footer'];
 
     getNodeDetails(tabId, nonInteractiveElements.join(','))
-    .then(nodes => {
-        nodes.forEach(node => {
-            getListeners(tabId, node.objectId)
-                .then(resp => {
-                    if (resp.listeners.length > 0) {
-                        labelElement(tabId, node.nodeId, resp.listeners[0].type);
-                    }
-                }).catch(err => {
-                    console.error('Could not get node listeners: ', err);
-                });
-            })
+        .then(nodes => {
+            nodes.forEach(node => {
+                getListeners(tabId, node.objectId)
+                    .then(resp => {
+                        if (resp.listeners.length > 0) {
+                            labelElement(tabId, node.nodeId, resp.listeners[0].type);
+                        }
+                    }).catch(err => {
+                        console.error('Could not get node listeners: ', err);
+                    });
+                }
+            )
         }).catch(err => {
             console.error('Could not get node details: ', err);
         });
@@ -70,7 +71,6 @@ async function getNodeDetails(tabId, selector) {
             );
         });
 
-        //console.log('nodeListResult: ', nodeListResult);
         const nodeListObjectId = nodeListResult.result.objectId; // Get the objectId of the NodeList
         const nodeListIds = [];
         const nodeList = [];
@@ -135,7 +135,7 @@ async function labelElement(tabId, nodeId, eventName) {
                 {
                     nodeId: nodeId,
                     outerHTML: `<div data-objectid="${nodeId}" style="outline: 2px solid blue; position: relative; display: inline-block;">
-                    <span style="position: absolute; top: 0; left: 0; background-color: rgba(0, 0, 255, 0.7); color: white; font-size: 1rem; padding: 2px 4px; z-index: 1000">${eventName}</span>
+                    <span style="position: absolute; top: 0; left: 0; background-color: blue; color: white; font-size: 1rem; padding: 2px 4px; z-index: 1000">${eventName}</span>
                     ${html.outerHTML}
                     </div>`
                 }
@@ -172,7 +172,7 @@ async function getTabId() {
 
 async function handleMessages(message) {
     if(message.target === 'sw' && message.type === 'event-listeners') {
-        if(message.isChecked) {
+        if(message.isChecked) {  // FIX ME: code stink
             getTabId().then(id => {
                 chrome.debugger.attach({ tabId: id }, "1.2", onAttach.bind(null, id));
             });

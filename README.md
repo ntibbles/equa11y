@@ -17,7 +17,7 @@ Assistive Technology Testing Tools is a Chrome extensions with a set of utilies 
 - Outline Event Listeners - Outlines and labels all non-interactive elements in the pages.
 
 ### Experimental Utility Limitations
-- Outline Embedded Text grayscales images and uses Tesseract to read the text. If the server prevents a reload of the images the graysacle will fail, reducing the accuracy of Tesseract. 
+- Outline Embedded Text grayscales images and uses Tesseract to read the text. If the server prevents a reload of the images the graysacle will fail, reducing the accuracy of Tesseract. Make sure all images are loaded BEFORE running the utility.
 - Outline Event Listeners uses Chromes Debug mode. Any limitaions on the browser using debug mode (i.e. cancelling debug mode) will affect the functionality.
 
 ## Loading an unpacked extension

@@ -10,7 +10,7 @@ export function toggleInteractiveRoles(isChecked) {
             elements.forEach(el => {
                 // Create a label for the role
                 const roleLabel = document.createElement('span');
-                roleLabel.textContent = role;
+                roleLabel.textContent = (role === 'a') ? 'link (a)' : role;
                 roleLabel.className = 'at3-label';
                 
                 // Add the border and append the label

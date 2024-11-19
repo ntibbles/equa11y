@@ -26,7 +26,7 @@ export function processImages(isChecked) {
 
     if (isChecked) {
         // prevents reinit when the ext is closed and opened
-        if(!document.body.classList.contains('at3-text-detection')) {
+        if(!document.body.classList.contains('at3-text-detection')) {  // FIX ME: code stink
             generateDialog();
             for (let i = 0; i < images.length; i++) {
                 const image = images[i];
@@ -58,7 +58,6 @@ export function processImages(isChecked) {
     function extractTextFromImage(image) {
         return new Promise((resolve, reject) => {
             (async () => {
-                //const worker = await createWorker('eng');
                 const worker = await createWorker('eng', 1, { logger: m => statusLogger(m) });
                 const { data: { text } } = await worker.recognize(image);
                 resolve(text);
@@ -179,7 +178,6 @@ export function processImages(isChecked) {
         for (let i = 0; i < images.length; i++) {
             // revert to colour
             images[i].src = images[i].dataset.src;
-            //images[i].removeAttribute('data-src');
         };
     }
 

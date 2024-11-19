@@ -1,50 +1,62 @@
 export function toggleHeadingOutline(isChecked) {
     // Define the list of heading tags
     const headingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+    const allTags = document.querySelectorAll(headingTags.join(','));
+    const levels = [];
+    let label = {};
+    let isSkipped = false;
 
     // Loop through each heading tag
-    headingTags.forEach(tag => {
-        // Get all elements with the specified heading tag
-        const headings = document.querySelectorAll(tag);
-
-        // Iterate through each heading element
-        headings.forEach(heading => {
-            if (isChecked) {
-                // If isChecked is true, add border and label
-                heading.style.border = '2px solid blue';
-                heading.style.position = 'relative';  // Ensure relative positioning for label placement
-
-                // Check if the label already exists, and avoid creating a new one
-                if (!heading.querySelector('.heading-label')) {
-                    // Create a label for the heading level
-                    const label = document.createElement('div');
-                    label.className = 'at3-label';  // Assign a class for easy identification
-                    label.innerText = tag.toUpperCase();  // Heading level (e.g., H1, H2)
-                    // label.style.position = 'absolute';
-                    // label.style.top = '0';
-                    // label.style.left = '0';
-                    // label.style.backgroundColor = 'blue';  // Background for readability
-                    // label.style.color = 'white';  // Text color
-                    // label.style.padding = '2px 5px';  // Padding around the text
-                    // label.style.fontSize = '12px';  // Smaller font size
-                    // label.style.fontWeight = 'bold';
-                    // label.style.zIndex = '1000';  // Ensure it's above other content
-
-                    // Append the label to the heading
-                    heading.prepend(label);
-                }
+    allTags.forEach((tag, index) => {
+        if (isChecked) {
+            tag.style.border = '2px solid blue';
+            tag.style.position = 'relative';  // Ensure relative positioning for label placement
+            levels.push(Number(tag.nodeName.substring(1)));
+            if(index === 0 && tag.nodeName !== 'H1') {
+                isSkipped = true;
             } else {
-                // If isChecked is false, remove border and label
-                heading.style.border = '';  // Reset the border
-                const label = heading.querySelector('.at3-label');
-                if (label) {
-                    heading.removeChild(label);  // Remove the label
-                }
+                isSkipped = findSkippedNumbers([levels[index - 1], levels[index]]).length;
             }
-        });
-    });
-}
 
-// Example usage:
-// Call toggleHeadingOutline(true) to add borders and labels
-// Call toggleHeadingOutline(false) to remove borders and labels
+            // Check if the label already exists, and avoid creating a new one
+            if(!tag.querySelector('.heading-label')) {
+                // Create a label for the heading level
+                label = document.createElement('div');
+                label.className = 'at3-label';  // Assign a class for easy identification
+                label.innerText = tag.nodeName.toUpperCase();  // Heading level (e.g., H1, H2)
+            
+                // Append the label to the heading
+                tag.prepend(label);
+            }
+
+            if(isSkipped) {
+                label.style.cssText = 'background-color: darkred !important;  outline: 2px dashed black;';
+            }
+        } else {
+            // If isChecked is false, remove border and label
+            tag.style.border = '';  // Reset the border
+            const label = tag.querySelector('.at3-label');
+            if (label) {
+                tag.removeChild(label);  // Remove the label
+            }
+        }
+    });
+    
+    function findSkippedNumbers(arr) {
+        // Sort the array in ascending order
+        arr.sort((a, b) => a - b);
+
+        const skippedNumbers = [];
+        let start = arr[0];
+        let end = arr[arr.length - 1];
+
+        // Iterate through the range of numbers between the first and last elements
+        for (let i = start + 1; i < end; i++) {
+            if (!arr.includes(i)) {
+                skippedNumbers.push(i);
+            }
+        }
+
+        return skippedNumbers;
+    }
+}

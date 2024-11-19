@@ -6,7 +6,7 @@ export function toggleLandmarkOutlines(isChecked) {
     ];
 
     if (isChecked) {
-        if(!document.body.classList.contains('at3-landmarks')) {
+        if(!document.body.classList.contains('at3-landmarks')) { // FIX ME: code stink
             landmarks.forEach(landmark => {
                 document.querySelectorAll(landmark).forEach(element => {
                     const label = document.createElement('div');
