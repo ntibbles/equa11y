@@ -3,7 +3,6 @@ export function toggleScreenReaderTextDisplay(isChecked) {
     // List of common interactive roles and their corresponding elements
     const interactiveRoles = ['button', 'a', 'checkbox', 'radio', 'slider', 'textbox', 'combobox', 'menuitem', 'option', '[role="button"]', '[role="link"]'];
     const roleSet = new Set(interactiveRoles.join().split(','));
-    console.log('roles: ', roleSet.has('button')); // chedck if this el exists in the set
 
     roleSet.forEach(role => {
         // Get all elements with the specified interactive role
