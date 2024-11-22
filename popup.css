@@ -50,6 +50,13 @@ nav {
     text-align: right;
 }
 
+.byline {
+    top: -30px;
+    position: relative;
+    text-align: center;
+    margin-bottom: -10px;
+}
+
 .superscript {
     position: relative; 
     top: -0.5em; 
@@ -67,4 +74,8 @@ nav {
     top: -8px;
     position: relative;
     margin: 0 10px 20px 0;
+}
+
+.header {
+    text-align: center;
 }
