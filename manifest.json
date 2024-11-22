@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Equally",
+  "name": "Equally: Accessibility Testing Utilities",
   "version": "1.0",
-  "description": "An accessibility testing utility extension for testing webpages.",
+  "description": "A utility extension for testing webpages for accessibility. Reveal code and perform accessibility tests that would normally take hours in just seconds. Now you don't need to inspect the code, just run a utility!",
   "permissions": [
     "activeTab",
     "scripting",
@@ -25,7 +25,7 @@
       "matches": [
         "<all_urls>"
       ],
-      "run_at": "document_start"
+      "run_at": "document_idle"
     }
   ],
   "web_accessible_resources": [
