@@ -1,5 +1,5 @@
-# Assistive Technology Testing Tools (AT3)
-Assistive Technology Testing Tools is a Chrome extensions with a set of utilies intended to help test a page for accessibility. It's primary purpose is to speed up testing for Accessibility Indicator Data Score testing. 
+# Equa11y
+The Equa11y extension is to help test a webpage for accessibility. It is designed to improve the efficiency of accessibility testing with various utilities.
 
 ## Core Utilities
 - Display Alt Text - Outlines and labels images with their alternative text.
@@ -17,7 +17,7 @@ Assistive Technology Testing Tools is a Chrome extensions with a set of utilies 
 - Outline Event Listeners - Outlines and labels all non-interactive elements in the pages.
 
 ### Experimental Utility Limitations
-- Outline Embedded Text grayscales images and uses Tesseract to read the text. If the server prevents a reload of the images the graysacle will fail, reducing the accuracy of Tesseract. 
+- Outline Embedded Text grayscales images and uses Tesseract to read the text. If the server prevents a reload of the images the graysacle will fail, reducing the accuracy of Tesseract. Make sure all images are loaded BEFORE running the utility.
 - Outline Event Listeners uses Chromes Debug mode. Any limitaions on the browser using debug mode (i.e. cancelling debug mode) will affect the functionality.
 
 ## Loading an unpacked extension

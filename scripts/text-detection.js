@@ -12,7 +12,7 @@ export function processImages(isChecked) {
     dialog.style.width = '15em';
     dialog.style.textAlign = 'center';
     dialog.style.borderRadius = '2em';
-    dialog.style.minHeight = '200px';
+    dialog.style.minHeight = '250px';
     msg.style.textTransform = 'Capitalize';
     msg.setAttribute('aria-live', 'polite');
 
@@ -26,17 +26,17 @@ export function processImages(isChecked) {
 
     if (isChecked) {
         // prevents reinit when the ext is closed and opened
-        if(!document.body.classList.contains('aid-text-detection')) {
+        if(!document.body.classList.contains('equa11y-text-detection')) {  // FIX ME: code stink
             generateDialog();
             for (let i = 0; i < images.length; i++) {
                 const image = images[i];
                 image.setAttribute('crossorigin', 'anonymous');
                 toDataURL(image);
             }
-            document.body.classList.add('aid-text-detection');
+            document.body.classList.add('equa11y-text-detection');
         }
     } else {
-        document.body.classList.remove('aid-text-detection');
+        document.body.classList.remove('equa11y-text-detection');
         dialog.close();
         for (let i = 0; i < images.length; i++) {
             const image = images[i];
@@ -58,7 +58,6 @@ export function processImages(isChecked) {
     function extractTextFromImage(image) {
         return new Promise((resolve, reject) => {
             (async () => {
-                //const worker = await createWorker('eng');
                 const worker = await createWorker('eng', 1, { logger: m => statusLogger(m) });
                 const { data: { text } } = await worker.recognize(image);
                 resolve(text);
@@ -103,7 +102,7 @@ export function processImages(isChecked) {
                 const label = document.createElement('div');
                 //label.textContent = 'Embedded text: ' + filteredWords;
                 label.textContent = 'Embedded text';
-                label.className = 'at3-label';
+                label.className = 'equa11y-label';
         
                 // Add the label to the image or a container
                 image.parentNode.insertBefore(label, image); 
@@ -179,7 +178,6 @@ export function processImages(isChecked) {
         for (let i = 0; i < images.length; i++) {
             // revert to colour
             images[i].src = images[i].dataset.src;
-            //images[i].removeAttribute('data-src');
         };
     }
 
@@ -209,11 +207,15 @@ export function processImages(isChecked) {
         const title = document.createElement('h1');
         title.textContent = 'Scanning';
         title.style.fontSize = '2rem';
-        title.style.paddingBottom = '1rem';
+
+        const spinner = document.createElement('div');
+        spinner.className = "lds-ring";
+        spinner.innerHTML = "<div></div><div></div><div></div><div></div></div>";
 
         msg.textContent = 'Initializing';
 
         dialog.append(title);
+        dialog.append(spinner);
         dialog.append(msg);
 
         document.body.appendChild(dialog);

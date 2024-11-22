@@ -2,16 +2,15 @@ export function revealViewportTag(isChecked) {
     const viewportTag = document.querySelector('meta[name="viewport"]');
     const viewportTextElement = document.createElement('div');
     if (isChecked) {
-        const viewportText = viewportTag.outerHTML;
-        viewportTextElement.innerText = viewportText;
-        viewportTextElement.id = 'vp'
-        viewportTextElement.style.position = 'fixed';
-        viewportTextElement.style.zIndex = 10000;
-        viewportTextElement.style.backgroundColor = 'blue';
-        viewportTextElement.style.color = 'white';
-        viewportTextElement.style.border = '2px solid blue';
-        document.body.prepend(viewportTextElement);
+        if(!document.getElementById('equa11y-label')) {  // FIX ME: code stink
+            const viewportText = viewportTag.outerHTML;
+            viewportTextElement.innerText = viewportText;
+            viewportTextElement.className = 'equa11y-label';
+            viewportTextElement.style.position = 'fixed';
+            viewportTextElement.id = 'equa11y-label';
+            document.body.prepend(viewportTextElement);
+        }
     } else {
-        document.getElementById('vp')?.remove();
+        document.getElementById('equa11y-label')?.remove();
     }
 }
