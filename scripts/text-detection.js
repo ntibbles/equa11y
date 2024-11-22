@@ -12,7 +12,7 @@ export function processImages(isChecked) {
     dialog.style.width = '15em';
     dialog.style.textAlign = 'center';
     dialog.style.borderRadius = '2em';
-    dialog.style.minHeight = '200px';
+    dialog.style.minHeight = '250px';
     msg.style.textTransform = 'Capitalize';
     msg.setAttribute('aria-live', 'polite');
 
@@ -207,11 +207,15 @@ export function processImages(isChecked) {
         const title = document.createElement('h1');
         title.textContent = 'Scanning';
         title.style.fontSize = '2rem';
-        title.style.paddingBottom = '1rem';
+
+        const spinner = document.createElement('div');
+        spinner.className = "lds-ring";
+        spinner.innerHTML = "<div></div><div></div><div></div><div></div></div>";
 
         msg.textContent = 'Initializing';
 
         dialog.append(title);
+        dialog.append(spinner);
         dialog.append(msg);
 
         document.body.appendChild(dialog);
