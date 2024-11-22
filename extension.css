@@ -1,4 +1,4 @@
-*:before, .at3-label *
+*:before, .equa11y-label *
 {
   background: transparent !important;
   border: none !important;
@@ -24,5 +24,5 @@
   width: auto !important;
 }
 
-.at3-label:before, .at3-label {  background: transparent !important; -webkit-border-radius: 3px !important; -moz-border-radius: 3px !important; border-radius: 3px !important; -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3) !important; -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3) !important; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3) !important; margin: 1px !important; padding: 5px 10px !important; z-index: 2147483647 !important; }
-.at3-label:before, .at3-label, .at3-label * { background: blue!important; color: #fff !important; display: inline !important; font-size: 1em !important; font-family: Verdana, Geneva, Tahoma, sans-serif; position: relative; }
+.equa11y-label:before, .equa11y-label {  background: transparent !important; -webkit-border-radius: 3px !important; -moz-border-radius: 3px !important; border-radius: 3px !important; -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3) !important; -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3) !important; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3) !important; margin: 1px !important; padding: 5px 10px !important; z-index: 2147483647 !important; }
+.equa11y-label:before, .equa11y-label, .equa11y-label * { background: blue!important; color: #fff !important; display: inline !important; font-size: 1em !important; font-family: Verdana, Geneva, Tahoma, sans-serif; position: relative; }
