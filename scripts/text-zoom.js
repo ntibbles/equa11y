@@ -10,21 +10,21 @@ export function toggleZoom(isChecked) {
     const css = `* { font-size: ${getComputedFontSize() * 2}px !important; }`;
     const head = document.head || document.getElementsByTagName('head')[0];
     const style = document.createElement('style');
-    style.id = 'aid_zoom';
+    style.id = 'equa11y_zoom';
     const body = document.body;
     const zoomLabel = document.createElement('div');
     zoomLabel.innerHTML = 'Text zoomed 200%';
-    zoomLabel.className = 'at3-label';
+    zoomLabel.className = 'equa11y-label';
     
     if (isChecked) {
         // prevent reinit if ext is closed and reopened
-        if(!document.getElementById('aid_zoom')) {
+        if(!document.getElementById('equa11y_zoom')) {
             style.appendChild(document.createTextNode(css));
             head.appendChild(style);
             body.prepend(zoomLabel);
         }
     } else {
-        document.getElementById('aid_zoom').remove();
-        document.querySelector('.at3-label').remove();
+        document.getElementById('equa11y_zoom').remove();
+        document.querySelector('.equa11y-label').remove();
     }
 }

@@ -27,7 +27,7 @@ async function injectCSS() {
     chrome.scripting.insertCSS({
         target : {tabId : id},
         files : ['extension.css'],
-    })
+    });
 }
 
 async function removeCSS() {
@@ -35,10 +35,8 @@ async function removeCSS() {
     chrome.scripting.removeCSS({
         target : {tabId : id},
         files : ['extension.css'],
-    })
+    });
 }
-
-
 
 // explicitly converts function string name on data-func to a function
 function getFunction(name) {
@@ -57,9 +55,28 @@ function getFunction(name) {
 
 function setState(tabId, event, id) {
     const store = {};
-    const isChecked = event.target.checked;
-    store[tabId] = {id, isChecked};
-    chrome.storage.sync.set( store );
+    chrome.storage.sync.get(store[tabId]).then((result) => {
+        const store = {};
+        const isChecked = event.target.checked;
+        store[id] = {isChecked, tabId};
+        chrome.storage.sync.set( store );
+    })
+}
+
+function restoreState(tabId, checkbox) {
+    // Restore checkbox state
+    const cbId = checkbox.id;
+    const store = {};
+    const func = getFunction(checkbox.dataset.func);
+    chrome.storage.sync.get(store[cbId]).then((result) => {
+        if( result[cbId] && result[cbId].tabId === tabId){
+            checkbox.checked = result[cbId].isChecked;
+            if(checkbox.checked && func !== "serviceWorker") {
+                injectCSS();
+                loadScript(func, checkbox.checked);
+            }
+        }
+    });
 }
 
 async function loadScript(func, isChecked) {
@@ -67,7 +84,7 @@ async function loadScript(func, isChecked) {
     chrome.scripting.executeScript({
         target: { tabId: id },
         function: func,
-        args: [isChecked]
+        args: [isChecked, id]
     });
 } 
 
@@ -76,13 +93,11 @@ async function sendSWMessage(event) {
     await chrome.runtime.sendMessage({target: 'sw', type: 'event-listeners', isChecked: event.target.checked });
     
     if(!event.target.checked) {
-        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-            chrome.scripting.executeScript({
-                target: { tabId: id },
-                function: (function() {
-                    document.location.reload();
-                })
-            });
+        chrome.scripting.executeScript({
+            target: { tabId: id },
+            function: (function() {
+                document.location.reload();
+            })
         });
     }
 }
@@ -109,19 +124,4 @@ async function setEventListeners() {
             });
         }
     }
-}
-
-function restoreState(tabId, checkbox) {
-    // Restore checkbox state
-    const store = {};
-    const func = getFunction(checkbox.dataset.func);
-    chrome.storage.sync.get(store[tabId]).then((result) => {
-        if(result[tabId] && checkbox.id === result[tabId].id){
-            checkbox.checked = result[tabId].isChecked;
-            if(checkbox.checked && func !== "serviceWorker") {
-                injectCSS();
-                loadScript(func, checkbox.checked);
-            }
-        }
-    });
 }

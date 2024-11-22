@@ -56,3 +56,15 @@ nav {
     font-size: 60%;
     font-style: italic;
 }
+
+.name {
+    width: 120px;
+    margin-bottom: 20px;
+}
+
+.logo {
+    width: 40px;
+    top: -8px;
+    position: relative;
+    margin: 0 10px 20px 0;
+}

@@ -26,17 +26,17 @@ export function processImages(isChecked) {
 
     if (isChecked) {
         // prevents reinit when the ext is closed and opened
-        if(!document.body.classList.contains('at3-text-detection')) {  // FIX ME: code stink
+        if(!document.body.classList.contains('equa11y-text-detection')) {  // FIX ME: code stink
             generateDialog();
             for (let i = 0; i < images.length; i++) {
                 const image = images[i];
                 image.setAttribute('crossorigin', 'anonymous');
                 toDataURL(image);
             }
-            document.body.classList.add('at3-text-detection');
+            document.body.classList.add('equa11y-text-detection');
         }
     } else {
-        document.body.classList.remove('at3-text-detection');
+        document.body.classList.remove('equa11y-text-detection');
         dialog.close();
         for (let i = 0; i < images.length; i++) {
             const image = images[i];
@@ -102,7 +102,7 @@ export function processImages(isChecked) {
                 const label = document.createElement('div');
                 //label.textContent = 'Embedded text: ' + filteredWords;
                 label.textContent = 'Embedded text';
-                label.className = 'at3-label';
+                label.className = 'equa11y-label';
         
                 // Add the label to the image or a container
                 image.parentNode.insertBefore(label, image); 
