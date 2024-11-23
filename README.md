@@ -17,7 +17,7 @@ The Equa11y extension is to help test a webpage for accessibility. It is designe
 - **Outline Event Listeners** - Outlines and labels all non-interactive elements in the page with events. This is useful for identifying elements that may not get keyboard or screen reader focus. 
 
 ### Beta Utility Limitations
-- **Outline Embedded Text** grayscales images and uses Tesseract to read the text. If the server prevents a reload of the images the graysacle will fail, reducing the accuracy of Tesseract. Make sure all images are loaded BEFORE running the utility. NOTE: Occasionally, the content script to load Tesseract does load into the page. Refresh the page and try again. An issue has been logged: <a href="https://github.com/ntibbles/equa11y/issues/25">https://github.com/ntibbles/equa11y/issues/25</a>
+- **Outline Embedded Text** grayscales images and uses Tesseract to read the text. If the server prevents a reload of the images the graysacle will fail, reducing the accuracy of Tesseract. Make sure all images are loaded BEFORE running the utility. NOTE: Occasionally, the content script to load Tesseract doesn't load into the page. Refresh the page and try again. An issue has been logged: <a href="https://github.com/ntibbles/equa11y/issues/25">https://github.com/ntibbles/equa11y/issues/25</a>
 
 - **Outline Event Listeners** outlines non-interactive elements that have events bound to them. This utility uses Chromes Debug mode. Any limitations on the browser using debug mode (i.e. cancelling debug mode) will affect the functionality.
 
