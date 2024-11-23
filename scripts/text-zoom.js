@@ -13,6 +13,7 @@ export function toggleZoom(isChecked) {
     style.id = 'equa11y_zoom';
     const body = document.body;
     const zoomLabel = document.createElement('div');
+    zoomLabel.style.position = 'fixed';
     zoomLabel.innerHTML = 'Text zoomed 200%';
     zoomLabel.className = 'equa11y-label';
     
