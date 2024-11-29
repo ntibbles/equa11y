@@ -44,7 +44,7 @@ function checkFirstImage() {
         if (images.length > 0) {
             const firstImage = images[Math.round(images.length/2)];
             fetch(firstImage.src).then(resp => {
-                if (resp.type === 'basic') {
+                if (resp.type === 'basic' && resp.url === window.location.origin+'/') {
                     resolve({ hasCors: true });
                 } else {
                     resolve({ hasCors: false });
