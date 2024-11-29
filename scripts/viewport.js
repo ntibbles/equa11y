@@ -1,6 +1,7 @@
 export function revealViewportTag(isChecked) {
     const viewportTag = document.querySelector('meta[name="viewport"]');
     const viewportTextElement = document.createElement('div');
+    
     isChecked ? revealViewportTag_checked() : revealViewportTag_unchecked();
 
     function revealViewportTag_checked() {
