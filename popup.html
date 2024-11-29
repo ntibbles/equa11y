@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="popup.css">
     <title>Equally v1.0</title>
 </head>
+
 <body>
     <nav>
         <a href="about.html">About</a>
@@ -13,97 +15,104 @@
     <main>
         <div>
             <!-- <img class="logo" src="./icons/icon-48.png" alt=""/> -->
-            <img class="logo" src="./deps/Equally_horizontal.svg" alt="Equa11y Accessibility Testing Utilities"/>
+            <img class="logo" src="./deps/Equally_horizontal.svg" alt="Equa11y Accessibility Testing Utilities" />
             <!-- <p class="small byline">Accessibility Testing Utilities</p> -->
         </div>
-        
+
         <fieldset>
             <legend>Core Utils</legend>
             <div class="item-container">
-            <ul>
-                <li>
-                    <label>
-                        <input type="checkbox" id="displaySrText" data-func="toggleScreenReaderTextDisplay">
-                        Display screen reader text
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox" id="displayAltText" data-func="toggleAltTextDisplay">
-                        Display Alt Text
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox" id="displayLandmarks" data-func="toggleLandmarkOutlines">
-                        Display Landmark Regions 
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox" id="displayHeadingLevels" data-func="toggleHeadingOutline">
-                        Display Heading Levels
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox" id="grayscale" data-func="grayscale">
-                       Grayscale Page
-                    </label>
-                </li>
-            </ul>
-            <ul>
-                <li>
-                    <label>
-                        <input type="checkbox" id="displayRoles" data-func="toggleInteractiveRoles">
-                        Display Element Roles
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox" id="revealViewport" data-func="revealViewportTag">
-                        Reveal Viewport Tag
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox" id="zoomText" data-func="toggleZoom">
-                        Zoom Text 200%
-                    </label>
-                </li>
-               
-                <li>
-                    <label>
-                                <input type="checkbox" id="exclusiveText" data-func="exclusiveText">
-                                
-                        Highlight Exclusive Text
-                    </label>
-                </li>
-                
-            </ul>
+                <ul>
+                    <li>
+                        <label>
+                            <input type="checkbox" id="displaySrText" data-func="toggleScreenReaderTextDisplay">
+                            Display screen reader text
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="checkbox" id="displayAltText" data-func="toggleAltTextDisplay">
+                            Display Alt Text
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="checkbox" id="displayLandmarks" data-func="toggleLandmarkOutlines">
+                            Display Landmark Regions
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="checkbox" id="displayHeadingLevels" data-func="toggleHeadingOutline">
+                            Display Heading Levels
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="checkbox" id="grayscale" data-func="grayscale">
+                            Grayscale Page
+                        </label>
+                    </li>
+                </ul>
+                <ul>
+                    <li>
+                        <label>
+                            <input type="checkbox" id="displayRoles" data-func="toggleInteractiveRoles">
+                            Display Element Roles
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="checkbox" id="revealViewport" data-func="revealViewportTag">
+                            Reveal Viewport Tag
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="checkbox" id="zoomText" data-func="toggleZoom">
+                            Zoom Text 200%
+                        </label>
+                    </li>
+
+                    <li>
+                        <label>
+                            <input type="checkbox" id="exclusiveText" data-func="exclusiveText">
+                            Highlight Exclusive Text
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="checkbox" id="revealLang" data-func="revealLang">
+                            Reveal Lang Attribute
+                        </label>
+                    </li>
+                </ul>
             </div>
         </fieldset>
         <fieldset>
             <legend>Beta Utils*</legend>
             <div class="item-container">
-            <ul>
-                <li>
-                    <label>
-                        <input type="checkbox" id="displayEmbedded" data-func="processImages">
-                        Outline Embedded Text (EN Only)
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox" id="serviceWorker" data-func="getEventBinding">
-                       Outline Event Listeners (Debug Mode)
-                    </label>
-                </li>
-            </ul>
+                <ul>
+                    <li>
+                        <label>
+                            <input type="checkbox" id="displayEmbedded" data-func="processImages">
+                            Outline Embedded Text (EN Only)
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="checkbox" id="serviceWorker" data-func="getEventBinding">
+                            Outline Event Listeners (Debug Mode)
+                        </label>
+                    </li>
+                </ul>
             </div>
         </fieldset>
-        <p>* Beta utils may not be accurate, take time to run, and can break the content in the tabs.  <a href="https://github.com/ntibbles/equa11y?tab=readme-ov-file#beta-utilities" target="_blank">Learn more about beta utils.</a></p>
-    </main> 
+        <p>* Beta utils may not be accurate, take time to run, and can break the content in the tabs. <a
+                href="https://github.com/ntibbles/equa11y?tab=readme-ov-file#beta-utilities" target="_blank">Learn more
+                about beta utils.</a></p>
+    </main>
     <script src="popup.js" type="module"></script>
 </body>
+
 </html>

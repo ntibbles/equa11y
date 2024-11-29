@@ -8,6 +8,7 @@ import { toggleZoom } from "./scripts/text-zoom.js";
 import { processImages } from "./scripts/text-detection.js";
 import { grayscale } from "./scripts/grayscale.js";
 import { exclusiveText } from "./scripts/exclusive-text.js";
+import { revealLang } from "./scripts/lang.js";
 
 document.addEventListener('DOMContentLoaded', init);
 
@@ -53,6 +54,7 @@ function getFunction(name) {
         case 'processImages': return processImages;
         case 'grayscale' : return grayscale;
         case 'exclusiveText': return exclusiveText;
+        case 'revealLang': return revealLang;
         default: return 'serviceWorker';
     }
 }
