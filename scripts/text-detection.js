@@ -56,7 +56,7 @@ export function processImages(isChecked) {
     }
 
     function extractTextFromImage(image) {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             (async () => {
                 const worker = await createWorker('eng', 1, { logger: m => statusLogger(m) });
                 const { data: { text } } = await worker.recognize(image);

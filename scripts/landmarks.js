@@ -30,7 +30,7 @@ export function toggleLandmarkOutlines(isChecked) {
                     landmark = landmark.substring(7, landmark.indexOf(']') - 1);
                 }
 
-                label.textContent = ariaLabel ? `${ariaLabel} (${landmark})` : landmark;
+                label.textContent = ariaLabel ? `${ariaLabel} [${landmark}]` : landmark;
                 label.classList.add(...clsList);
 
                 element.prepend(label);

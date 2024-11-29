@@ -6,6 +6,7 @@ import { toggleInteractiveRoles } from "./scripts/roles.js";
 import { toggleZoom } from "./scripts/text-zoom.js";
 import { processImages } from "./scripts/text-detection.js";
 import { grayscale } from "./scripts/grayscale.js";
+import { exclusiveText } from "./scripts/exclusive-text.js";
 
 document.addEventListener('DOMContentLoaded', init);
 
@@ -49,6 +50,7 @@ function getFunction(name) {
         case 'toggleZoom': return toggleZoom;
         case 'processImages': return processImages;
         case 'grayscale' : return grayscale;
+        case 'exclusiveText': return exclusiveText;
         default: return 'serviceWorker';
     }
 }

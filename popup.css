@@ -2,7 +2,7 @@
 body {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     padding: 10px;
-    min-width: 93vw;
+    min-width: 94vw;
     font-size: 0.9em;
 }
 
@@ -65,5 +65,6 @@ nav {
 }
 
 .logo {
+    width: 280px;
     margin-bottom: 10px;
 }
