@@ -18,8 +18,8 @@ export function exclusiveText(isChecked) {
         }
 
         nodesToUpdate.map(el => {
-            if(!el.classList.contains('equally-highlight')) {
-                let content = el.textContent.replaceAll(regex, (word) => { return `<span class="equally-highlight">${word}</span>` });
+            if(!el.classList.contains('equa11y-highlight')) {
+                let content = el.textContent.replaceAll(regex, (word) => { return `<span class="equa11y-highlight equa11y-label">${word}</span>` });
                 el.innerHTML = content;
             }
         });
@@ -30,7 +30,7 @@ export function exclusiveText(isChecked) {
     }
 
     function removeHighlight() {
-        document.querySelectorAll('.equally-highlight').forEach(el => {
+        document.querySelectorAll('.equa11y-highlight').forEach(el => {
             let curContent = el.parentElement?.innerText;
             let content = el.textContent.replaceAll(regex, curContent);
             if(el.parentElement) el.parentElement.innerText = content;

@@ -83,8 +83,3 @@
         transform: rotate(135deg);
     }
 }
-
-.equally-highlight {
-  border: 2px solid blue !important;
-  background-color: yellow !important;
-}
