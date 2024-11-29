@@ -1,3 +1,4 @@
+import { toggleScreenReaderTextDisplay } from "./scripts/screenreader-text.js";
 import { toggleAltTextDisplay } from "./scripts/alt-text.js";
 import { revealViewportTag } from "./scripts/viewport.js";
 import { toggleLandmarkOutlines } from "./scripts/landmarks.js";
@@ -42,6 +43,7 @@ async function removeCSS() {
 // explicitly converts function string name on data-func to a function
 function getFunction(name) {
     switch(name) {
+        case 'toggleScreenReaderTextDisplay': return toggleScreenReaderTextDisplay;
         case 'toggleAltTextDisplay': return toggleAltTextDisplay;
         case 'revealViewportTag': return revealViewportTag;
         case 'toggleLandmarkOutlines': return toggleLandmarkOutlines;
