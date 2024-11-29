@@ -1,3 +1,4 @@
+import { toggleScreenReaderTextDisplay } from "./scripts/screenreader-text.js";
 import { toggleAltTextDisplay } from "./scripts/alt-text.js";
 import { revealViewportTag } from "./scripts/viewport.js";
 import { toggleLandmarkOutlines } from "./scripts/landmarks.js";
@@ -6,6 +7,8 @@ import { toggleInteractiveRoles } from "./scripts/roles.js";
 import { toggleZoom } from "./scripts/text-zoom.js";
 import { processImages } from "./scripts/text-detection.js";
 import { grayscale } from "./scripts/grayscale.js";
+import { exclusiveText } from "./scripts/exclusive-text.js";
+import { revealLang } from "./scripts/lang.js";
 
 document.addEventListener('DOMContentLoaded', init);
 
@@ -41,6 +44,7 @@ async function removeCSS() {
 // explicitly converts function string name on data-func to a function
 function getFunction(name) {
     switch(name) {
+        case 'toggleScreenReaderTextDisplay': return toggleScreenReaderTextDisplay;
         case 'toggleAltTextDisplay': return toggleAltTextDisplay;
         case 'revealViewportTag': return revealViewportTag;
         case 'toggleLandmarkOutlines': return toggleLandmarkOutlines;
@@ -49,6 +53,8 @@ function getFunction(name) {
         case 'toggleZoom': return toggleZoom;
         case 'processImages': return processImages;
         case 'grayscale' : return grayscale;
+        case 'exclusiveText': return exclusiveText;
+        case 'revealLang': return revealLang;
         default: return 'serviceWorker';
     }
 }
