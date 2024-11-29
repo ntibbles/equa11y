@@ -16,10 +16,12 @@ export function revealLang(isChecked) {
                 langTextElement.innerText = `lang="${langAttr}"`;
             } else {
                 // show all other tags
-                let label = document.createElement('span');
-                label.classList.add(...clsList);
-                label.innerHTML = `lang="${langAttr}"`;
-                el.prepend(label);
+                if(!el.querySelector('.equa11y-label')) {
+                    let label = document.createElement('span');
+                    label.classList.add(...clsList);
+                    label.innerHTML = `lang="${langAttr}"`;
+                    el.prepend(label);
+                }   
             }
         }
 
@@ -27,7 +29,7 @@ export function revealLang(isChecked) {
         if(langTags[0].nodeName !== 'HTML') {
             langTextElement.innerText = 'No lang attribute on HTML tag.';
         }
-        document.body.prepend(langTextElement);
+         if(!document.getElementById('equa11y-lang')) document.body.prepend(langTextElement);
     }
 
     function langTag_unchecked() {
