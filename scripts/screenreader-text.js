@@ -19,14 +19,14 @@ export function toggleScreenReaderTextDisplay(isChecked) {
                     
                     // Create a screen reader label for the element level
                     const srLabel = document.createElement('div');
-                    srLabel.className = 'at3-label';  // Assign a class for easy identification
+                    srLabel.className = 'equa11y-label';  // Assign a class for easy identification
                     srLabel.innerText = `SR Text: ${element.innerText}`; 
                     element.prepend(srLabel);
                 }
             } else {
                 // If isChecked is false, remove border and label
                 element.style.border = '';  // Reset the border
-                const srLabel = element.querySelector('.at3-label');
+                const srLabel = element.querySelector('.equa11y-label');
                 if (srLabel) {
                     element.removeChild(srLabel);  // Remove the label
                 }
@@ -54,12 +54,12 @@ export function toggleScreenReaderTextDisplay(isChecked) {
             // Create a screen reader label for the element level
             const srLabel = document.createElement('div');
             srLabel.innerText = `SR Text: ${ariaLabel} ${ariaLabelledby} ${ariaDescribedby}`;
-            srLabel.className = 'at3-label'; // Assign a class for easy identification
+            srLabel.className = 'equa11y-label'; // Assign a class for easy identification
             element.prepend(srLabel);
         } else {
             // If isChecked is false, remove border and label
             element.style.border = '';  // Reset the border
-            const srLabel = element.querySelector('.at3-label');
+            const srLabel = element.querySelector('.equa11y-label');
             if (srLabel) {
                 element.removeChild(srLabel);  // Remove the label
             }

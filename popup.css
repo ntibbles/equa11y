@@ -73,3 +73,13 @@ nav {
     width: 280px;
     margin-bottom: 10px;
 }
+
+.ps-logo {
+    text-align: right;
+    margin: 0;
+}
+
+.byline {
+    position: relative;
+    top: -5px;
+}

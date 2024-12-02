@@ -1,12 +1,4 @@
 export function toggleZoom(isChecked) {
-    function getComputedFontSize() {
-        const body = document.body;
-        const computedStyle = window.getComputedStyle(body);
-        const fontSize = computedStyle.fontSize;
-        
-        return parseFloat(fontSize);
-    }
-
     const css = `* { font-size: ${getComputedFontSize() * 2}px !important; }`;
     const head = document.head || document.getElementsByTagName('head')[0];
     const style = document.createElement('style');
@@ -31,5 +23,13 @@ export function toggleZoom(isChecked) {
     function textZoom_unchecked() {
         document.getElementById('equa11y_zoom').remove();
         document.querySelector('.equa11y-label').remove();
+    }
+
+    function getComputedFontSize() {
+        const body = document.body;
+        const computedStyle = window.getComputedStyle(body);
+        const fontSize = computedStyle.fontSize;
+        
+        return parseFloat(fontSize);
     }
 }
