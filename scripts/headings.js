@@ -1,5 +1,4 @@
-export function toggleHeadingOutline(isChecked, tabId) {
-    // Define the list of heading tags
+export function toggleHeadingOutline(isChecked) {
     const headingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
     const allTags = document.querySelectorAll(headingTags.join(','));
     const levels = [];
@@ -7,14 +6,13 @@ export function toggleHeadingOutline(isChecked, tabId) {
     let label = {};
     let isSkipped = false;
 
-    heading_unchecked();
-
-    if(isChecked) heading_checked();
+    isChecked ? heading_checked() : heading_unchecked();
 
     function heading_checked() {
         allTags.forEach((tag, index) => {
             tag.style.border = '2px solid blue';
-            tag.style.position = 'relative';  // Ensure relative positioning for label placement
+            tag.style.position = 'relative'; 
+           
             levels.push(Number(tag.nodeName.substring(1)));
 
             if(index === 0 && tag.nodeName !== 'H1') {
@@ -23,14 +21,13 @@ export function toggleHeadingOutline(isChecked, tabId) {
                 isSkipped = findSkippedNumbers([levels[index - 1], levels[index]]).length;
             }
 
-            // Check if the label already exists, and avoid creating a new one
-            if(!tag.querySelector('.heading-label')) {
-                // Create a label for the heading level
+            if(!tag.classList.contains('equa11y-heading-label')) {
                 label = document.createElement('div');
-                label.classList.add(...clsList);  // Assign a class for easy identification
-                label.innerText = tag.nodeName.toUpperCase();  // Heading level (e.g., H1, H2)
+                label.classList.add(...clsList);
+                label.innerText = tag.nodeName.toUpperCase();
             
                 // Append the label to the heading
+                tag.classList.add('equa11y-heading-label')
                 tag.prepend(label);
             }
 
@@ -43,23 +40,22 @@ export function toggleHeadingOutline(isChecked, tabId) {
 
     function heading_unchecked() {
         allTags.forEach((tag, index) => {
-            tag.style.border = '';  // Reset the border
+            tag.style.border = ''; 
             const label = tag.querySelector('.equa11y-headings');
             if (label) {
-                tag.removeChild(label);  // Remove the label
+                tag.classList.remove('equa11y-heading-label');
+                tag.removeChild(label); 
             }
         });
     }
 
     function findSkippedNumbers(arr) {
-        // Sort the array in ascending order
         arr.sort((a, b) => a - b);
 
         const skippedNumbers = [];
         let start = arr[0];
         let end = arr[arr.length - 1];
 
-        // Iterate through the range of numbers between the first and last elements
         for (let i = start + 1; i < end; i++) {
             if (!arr.includes(i)) {
                 skippedNumbers.push(i);
