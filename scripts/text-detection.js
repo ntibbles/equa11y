@@ -58,7 +58,12 @@ export function processImages(isChecked) {
     function extractTextFromImage(image) {
         return new Promise((resolve, reject) => {
             (async () => {
-                const worker = await createWorker('eng', 1, { logger: m => statusLogger(m) });
+                const worker = await createWorker('eng', 1, { 
+                    workerPath: chrome.runtime.getURL("deps/tesseract-core/worker.min.js"),
+                    langPath: chrome.runtime.getURL("deps/tesseract-core/eng.traineddata.gz"),
+                    corePath: chrome.runtime.getURL("deps/tesseract-core/"),
+                    logger: m => statusLogger(m) 
+                });
                 const { data: { text } } = await worker.recognize(image);
                 resolve(text);
                 await worker.terminate();
