@@ -81,5 +81,6 @@ nav {
 
 .byline {
     position: relative;
-    top: -5px;
+    top: -20px;
+    right: 5px;
 }
