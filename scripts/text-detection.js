@@ -56,7 +56,7 @@ export function processImages(isChecked) {
     }
 
     function extractTextFromImage(image) {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             (async () => {
                 const worker = await createWorker('eng', 1, { 
                     workerPath: chrome.runtime.getURL("deps/tesseract-core/worker.min.js"),
@@ -68,6 +68,8 @@ export function processImages(isChecked) {
                 resolve(text);
                 await worker.terminate();
             })();
+        }).catch(err => {
+            console.warn("Error occurred within Tesseract: ", err);
         });
     }
 
@@ -227,4 +229,3 @@ export function processImages(isChecked) {
         dialog.showModal();
     }
 }
-  

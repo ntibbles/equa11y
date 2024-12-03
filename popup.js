@@ -19,6 +19,38 @@ function getTabId() {
 
 function init() {
     setEventListeners();
+    checkCORS();
+}
+
+async function checkCORS() {
+    const id = await getTabId();
+    chrome.scripting.executeScript({
+        target: { tabId: id },
+        function: checkFirstImage
+    }).then(result => {
+        if (result[0].result.hasCors) {
+            document.getElementById('displayEmbedded').setAttribute('disabled', true);
+            document.getElementById('embeddedTextStatus').innerHTML = ' (<a href="about.html">Not Available</a>)';
+        }
+    });
+}
+
+function checkFirstImage() {
+    return new Promise(resolve => {
+        const images = document.getElementsByTagName('img');
+        if (images.length > 0) {
+            const firstImage = images[Math.round(images.length/2)];
+            fetch(firstImage.src).then(resp => {
+                if (resp.type === 'basic' && resp.url === window.location.origin+'/') {
+                    resolve({ hasCors: true });
+                } else {
+                    resolve({ hasCors: false });
+                }
+            }).catch(() => {
+                resolve({ hasCors: true });
+            });
+        }
+    });
 }
 
 //insertCSS

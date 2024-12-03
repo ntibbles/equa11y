@@ -6,23 +6,12 @@ export function toggleLandmarkOutlines(isChecked) {
     ];
     const clsList = ['equa11y-label', 'equa11y-landmarks'];
 
-    // Remove all borders and labels
-    landmarks.forEach(landmark => {
-        document.querySelectorAll(landmark).forEach(element => {
-            element.style.border = 'none';
-        });
+    isChecked ? toggleLandmarks_checked() : toggleLandmarks_unchecked();
 
-        // Remove existing label
-        document.querySelectorAll('.equa11y-landmarks').forEach(element => {
-            element.remove();
-        })
-    });
-
-    if (isChecked) {
+    function toggleLandmarks_checked() {
         landmarks.forEach(landmark => {
             document.querySelectorAll(landmark).forEach(element => {
-                const label = document.createElement('div');
-                // Add border and label
+               
                 element.style.border = '2px solid blue';
                 ariaLabel = element.getAttribute('aria-label');
 
@@ -30,11 +19,29 @@ export function toggleLandmarkOutlines(isChecked) {
                     landmark = landmark.substring(7, landmark.indexOf(']') - 1);
                 }
 
-                label.textContent = ariaLabel ? `${ariaLabel} (${landmark})` : landmark;
-                label.classList.add(...clsList);
+                if(!element.classList.contains('equa11y-landmark')) {
+                    const label = document.createElement('div');
+                    label.textContent = ariaLabel ? `${ariaLabel} [${landmark}]` : landmark;
+                    label.classList.add(...clsList);
 
-                element.prepend(label);
+                    element.classList.add('equa11y-landmark');
+                    element.prepend(label);
+                }
             });
         });
+    }
+
+    function toggleLandmarks_unchecked() {
+        landmarks.forEach(landmark => {
+            document.querySelectorAll(landmark).forEach(element => {
+                element.classList.remove('equa11y-landmark');
+                element.style.border = 'none';
+            });
+    
+            // Remove existing label
+            document.querySelectorAll('.equa11y-landmarks').forEach(element => {
+                element.remove();
+            })
+        });    
     }
 }
