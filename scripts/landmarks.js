@@ -36,7 +36,6 @@ export function toggleLandmarkOutlines(isChecked) {
         landmarks.forEach(landmark => {
             document.querySelectorAll(landmark).forEach(element => {
                 element.classList.remove(...elCls);
-                
             });
     
             // Remove existing label
