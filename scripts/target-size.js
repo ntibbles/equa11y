@@ -35,8 +35,6 @@ export function toggleTargetSize(isChecked) {
     }
 
     function getComputedDimensions(element) {
-       
-        console.log('width: ', element.offsetWidth);
         const dimensions = {
             width: element.offsetWidth,
             height:element.offsetHeight
