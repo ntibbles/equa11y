@@ -11,7 +11,7 @@ export function toggleTargetSize(isChecked) {
             if(!element.classList.contains('equa11y-size')) {
                 const dimensions = getComputedDimensions(element);
                 const label = document.createElement('div');
-                label.innerHTML = dimensions.width + 'px w x \n' + dimensions.height + 'px h';
+                label.innerHTML = `${dimensions.width}px w x ${dimensions.height}px h`;
                 label.classList.add(...clsList);
 
                 if(dimensions.width < 24 || dimensions.height < 24) {

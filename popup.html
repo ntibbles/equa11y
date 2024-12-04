@@ -14,9 +14,7 @@
     </nav>
     <main>
         <div>
-            <!-- <img class="logo" src="./icons/icon-48.png" alt=""/> -->
             <img class="logo" src="./deps/Equally_horizontal.svg" alt="Equa11y Accessibility Testing Utilities" />
-            <!-- <p class="small byline">Accessibility Testing Utilities</p> -->
         </div>
 
         <fieldset>
@@ -26,7 +24,7 @@
                     <li>
                         <label>
                             <input type="checkbox" id="displaySrText" data-func="toggleScreenReaderTextDisplay">
-                            Display Screen Reader Text (1.1)
+                            Display Screen Reader Text
                         </label>
                     </li>
                     <li>
@@ -49,22 +47,34 @@
                     </li>
                     <li>
                         <label>
-                            <input type="checkbox" id="grayscale" data-func="grayscale">
-                            Grayscale Page
+                            <input type="checkbox" id="targetSize" data-func="toggleTargetSize">
+                            Display Target Size
                         </label>
                     </li>
                     <li>
                         <label>
-                            <input type="checkbox" id="targetSize" data-func="toggleTargetSize">
-                            Display Target Size
+                            <input type="checkbox" id="displayRoles" data-func="toggleInteractiveRoles">
+                            Display Element Roles
                         </label>
                     </li>
                 </ul>
                 <ul>
                     <li>
                         <label>
-                            <input type="checkbox" id="displayRoles" data-func="toggleInteractiveRoles">
-                            Display Element Roles
+                            <input type="checkbox" id="grayscale" data-func="grayscale">
+                            Grayscale Page
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="checkbox" id="exclusiveText" data-func="exclusiveText">
+                            Highlight Exclusive Text
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="checkbox" id="revealLang" data-func="revealLang">
+                            Reveal Lang Attribute
                         </label>
                     </li>
                     <li>
@@ -77,19 +87,6 @@
                         <label>
                             <input type="checkbox" id="zoomText" data-func="toggleZoom">
                             Zoom Text 200%
-                        </label>
-                    </li>
-
-                    <li>
-                        <label>
-                            <input type="checkbox" id="exclusiveText" data-func="exclusiveText">
-                            Highlight Exclusive Text (1.1)
-                        </label>
-                    </li>
-                    <li>
-                        <label>
-                            <input type="checkbox" id="revealLang" data-func="revealLang">
-                            Reveal Lang Attribute (1.1)
                         </label>
                     </li>
                 </ul>
