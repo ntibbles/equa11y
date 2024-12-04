@@ -2,6 +2,7 @@ export function toggleScreenReaderTextDisplay(isChecked) {
     const interactiveRoles = ['button', 'a', 'checkbox', 'radio', 'slider', 'textbox', 'combobox', 'menuitem', 'option', '[role="button"]', '[role="link"]'];
     const ariaLabels = ['aria-label', 'aria-labelledby', 'aria-describedby'];
     const elementsInteractiveRoles = document.querySelectorAll(interactiveRoles.join(','));
+    const elList = ['equa11y-border'];
     const clsList = ['equa11y-label', 'equa11y-sr-text'];
 
     // List of common interactive roles and their corresponding elements
@@ -19,14 +20,12 @@ export function toggleScreenReaderTextDisplay(isChecked) {
                         return element.getAttribute(aria);
                     }
                 });
-               
-                element.style.border = '2px solid blue';
-                element.style.position = 'relative'; 
     
                 let labelText = ariaAttr.toString().replace(/^\,+|\,+$/g, '');
                 const srLabel = document.createElement('div');
-                srLabel.innerText = `SR Text: ${(labelText.length > 0) ? labelText : element.textContent}`;
+                srLabel.innerText = `${(labelText.length > 0) ? labelText : element.textContent}`;
                 srLabel.classList.add(...clsList);
+                element.classList.add(...elList);
                 element.prepend(srLabel);
             }
         });
@@ -34,7 +33,7 @@ export function toggleScreenReaderTextDisplay(isChecked) {
 
     function srText_unchecked() {
         document.querySelectorAll('.equa11y-sr-text').forEach(el => {
-            el.parentElement.removeAttribute('style');
+            el.parentElement.classList.remove(...elList);
             el.remove();
         });
     }
