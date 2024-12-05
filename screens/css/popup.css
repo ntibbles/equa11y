@@ -2,7 +2,7 @@
 body {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     padding: 10px;
-    min-width: 91.5vw;
+    min-width: 92vw;
     font-size: 0.9em;
 }
 
@@ -69,7 +69,8 @@ nav {
 }
 
 .logo {
-    width: 280px;
+    width: 220px;
+    margin-top: -20px;
     margin-bottom: 20px;
 }
 
@@ -86,6 +87,7 @@ nav {
     padding: 5px;
     border-top-right-radius: 5px;
     border-top-left-radius: 5px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .equa11y-tabs:focus,
@@ -111,6 +113,7 @@ nav {
 }
 
 .equa11y-tablist li {
+    margin: 0 1px 0 2px;
     display: inline;
 }
 
@@ -146,4 +149,8 @@ nav {
 .dark-mode .settings-icon,
 .dark-mode a {
     filter: invert(1);
+}
+
+.hide-beta .beta-util {
+    display: none;
 }

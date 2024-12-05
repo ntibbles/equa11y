@@ -11,6 +11,7 @@ import { exclusiveText } from "../../scripts/exclusive-text.js";
 import { revealLang } from "../../scripts/lang.js";
 import { toggleTargetSize } from "../../scripts/target-size.js";
 import { tabController } from "./tab.js";
+import { toggleBetaUtils, toggleDarkMode, isDarkMode } from "./settings.js";
 
 document.addEventListener('DOMContentLoaded', init);
 
@@ -23,9 +24,24 @@ function getTabId() {
 }
 
 function init() {
-    tabController();
-    setEventListeners();
-    checkCORS();
+    updateScreen('./screens/home.html');
+}
+
+function updateScreen(path) {
+    const screenPath = chrome.runtime.getURL(path);
+    fetch(screenPath)
+        .then(response => response.text())
+        .then(text => { 
+            document.body.innerHTML = text;
+            tabController();
+            setEventListeners();
+            checkCORS();
+
+            if(isDarkMode) {
+                document.getElementsByClassName('settings-icon')[0].setAttribute('src', './images/cog-white.svg');
+                document.getElementsByClassName('logo')[0].setAttribute('src', './images/Equally_horizontal-white.svg');
+            }
+        });
 }
 
 async function checkCORS() {
@@ -91,13 +107,13 @@ function getFunction(name) {
         case 'exclusiveText': return exclusiveText;
         case 'revealLang': return revealLang;
         case 'toggleTargetSize': return toggleTargetSize;
-        default: return 'serviceWorker';
+        case 'serviceWorker': return 'serviceWorker';
     }
 }
 
 function setState(tabId, event, id) {
     const store = {};
-    chrome.storage.sync.get(store[tabId]).then((result) => {
+    chrome.storage.sync.get(store[tabId]).then(() => {
         const store = {};
         const isChecked = event.target.checked;
         store[id] = {isChecked, tabId};
@@ -165,4 +181,9 @@ async function setEventListeners() {
             });
         }
     }
+
+    document.getElementById('settings')?.addEventListener('click', () => updateScreen('./screens/settings.html'));
+    document.getElementById('back')?.addEventListener('click', () => updateScreen('./screens/home.html'));
+    document.getElementById('showBeta')?.addEventListener('click', evt => toggleBetaUtils(evt));
+    document.getElementById('darkMode')?.addEventListener('click', evt => toggleDarkMode(evt));
 }
