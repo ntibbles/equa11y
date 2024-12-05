@@ -1,5 +1,5 @@
 export function exclusiveText(isChecked) {
-    const regex = /\bsee|view|look|watch|observe|gaze|notice|spto|peek|stare|glance|scan|sight|perceive\b/gi;
+    const regex = /\bsee|view|look|watch|peek|stare|glance|sight\b/gi;
     const treeWalker = document.createTreeWalker(
         document.body,
         NodeFilter.SHOW_ELEMENT

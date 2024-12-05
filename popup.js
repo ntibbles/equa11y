@@ -9,6 +9,7 @@ import { processImages } from "./scripts/text-detection.js";
 import { grayscale } from "./scripts/grayscale.js";
 import { exclusiveText } from "./scripts/exclusive-text.js";
 import { revealLang } from "./scripts/lang.js";
+import { toggleTargetSize } from "./scripts/target-size.js";
 
 document.addEventListener('DOMContentLoaded', init);
 
@@ -22,6 +23,38 @@ function getTabId() {
 
 function init() {
     setEventListeners();
+    checkCORS();
+}
+
+async function checkCORS() {
+    const id = await getTabId();
+    chrome.scripting.executeScript({
+        target: { tabId: id },
+        function: checkFirstImage
+    }).then(result => {
+        if (result[0].result.hasCors) {
+            document.getElementById('displayEmbedded').setAttribute('disabled', true);
+            document.getElementById('embeddedTextStatus').innerHTML = ' (<a href="about.html">Not Available</a>)';
+        }
+    });
+}
+
+function checkFirstImage() {
+    return new Promise(resolve => {
+        const images = document.getElementsByTagName('img');
+        if (images.length > 0) {
+            const firstImage = images[Math.round(images.length/2)];
+            fetch(firstImage.src).then(resp => {
+                if (resp.type === 'basic' && resp.url === window.location.origin+'/') {
+                    resolve({ hasCors: true });
+                } else {
+                    resolve({ hasCors: false });
+                }
+            }).catch(() => {
+                resolve({ hasCors: true });
+            });
+        }
+    });
 }
 
 //insertCSS
@@ -55,6 +88,7 @@ function getFunction(name) {
         case 'grayscale' : return grayscale;
         case 'exclusiveText': return exclusiveText;
         case 'revealLang': return revealLang;
+        case 'toggleTargetSize': return toggleTargetSize;
         default: return 'serviceWorker';
     }
 }
@@ -112,11 +146,10 @@ async function setEventListeners() {
     const id = await getTabId();
     // grab all checkbox inputs
     let allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
-
     for (const cb of allCheckboxes) {
         let func = getFunction(cb.dataset.func);
         restoreState(id, cb);
-        if(func === 'serviceWorker') {
+        if (func === 'serviceWorker') {
             document.getElementById(cb.id).addEventListener('change', (event) => {
                 setState(id, event, cb.id);
                 sendSWMessage(event);

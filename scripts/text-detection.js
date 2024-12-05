@@ -227,4 +227,3 @@ export function processImages(isChecked) {
         dialog.showModal();
     }
 }
-  

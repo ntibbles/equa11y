@@ -29,11 +29,16 @@ li {
     font-weight: normal;
 }
 
-h1 {
+h1, h2 {
     margin: 0;
     display: inline-block;
     margin: 0 5px 20px;
     font-size: 1.5em;
+}
+
+h2 {
+    margin: 10px 0;
+    font-size: 1.1em;
 }
 
 nav {
@@ -68,3 +73,4 @@ nav {
     width: 280px;
     margin-bottom: 10px;
 }
+

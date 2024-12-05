@@ -4,6 +4,7 @@ export function toggleLandmarkOutlines(isChecked) {
         '[role="region"]', '[role="complementary"]', '[role="contentinfo"]', '[role="search"]',
         '[role="main"]', '[role="contentinfo"]', '[role="banner"]', '[role="navigation"]'
     ];
+    const elCls = ['equa11y-border', 'equa11y-landmark'];
     const clsList = ['equa11y-label', 'equa11y-landmarks'];
 
     isChecked ? toggleLandmarks_checked() : toggleLandmarks_unchecked();
@@ -12,7 +13,7 @@ export function toggleLandmarkOutlines(isChecked) {
         landmarks.forEach(landmark => {
             document.querySelectorAll(landmark).forEach(element => {
                
-                element.style.border = '2px solid blue';
+               
                 ariaLabel = element.getAttribute('aria-label');
 
                 if (landmark.indexOf("role") > -1) {
@@ -24,7 +25,7 @@ export function toggleLandmarkOutlines(isChecked) {
                     label.textContent = ariaLabel ? `${ariaLabel} [${landmark}]` : landmark;
                     label.classList.add(...clsList);
 
-                    element.classList.add('equa11y-landmark');
+                    element.classList.add(...elCls);
                     element.prepend(label);
                 }
             });
@@ -34,8 +35,7 @@ export function toggleLandmarkOutlines(isChecked) {
     function toggleLandmarks_unchecked() {
         landmarks.forEach(landmark => {
             document.querySelectorAll(landmark).forEach(element => {
-                element.classList.remove('equa11y-landmark');
-                element.style.border = 'none';
+                element.classList.remove(...elCls);
             });
     
             // Remove existing label
