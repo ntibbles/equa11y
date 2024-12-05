@@ -10,16 +10,19 @@ export function toggleTargetSize(isChecked) {
        roleList.forEach(element => {
             if(!element.classList.contains('equa11y-size')) {
                 const dimensions = getComputedDimensions(element);
-                const label = document.createElement('div');
-                label.innerHTML = `${dimensions.width}px w x ${dimensions.height}px h`;
-                label.classList.add(...clsList);
+                // if dimensions are 0 don't add a label
+                if(dimensions.height > 0 || dimensions.width > 0) {
+                    const label = document.createElement('div');
+                    label.innerHTML = `${dimensions.width}px w x ${dimensions.height}px h`;
+                    label.classList.add(...clsList);
 
-                if(dimensions.width < 24 || dimensions.height < 24) {
-                    label.style.cssText = 'background-color: darkred !important;  outline: 2px dashed black;';
+                    if(dimensions.width < 24 || dimensions.height < 24) {
+                        label.style.cssText = 'background-color: darkred !important;  outline: 2px dashed black;';
+                    }
+
+                    element.classList.add(...elList);
+                    element.parentNode.insertBefore(label, element);
                 }
-
-                element.classList.add(...elList);
-                element.parentNode.insertBefore(label, element);
             }
         });
     }
