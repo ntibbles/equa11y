@@ -1,15 +1,16 @@
-import { toggleScreenReaderTextDisplay } from "./scripts/screenreader-text.js";
-import { toggleAltTextDisplay } from "./scripts/alt-text.js";
-import { revealViewportTag } from "./scripts/viewport.js";
-import { toggleLandmarkOutlines } from "./scripts/landmarks.js";
-import { toggleHeadingOutline } from "./scripts/headings.js";
-import { toggleInteractiveRoles } from "./scripts/roles.js";
-import { toggleZoom } from "./scripts/text-zoom.js";
-import { processImages } from "./scripts/text-detection.js";
-import { grayscale } from "./scripts/grayscale.js";
-import { exclusiveText } from "./scripts/exclusive-text.js";
-import { revealLang } from "./scripts/lang.js";
-import { toggleTargetSize } from "./scripts/target-size.js";
+import { toggleScreenReaderTextDisplay } from "../../scripts/screenreader-text.js";
+import { toggleAltTextDisplay } from "../../scripts/alt-text.js";
+import { revealViewportTag } from "../../scripts/viewport.js";
+import { toggleLandmarkOutlines } from "../../scripts/landmarks.js";
+import { toggleHeadingOutline } from "../../scripts/headings.js";
+import { toggleInteractiveRoles } from "../../scripts/roles.js";
+import { toggleZoom } from "../../scripts/text-zoom.js";
+import { processImages } from "../../scripts/text-detection.js";
+import { grayscale } from "../../scripts/grayscale.js";
+import { exclusiveText } from "../../scripts/exclusive-text.js";
+import { revealLang } from "../../scripts/lang.js";
+import { toggleTargetSize } from "../../scripts/target-size.js";
+import { tabController } from "./tab.js";
 
 document.addEventListener('DOMContentLoaded', init);
 
@@ -22,6 +23,7 @@ function getTabId() {
 }
 
 function init() {
+    tabController();
     setEventListeners();
     checkCORS();
 }

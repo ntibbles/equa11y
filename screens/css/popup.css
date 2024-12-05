@@ -1,0 +1,139 @@
+
+body {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    padding: 10px;
+    min-width: 91.5vw;
+    font-size: 0.9em;
+}
+
+fieldset {
+    border: none;
+    padding: 10px 10px 0;
+    font-weight: bold;
+    margin: 1rem 1rem .5rem;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+ul:first-child {
+    margin-right: 1.5rem;
+}
+
+li {
+    margin: 5px;
+    list-style-type: none;
+    font-weight: normal;
+}
+
+h1, h2 {
+    margin: 0;
+    display: inline-block;
+    margin: 0 5px 20px;
+    font-size: 1.5em;
+}
+
+h2 {
+    margin: 10px 0;
+    font-size: 1.1em;
+}
+
+nav {
+    text-align: right;
+}
+
+.item-container {
+    display: flex;
+    padding-bottom: 1rem;
+}
+
+.small {
+    font-size: .7rem;
+    text-align: right;
+}
+
+.byline {
+    top: -30px;
+    position: relative;
+    text-align: center;
+    margin-bottom: -10px;
+}
+
+.superscript {
+    position: relative; 
+    top: -0.5em; 
+    font-size: 60%;
+    font-style: italic;
+}
+
+.logo {
+    width: 280px;
+    margin-bottom: 20px;
+}
+
+/* Tabs */
+:host {
+    display: block;
+    container-type: inline-size;
+}
+
+.equa11y-tabs {
+    border: 1px solid gray;
+    border-bottom: none;
+    background-color: white;
+    padding: 5px;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+}
+
+.equa11y-tabs:focus,
+.equa11y-tabs[tabindex='0'] {
+    background-color: #AB1B18;
+    color:white;
+}
+
+.equa11y-tabpanel {
+    display: none;
+    border: 1px gray solid;
+    border-radius: 5px;
+}
+
+.equa11y-instructions {
+    display:none;
+}
+
+.equa11y-tablist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.equa11y-tablist li {
+    display: inline;
+}
+
+#tabs:focus-within > .equa11y-instructions {
+    display: block;
+}
+
+.visible {
+    display: block;
+}
+
+.sr-only {
+    clip: rect(1px, 1px, 1px, 1px);
+    -webkit-clip-path: inset(50%);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+    margin: -1px;
+}
+
+.settings-icon {
+    width: 25px;
+}
