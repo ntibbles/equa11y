@@ -68,6 +68,8 @@ export function processImages(isChecked) {
                 resolve(text);
                 await worker.terminate();
             })();
+        }).catch(err => {
+            console.warn("Error occurred within Tesseract: ", err);
         });
     }
 

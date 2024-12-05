@@ -37,11 +37,19 @@ export function toggleHeadingOutline(isChecked) {
     }
 
     function heading_unchecked() {
+<<<<<<< HEAD
         allTags.forEach(tag => {
             tag.style.border = ''; 
             const label = tag.querySelector('.equa11y-headings');
             if (label) {
                 tag.classList.remove(...tagList);
+=======
+        allTags.forEach((tag, index) => {
+            tag.style.border = ''; 
+            const label = tag.querySelector('.equa11y-headings');
+            if (label) {
+                tag.classList.remove('equa11y-heading-label');
+>>>>>>> main
                 tag.removeChild(label); 
             }
         });
