@@ -137,3 +137,13 @@ nav {
 .settings-icon {
     width: 25px;
 }
+
+.dark-mode {
+    background-color: rgb(34, 35, 35);
+    color: white;
+}
+
+.dark-mode .settings-icon,
+.dark-mode a {
+    filter: invert(1);
+}
