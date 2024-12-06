@@ -1,6 +1,26 @@
 # Equa11y: Accessibility Testing Utilities
 The Equa11y extension is to help test a webpage for accessibility. It is designed to improve the efficiency of accessibility testing with various utilities.
 
+## What's New in Version 1.1!
+### New Functionality
+- **Display Target Size** - Displays the current target size of an interactive element.
+- **Display Screen Reader Text** - Displays the hidden text that a screen reader would announce. It takes into consideration the precedence of aria-label, aria-labelledby, and aria-describedby.
+- **Highlight Exclusive Text** - Scans the page for exclusive words (e.g - "See", "View", etc) and highlights them. You can also modify the list in the **NEW** "settings" page.
+- **Reveal Lang Attribute** - Displays the lang attribute for the pagae and any in-page elements.
+
+### New UI
+All utilities are now broken into tabs by WCAG's (Web Content Accessibility Guideline) principles:
+- Perceivable
+- Operable
+- Understandable
+- Robust
+And includes the success criteria for each test.
+
+**NEW Settings** page allows you to do the following:
+- Change the UI to 'Dark Mode'
+- Hide the beta utilities
+- Change the list of exclusive words
+
 ## Core Utilities
 - **Display Alt Text** - Outlines and labels images with their alternative text.
 - **Display Landmark Regions** - Outlines and labels landmark regions with there role and label.
