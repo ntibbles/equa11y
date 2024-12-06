@@ -66,12 +66,20 @@ nav {
     color: darkred;
 }
 
+.dark-mode .error {
+    color: yellow;
+}
+
 .error::before {
     content: '!! ';
 }
 
 .success {
     color: darkgreen;
+}
+
+.dark-mode .success {
+    color: greenyellow;
 }
 
 .success::before {

@@ -9,11 +9,12 @@ The Equa11y extension is to help test a webpage for accessibility. It is designe
 - **Reveal Lang Attribute** - Displays the lang attribute for the pagae and any in-page elements.
 
 ### New UI
-All utilities are now broken into tabs by WCAG's (Web Content Accessibility Guideline) principles:
+All utilities are now broken into tabs by WCAG (Web Content Accessibility Guideline) principle:
 - Perceivable
 - Operable
 - Understandable
 - Robust
+
 And includes the success criteria for each test.
 
 **NEW Settings** page allows you to do the following:

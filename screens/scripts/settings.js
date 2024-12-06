@@ -63,6 +63,7 @@ function setWordList(evt) {
 
     if(list.length === 0) {
         setStatus({msg: 'List cannot be empty.', type: 'error'});
+        el.focus();
         return;
     }
 

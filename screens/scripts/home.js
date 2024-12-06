@@ -48,7 +48,7 @@ async function checkCORS() {
     }).then(result => {
         if (result[0].result.hasCors) {
             document.getElementById('displayEmbedded').setAttribute('disabled', true);
-            document.getElementById('embeddedTextStatus').innerHTML = ' (<a href="about.html">Not Available</a>)';
+            document.getElementById('embeddedTextStatus').innerHTML = ' (<a href="https://github.com/ntibbles/equa11y/tree/main?tab=readme-ov-file#why-is-a-utility-not-available">Not Available</a>)';
         }
     });
 }
