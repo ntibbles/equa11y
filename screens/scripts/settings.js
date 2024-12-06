@@ -3,10 +3,10 @@ import { dispatch } from "./utils/events.js";
 document.addEventListener('popup-settings', init);
 
 function init() {
-    console.log('settings init');
     getWordList();
     resetCheckboxes();
     setEventListeners();
+    document.getElementById('back').focus();
 }
 
 function getTabId() {

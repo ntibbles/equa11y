@@ -84,10 +84,6 @@ footer {
     container-type: inline-size;
 }
 
-#tabs {
-    margin-top: -28px;
-}
-
 .equa11y-tabs {
     border: 1px solid gray;
     border-bottom: none;
@@ -143,6 +139,12 @@ footer {
     white-space: nowrap;
     width: 1px;
     margin: -1px;
+}
+
+.settings {
+    position: absolute;
+    right: 20px;
+    top: 17px;
 }
 
 .settings-icon {
