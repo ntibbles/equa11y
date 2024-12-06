@@ -36,9 +36,8 @@ function checkSettings() {
         chrome.storage.sync.get(store[id]).then((result) => {
             if(result['darkMode']?.isChecked) setDarkMode();
             if(result['showBeta']?.isChecked) setBetaUtils();
-            console.log('result: ', result);
-        })
-    })
+        });
+    });
 }
 
 async function checkCORS() {

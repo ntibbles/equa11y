@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "build": "copyfiles scripts/* deps/* deps/tesseract-core/* icons/* manifest.json extension.css about.html popup.html popup.js popup.css sw.js dist",
+    "build": "copyfiles scripts/* deps/*/* screens/*/*/* icons/* manifest.json extension.css about.html popup.html popup.js popup.css sw.js dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
