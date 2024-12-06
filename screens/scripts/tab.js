@@ -38,6 +38,7 @@ export function tabController() {
         let curPanel = panels[index];
         let curTab = tabs[index];
         curTab.focus();
+        curTab.setAttribute('aria-selected', 'true');
         curTab.setAttribute('tabindex', '0');
 
         curPanel.classList.add('visible');
@@ -47,6 +48,7 @@ export function tabController() {
     
     function hidePanels() {
         tabs.map(el => {
+            el.setAttribute('aria-selected', 'false');
             el.setAttribute('tabindex', '-1');
         });
         panels.map(el => {

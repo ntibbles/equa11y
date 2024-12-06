@@ -1,5 +1,9 @@
-export function exclusiveText(isChecked) {
-    const regex = /\bsee|view|look|watch|peek|stare|glance|sight\b/gi;
+export function exclusiveText(isChecked, list) {
+    let regex = /\bsee|view|look|watch|peek|stare|glance|sight\b/gi;
+    if(list) {
+        regex = new RegExp(`${list}`, 'gi');
+    }
+
     const treeWalker = document.createTreeWalker(
         document.body,
         NodeFilter.SHOW_ELEMENT

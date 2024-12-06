@@ -145,11 +145,12 @@ function restoreState(tabId, checkbox) {
 }
 
 async function loadScript(func, isChecked) {
+    const list = await getUserList();
     const id = await getTabId();
     chrome.scripting.executeScript({
         target: { tabId: id },
         function: func,
-        args: [isChecked, id]
+        args: [isChecked, list]
     });
 } 
 
@@ -192,3 +193,13 @@ async function setEventListeners() {
     document.getElementById('settings')?.addEventListener('click', () => dispatch('popup-load-screen', 'settings'));
 }
 
+async function getUserList() {
+    const tabId = await getTabId();
+    const store = {};
+    return new Promise(resolve => {
+        chrome.storage.sync.get(store[tabId]).then((result) => {
+            let pipeList = result['wordList']?.list.replaceAll(',', '|');
+            resolve(pipeList);
+        });
+    });
+}

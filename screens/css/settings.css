@@ -5,7 +5,7 @@ body {
     font-size: 0.9em;
 }
 
-fieldset {
+.settings-screen fieldset {
     border: none;
     padding: 0;
     margin: 0;
@@ -21,13 +21,13 @@ ul:first-child {
 }
 
 li {
-    margin: 5px;
+    margin: 10px 0;
     list-style-type: none;
     font-weight: normal;
 }
 
-h1, h2 {
-    margin: 0;
+h1 {
+    margin-bottom: 0.3em;
     display: inline-block;
     font-size: 1.5em;
 }
@@ -39,4 +39,41 @@ h2 {
 
 nav {
     text-align: right;
+}
+
+.list-label {
+    display: block;
+    margin: 10px 0;
+}
+
+#wordList {
+    width: 100%;
+    height: 2em;
+}
+
+#statusMsg {
+    margin-top: 0.5em;
+    display: block;
+    margin-bottom: 1em;
+    font-size: 0.9em;
+}
+
+.settings-screen p:not(.small) {
+    font-size: 0.8em;
+}
+
+.error {
+    color: darkred;
+}
+
+.error::before {
+    content: '!! ';
+}
+
+.success {
+    color: darkgreen;
+}
+
+.success::before {
+    content: '';
 }

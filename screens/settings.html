@@ -1,55 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
+<nav>
+    <a href="#" id="back" autofocus>Back</a>
+</nav>
+<main class="settings-screen">
+    <fieldset>
+        <legend>
+            <h1>Settings</h1>
+        </legend>
+        <div>
+            <ul>
+                <li>
+                    <label>
+                        <input type="checkbox" id="showBeta">
+                        Hide Beta Utils^
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" id="darkMode">
+                        Dark Mode
+                    </label>
+                </li>
+            </ul>
+        </div>
+    </fieldset>
+    <div>
+        <form>
+            <label>
+                <span class="list-label">Exclusive Word List*:</span>
+                <input type="text" id="wordList" value="see,view,look,watch,peek,stare,glance,sight" required>
+                <span id="statusMsg" aria-live="polite"></span>
+            </label>
+            <button id="updateBtn">Update List</button>
+            <button id="resetBtn">Reset List</button>
+        </form>
+    </div>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/settings.css">
-    <title>Equally v1.2</title>
-</head>
-
-<body>
-    <nav>
-        <a href="#" id="back">Back</a>
-    </nav>
-    <main>
-
-        <fieldset>
-            <legend>
-                <h1>Settings</h1>
-            </legend>
-            <div class="item-container">
-                <ul>
-                    <li>
-                        <label>
-                            <input type="checkbox" id="showBeta">
-                            Hide Beta Utils*
-                        </label>
-                    </li>
-                    <li>
-                        <label>
-                            <input type="checkbox" id="darkMode">
-                            Dark Mode
-                        </label>
-                    </li>
-                    <li>
-                        <label>
-                            Exclusive Word List:
-                            <input type="text" id="wordList" value="see,view,look,watch,peek,stare,glance,sight">
-                        </label>
-                    </li>
-                </ul>
-            </div>
-        </fieldset>
-
-        <p>For any questions, to report any issues, or contribute please <a
-                href="https://github.com/ntibbles/equa11y/issues">log
-                them in the github repo.</a>
-            Or to discuss anything, visit the <a href="https://github.com/ntibbles/equa11y/discussions/28"
-                target="_blank">discussions page</a>.
-        </p>
-        * Beta utils may not be accurate, take time to run, and can break the content in the tabs. <a
-                href="https://github.com/ntibbles/equa11y?tab=readme-ov-file#beta-utilities" target="_blank">Learn more about beta utils.</a>
-        <p class="small">v1.2</p>
-    </main>
-</body>
+    <p>For any questions, to report any issues, or contribute please log
+            them in the <a
+            href="https://github.com/ntibbles/equa11y/issues">github repo.</a>
+        Or to discuss anything, visit the <a href="https://github.com/ntibbles/equa11y/discussions/28"
+            target="_blank">discussions page</a>.
+    </p>
+    <p>^ Beta utils may not be accurate, take time to run, and can break the content in the tabs. <a
+        href="https://github.com/ntibbles/equa11y?tab=readme-ov-file#beta-utilities" target="_blank">Learn more about
+        beta utils.</a>
+    </p>
+    <p class="small">v1.2</p>
+</main>
