@@ -44,6 +44,10 @@ nav {
     text-align: right;
 }
 
+footer {
+    text-align: right;
+}
+
 .item-container {
     display: flex;
     padding-bottom: 1rem;
@@ -52,6 +56,7 @@ nav {
 .small {
     font-size: .7rem;
     text-align: right;
+    vertical-align: super;
 }
 
 .byline {
@@ -70,14 +75,17 @@ nav {
 
 .logo {
     width: 220px;
-    margin-top: -20px;
-    margin-bottom: 20px;
+    margin-top: 20px;
 }
 
 /* Tabs */
 :host {
     display: block;
     container-type: inline-size;
+}
+
+#tabs {
+    margin-top: -28px;
 }
 
 .equa11y-tabs {
@@ -153,4 +161,8 @@ nav {
 
 .hide-beta .beta-util {
     display: none;
+}
+
+footer .small {
+    float: left;
 }

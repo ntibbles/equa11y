@@ -37,7 +37,8 @@
         "deps/tesseract-core/tesseract-core-simd.wasm.js",
         "deps/tesseract-core/tesseract-core-simd-lstm.wasm.js",
         "deps/tesseract-core/tesseract-core-lstm.wasm.js",
-        "deps/tesseract-core/eng.traineddata.gz"
+        "deps/tesseract-core/eng.traineddata.gz",
+        "screens/scripts/home.js"
       ],
       "matches": [
         "<all_urls>"
