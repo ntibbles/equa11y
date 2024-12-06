@@ -95,7 +95,7 @@ function restoreState(tabId, checkbox) {
 function getWordList() {
     const store = {};
     chrome.storage.sync.get(store['wordList']).then((result) => {
-        document.getElementById('wordList').value = result['wordList'].list;
+        (result['wordList']) ? document.getElementById('wordList').value = result['wordList'].list : "see,view,look,watch,peek,stare,glance,sight";
     });
 }
 
