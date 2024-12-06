@@ -85,7 +85,6 @@ function restoreState(tabId, checkbox) {
     const cbId = checkbox.id;
     const store = {};
     chrome.storage.sync.get(store[cbId]).then((result) => {
-        //console.log('restore: ', result);
         if( result[cbId] && result[cbId].tabId === tabId ){
             checkbox.checked = result[cbId].isChecked;
         }

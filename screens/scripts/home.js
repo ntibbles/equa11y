@@ -199,7 +199,6 @@ async function getUserList() {
     return new Promise(resolve => {
         chrome.storage.sync.get(store[tabId]).then((result) => {
             let pipeList = result['wordList']?.list.replaceAll(',', '|') || '';
-            console.log('list: ', pipeList);
             resolve(pipeList);
         });
     });
