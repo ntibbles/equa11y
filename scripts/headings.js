@@ -31,6 +31,7 @@ export function toggleHeadingOutline(isChecked) {
 
             if(isSkipped) {
                 label.style.cssText = 'background-color: darkred !important;  outline: 2px dashed black;';
+                label.classList.add('skipped');
             }
         })
 
@@ -43,6 +44,7 @@ export function toggleHeadingOutline(isChecked) {
             if (label) {
                 tag.classList.remove(...tagList);
                 tag.removeChild(label); 
+                label.classList.remove('skipped');
             }
         });
     }

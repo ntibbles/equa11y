@@ -32,6 +32,10 @@
   position: relative !important;
 }
 
+.equa11y-headings.skipped::after {
+  content: ' ↓'!important;
+}
+
 /* Spinner - https://loading.io/css/ */
 .lds-ring,
 .lds-ring div {
