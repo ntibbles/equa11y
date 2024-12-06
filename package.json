@@ -1,6 +1,6 @@
 {
   "name": "equa11y",
-  "version": "1.0",
+  "version": "1.1",
   "description": "A utility extension for testing webpages for accessibility.",
   "main": "popup.js",
   "directories": {
