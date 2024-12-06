@@ -21,6 +21,9 @@ The Equa11y extension is to help test a webpage for accessibility. It is designe
 
 - **Outline Event Listeners** outlines non-interactive elements that have events bound to them. This utility uses Chromes Debug mode. Any limitations on the browser using debug mode (i.e. cancelling debug mode) will affect the functionality.
 
+## Why is a utility 'Not Available'
+The extension checks if the site can run some of the utilities during initialization. If something fails, the utility is 'Not Available'.
+
 ## Loading an unpacked extension
 To load an unpacked extension in developer mode:
 

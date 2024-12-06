@@ -1,17 +1,26 @@
-import { toggleScreenReaderTextDisplay } from "./scripts/screenreader-text.js";
-import { toggleAltTextDisplay } from "./scripts/alt-text.js";
-import { revealViewportTag } from "./scripts/viewport.js";
-import { toggleLandmarkOutlines } from "./scripts/landmarks.js";
-import { toggleHeadingOutline } from "./scripts/headings.js";
-import { toggleInteractiveRoles } from "./scripts/roles.js";
-import { toggleZoom } from "./scripts/text-zoom.js";
-import { processImages } from "./scripts/text-detection.js";
-import { grayscale } from "./scripts/grayscale.js";
-import { exclusiveText } from "./scripts/exclusive-text.js";
-import { revealLang } from "./scripts/lang.js";
-import { toggleTargetSize } from "./scripts/target-size.js";
+import { toggleScreenReaderTextDisplay } from "../../scripts/screenreader-text.js";
+import { toggleAltTextDisplay } from "../../scripts/alt-text.js";
+import { revealViewportTag } from "../../scripts/viewport.js";
+import { toggleLandmarkOutlines } from "../../scripts/landmarks.js";
+import { toggleHeadingOutline } from "../../scripts/headings.js";
+import { toggleInteractiveRoles } from "../../scripts/roles.js";
+import { toggleZoom } from "../../scripts/text-zoom.js";
+import { processImages } from "../../scripts/text-detection.js";
+import { grayscale } from "../../scripts/grayscale.js";
+import { exclusiveText } from "../../scripts/exclusive-text.js";
+import { revealLang } from "../../scripts/lang.js";
+import { toggleTargetSize } from "../../scripts/target-size.js";
+import { tabController } from "./tab.js";
+import { dispatch } from "./utils/events.js";
 
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('popup-home', init);
+
+function init() {
+    tabController();
+    setEventListeners();
+    checkCORS();
+    checkSettings();
+}
 
 function getTabId() {
     return new Promise(resolve => {
@@ -21,9 +30,15 @@ function getTabId() {
     })
 }
 
-function init() {
-    setEventListeners();
-    checkCORS();
+function checkSettings() {
+    let store = {};
+    getTabId().then(id => {
+        chrome.storage.sync.get(store[id]).then((result) => {
+            if(result['darkMode']?.isChecked) setDarkMode();
+            if(result['showBeta']?.isChecked) setBetaUtils();
+            console.log('result: ', result);
+        })
+    })
 }
 
 async function checkCORS() {
@@ -89,13 +104,23 @@ function getFunction(name) {
         case 'exclusiveText': return exclusiveText;
         case 'revealLang': return revealLang;
         case 'toggleTargetSize': return toggleTargetSize;
-        default: return 'serviceWorker';
+        case 'serviceWorker': return 'serviceWorker';
     }
+}
+
+function setDarkMode() {
+    if(!document.body.classList.contains('dark-mode')) document.body.classList.add('dark-mode');
+    document.getElementsByClassName('settings-icon')[0].setAttribute('src', './images/cog-white.svg');
+    document.getElementsByClassName('logo')[0].setAttribute('src', './images/Equally_horizontal-white.svg');
+}
+
+function setBetaUtils() {
+    if(!document.body.classList.contains('hide-beta')) document.body.classList.add('hide-beta');
 }
 
 function setState(tabId, event, id) {
     const store = {};
-    chrome.storage.sync.get(store[tabId]).then((result) => {
+    chrome.storage.sync.get(store[tabId]).then(() => {
         const store = {};
         const isChecked = event.target.checked;
         store[id] = {isChecked, tabId};
@@ -120,11 +145,12 @@ function restoreState(tabId, checkbox) {
 }
 
 async function loadScript(func, isChecked) {
+    const list = await getUserList();
     const id = await getTabId();
     chrome.scripting.executeScript({
         target: { tabId: id },
         function: func,
-        args: [isChecked, id]
+        args: [isChecked, list]
     });
 } 
 
@@ -163,4 +189,17 @@ async function setEventListeners() {
             });
         }
     }
+
+    document.getElementById('settings')?.addEventListener('click', () => dispatch('popup-load-screen', 'settings'));
+}
+
+async function getUserList() {
+    const tabId = await getTabId();
+    const store = {};
+    return new Promise(resolve => {
+        chrome.storage.sync.get(store[tabId]).then((result) => {
+            let pipeList = result['wordList']?.list.replaceAll(',', '|');
+            resolve(pipeList);
+        });
+    });
 }
