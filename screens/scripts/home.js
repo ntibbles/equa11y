@@ -11,7 +11,8 @@ import { exclusiveText } from "../../scripts/exclusive-text.js";
 import { revealLang } from "../../scripts/lang.js";
 import { toggleTargetSize } from "../../scripts/target-size.js";
 import { tabController } from "./tab.js";
-import { dispatch } from "./utils/events.js";
+import { dispatch } from "./utils/helpers.js";
+import { getTabId } from "./utils/helpers.js";
 
 // create a Set to map the imports
 
@@ -29,13 +30,7 @@ function init() {
     checkSettings();
 }
 
-function getTabId() {
-    return new Promise(resolve => {
-        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-            resolve(tabs[0].id);
-        });
-    })
-}
+
 
 function checkSettings() {
     let store = {};

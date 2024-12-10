@@ -18,9 +18,10 @@ All utilities are now broken into tabs by WCAG (Web Content Accessibility Guidel
 And includes the success criteria for each test.
 
 **NEW Settings** page allows you to do the following:
-- Change the UI to 'Dark Mode'
+- Set Dark Mode
 - Hide the beta utilities
 - Change the list of exclusive words
+- Increase the font size of the extension
 
 ## Core Utilities
 - **Display Alt Text** - Outlines and labels images with their alternative text.
