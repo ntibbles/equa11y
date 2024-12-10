@@ -1,6 +1,5 @@
 body {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
-    padding: 10px;
     min-width: 92vw;
     font-size: 0.9em;
 }
@@ -16,12 +15,7 @@ ul {
     padding: 0;
 }
 
-ul:first-child {
-    margin-right: 1.5rem;
-}
-
 li {
-    margin: 10px 0;
     list-style-type: none;
     font-weight: normal;
 }

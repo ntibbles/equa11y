@@ -14,7 +14,7 @@ export function toggleInteractiveRoles(isChecked) {
             elements.forEach(el => {
                 if(!el.classList.contains('outlined-role')) {
                     const roleLabel = document.createElement('span');
-                    roleLabel.textContent = (role === 'a') ? 'link (a)' : role;
+                    roleLabel.textContent = (role === 'a') ? 'link [a]' : role;
                     roleLabel.classList.add(...clsList);
                   
                     el.classList.add(...elList);

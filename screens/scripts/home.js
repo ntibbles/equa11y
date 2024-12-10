@@ -13,9 +13,16 @@ import { toggleTargetSize } from "../../scripts/target-size.js";
 import { tabController } from "./tab.js";
 import { dispatch } from "./utils/events.js";
 
+// create a Set to map the imports
+
 document.addEventListener('popup-home', init);
+let zoomSizeSlider = {};
+let settingsBtn = {};
 
 function init() {
+    zoomSizeSlider = document.getElementById('zoomSize');
+    settingsBtn =  document.getElementById('settings');
+
     tabController();
     setEventListeners();
     checkCORS();
@@ -34,7 +41,8 @@ function checkSettings() {
     let store = {};
     getTabId().then(id => {
         chrome.storage.sync.get(store[id]).then((result) => {
-            if(result['darkMode']?.isChecked) setDarkMode();
+            if(result['darkMode']?.value === 'true') setDarkMode();
+            if(!result['darkMode'] || result['darkMode']?.value === 'auto') OSdarkMode();
             if(result['showBeta']?.isChecked) setBetaUtils();
         });
     });
@@ -117,6 +125,8 @@ function setBetaUtils() {
     if(!document.body.classList.contains('hide-beta')) document.body.classList.add('hide-beta');
 }
 
+
+// move state to an import 
 function setState(tabId, event, id) {
     const store = {};
     chrome.storage.sync.get(store[tabId]).then(() => {
@@ -135,6 +145,7 @@ function restoreState(tabId, checkbox) {
     chrome.storage.sync.get(store[cbId]).then((result) => {
         if( result[cbId] && result[cbId].tabId === tabId){
             checkbox.checked = result[cbId].isChecked;
+            if(result['zoomText'].isChecked) zoomSizeSlider.disabled = false;
             if(checkbox.checked && func !== "serviceWorker") {
                 injectCSS();
                 loadScript(func, checkbox.checked);
@@ -167,6 +178,7 @@ async function sendSWMessage(event) {
     }
 }
 
+// simplify this
 async function setEventListeners() {
     const id = await getTabId();
     // grab all checkbox inputs
@@ -189,7 +201,7 @@ async function setEventListeners() {
         }
     }
 
-    document.getElementById('settings')?.addEventListener('click', () => dispatch('popup-load-screen', 'settings'));
+    settingsBtn.addEventListener('click', () => dispatch('popup-load-screen', 'settings'));
 }
 
 async function getUserList() {
@@ -201,4 +213,10 @@ async function getUserList() {
             resolve(pipeList);
         });
     });
+}
+
+function OSdarkMode() {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        setDarkMode();
+    }
 }
