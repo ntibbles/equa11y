@@ -1,5 +1,5 @@
-import { dispatch } from "./utils/events.js";
-let fontSize = "1em";
+import { dispatch } from "./utils/helpers.js";
+let fontSize = 1;
 
 document.addEventListener('popup-settings', init);
 
@@ -100,7 +100,7 @@ function restoreState(tabId, checkbox) {
         if(result['fontZoom']) {
             const percent = result['fontZoom'].value;
             document.getElementById('fontSize').value = percent;
-            document.getElementById("sizeValue").value = `${percent * 100}%`;
+            document.getElementById("sizeValue").value = `${Math.round(percent * 100)}%`;
         } 
     });
 }
@@ -111,7 +111,7 @@ function setStatus(status) {
     msg.classList.add(status.type);
 }
 
-function handleFontSize(evt) {
+function handleFontSize() {
     const input = document.getElementById("fontSize");
     const value = document.getElementById("sizeValue");
     const store = {};

@@ -1,4 +1,4 @@
-import { dispatch } from "./utils/events.js";
+import { dispatch } from "./utils/helpers.js";
 
 document.addEventListener('DOMContentLoaded', init);
 document.addEventListener('popup-load-screen', evt => updateScreen(evt.detail));
@@ -39,7 +39,7 @@ function setFontSize(percent) {
 
     if(percent > 1) {
         document.getElementById('fontZoom')?.remove();
-        let css = `* { font-size: ${ fontSize * percent }px !important; }`;
+        let css = `* { font-size: ${ fontSize * percent }px !important; };`;
         style.appendChild(document.createTextNode(css));
         head.appendChild(style);
     } else {
