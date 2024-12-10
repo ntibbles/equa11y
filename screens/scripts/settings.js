@@ -1,11 +1,14 @@
 import { dispatch } from "./utils/events.js";
+let fontSize = "1em";
 
 document.addEventListener('popup-settings', init);
 
 function init() {
     getWordList();
     resetCheckboxes();
+    resetDarkMode();
     setEventListeners();
+    handleFontSize();
     document.getElementById('back').focus();
 }
 
@@ -21,7 +24,7 @@ function toggleBetaUtils(evt) {
     let showBetaUtils = evt.target.checked;
 
     getTabId().then(id => {
-        setState(id, evt, evt.target.id);
+        setState(id, evt, evt?.target.id);
     });
 
     if(showBetaUtils) {
@@ -31,24 +34,35 @@ function toggleBetaUtils(evt) {
     }
 }
 
-function toggleDarkMode(evt) {
-    let isDarkMode = evt.target.checked;
+function changeDarkMode(evt) {
+    switch (evt.target.value) {
+        case 'true': 
+            document.body.classList.add('dark-mode');
+            break;
+        case 'false':
+            document.body.classList.remove('dark-mode');
+            break;
+        default:
+            if(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+    }
 
     getTabId().then(id => {
-        setState(id, evt, evt.target.id);
+        const store = {};
+        const value = evt.target.value;
+        const btn = evt.target.id;
+        store['darkMode'] = { value, btn };
+        chrome.storage.sync.set( store );
     });
-
-    if(isDarkMode) {
-        document.body.classList.add('dark-mode');
-    } else {
-        document.body.classList.remove('dark-mode');
-    }
 }
 
 function setState(tabId, event, id) {
     const store = {};
     chrome.storage.sync.get(store[tabId]).then(() => {
-        const isChecked = event.target.checked;
+        const isChecked = event?.target.checked;
         store[id] = {isChecked, tabId};
         chrome.storage.sync.set( store );
     })
@@ -76,12 +90,6 @@ function setWordList(evt) {
     })
 }
 
-function setStatus(status) {
-    const msg =  document.getElementById('statusMsg');
-    msg.innerText = status.msg;
-    msg.classList.add(status.type);
-}
-
 function restoreState(tabId, checkbox) {
     const cbId = checkbox.id;
     const store = {};
@@ -89,6 +97,32 @@ function restoreState(tabId, checkbox) {
         if( result[cbId] && result[cbId].tabId === tabId ){
             checkbox.checked = result[cbId].isChecked;
         }
+        if(result['fontZoom']) {
+            const percent = result['fontZoom'].value;
+            document.getElementById('fontSize').value = percent;
+            document.getElementById("sizeValue").value = `${percent * 100}%`;
+        } 
+    });
+}
+
+function setStatus(status) {
+    const msg =  document.getElementById('statusMsg');
+    msg.innerText = status.msg;
+    msg.classList.add(status.type);
+}
+
+function handleFontSize(evt) {
+    const input = document.getElementById("fontSize");
+    const value = document.getElementById("sizeValue");
+    const store = {};
+    fontSize = getComputedFontSize();
+
+    input.addEventListener("input", (event) => {
+        let percent = event.target.value;
+        document.dispatchEvent(new CustomEvent('popup-font-size', { detail: percent }));
+        value.textContent = `${Math.round(percent * 100)}%`;
+        store['fontZoom'] = { value: input.value };
+        chrome.storage.sync.set( store );
     });
 }
 
@@ -99,12 +133,22 @@ function getWordList() {
     });
 }
 
+
 function resetCheckboxes() {
     let allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
     getTabId().then(id => {
         for (const cb of allCheckboxes) {
             restoreState(id, cb);
         }
+    });
+}
+
+function resetDarkMode() {
+    const store = {};
+    getTabId().then(id => {
+        chrome.storage.sync.get(store[id]).then((result) => {
+            if(result['darkMode']) document.getElementById(result['darkMode'].btn).checked = true;
+        });
     });
 }
 
@@ -119,5 +163,17 @@ function setEventListeners() {
     document.getElementById('updateBtn').addEventListener('click', setWordList);
     document.getElementById('resetBtn').addEventListener('click', resetWordList);
     document.getElementById('showBeta').addEventListener('click', toggleBetaUtils);
-    document.getElementById('darkMode').addEventListener('click', toggleDarkMode);
+
+    const darkMode = document.querySelectorAll('input[type="radio"]');
+    for(let btn of darkMode) {
+        btn.addEventListener('change', changeDarkMode);
+    }
+}
+
+function getComputedFontSize() {
+    const body = document.body;
+    const computedStyle = window.getComputedStyle(body);
+    const fontSize = computedStyle.fontSize;
+    
+    return parseFloat(fontSize);
 }

@@ -37,13 +37,13 @@ export function tabController() {
     function showPanel() {
         let curPanel = panels[index];
         let curTab = tabs[index];
+        
         curTab.focus();
         curTab.setAttribute('aria-selected', 'true');
         curTab.setAttribute('tabindex', '0');
 
         curPanel.classList.add('visible');
         curPanel.setAttribute('aria-selected', 'true');
-        curPanel.setAttribute('tabindex', '0');
     }
     
     function hidePanels() {
@@ -54,7 +54,6 @@ export function tabController() {
         panels.map(el => {
             el.classList.remove('visible');
             el.setAttribute('aria-selected', 'false');
-            el.setAttribute('tabindex', '-1');
         });
     }
 }
