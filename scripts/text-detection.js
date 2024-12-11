@@ -2,9 +2,12 @@ export function processImages(isChecked) {
     const images = document.getElementsByTagName('img');
     const canvas = document.createElement('canvas');
     const dialog = document.createElement('dialog');
+    const dialogTitle = document.createElement('h1');
+    const dialogSpinner = document.createElement('div');
     const msg = document.createElement('p');
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
     const { createWorker } = Tesseract;
+    const errors = ['test error'];
     let numOfJobs = 0;
     let completedJobs = 0;
     let runningJobs = {};
@@ -37,6 +40,7 @@ export function processImages(isChecked) {
         }
     } else {
         document.body.classList.remove('equa11y-text-detection');
+        window.focus();
         dialog.close();
         for (let i = 0; i < images.length; i++) {
             const image = images[i];
@@ -62,8 +66,12 @@ export function processImages(isChecked) {
                     workerPath: chrome.runtime.getURL("deps/tesseract-core/worker.min.js"),
                     langPath: chrome.runtime.getURL("deps/tesseract-core/eng.traineddata.gz"),
                     corePath: chrome.runtime.getURL("deps/tesseract-core/"),
-                    logger: m => statusLogger(m) 
+                    logger: m => statusLogger(m),
+                    errorHandler: err => console.error(err) 
                 });
+                // await worker.setParameters({
+                //     preserve_interword_spaces: '1'
+                // });
                 const { data: { text } } = await worker.recognize(image);
                 resolve(text);
                 await worker.terminate();
@@ -119,24 +127,27 @@ export function processImages(isChecked) {
 
     function toDataURL(img) {
         try {
-            fetch(img.src)
-                .then(response => response.blob())
-                .then(blob => new Promise((resolve, reject) => {
-                    const reader = new FileReader()
-                    reader.onloadend = () => resolve(reader.result)
-                    reader.onerror = reject
-                    reader.readAsDataURL(blob)
-                }))
-                .then(dataURL => {
-                    msg.textContent = 'Greyscaling Images';
-                    makeGrayscale({ img, dataURL })
-                    .then(img => {
-                        extractText(img);
-                    });
-                })
-                .catch(err => {
-                    console.error("Can't fetch the resource");
-                })
+            if(!img.src.includes('undefined')) {
+                fetch(img.src)
+                    .then(response => response.blob())
+                    .then(blob => new Promise((resolve, reject) => {
+                        const reader = new FileReader()
+                        reader.onloadend = () => resolve(reader.result)
+                        reader.onerror = reject
+                        reader.readAsDataURL(blob)
+                    }))
+                    .then(dataURL => {
+                        msg.textContent = 'Greyscaling Images';
+                        makeGrayscale({ img, dataURL })
+                        .then(img => {
+                            extractText(img);
+                        });
+                    })
+                    .catch(err => {
+                        errorLogger("Blocked from fetching the images");
+                        console.error("ET : Blocked from fetching the images: ", err);
+                    })
+            }
         } catch (err) {
             console.warn(`Image could not be converted to dataURI: ${img.src} with error: ${err}`);
         }
@@ -204,25 +215,34 @@ export function processImages(isChecked) {
         if(numOfJobs === completedJobs) {
             msg.textContent = 'Scanning Complete';
             setTimeout(() => {
-                dialog.close();
+                (!errors.length) ? dialog.close() : showErrors();
                 revertToColour();
             }, 2000);
         }
     }
 
-    function generateDialog() {
-        const title = document.createElement('h1');
-        title.textContent = 'Scanning';
-        title.style.fontSize = '2rem';
+    function errorLogger(err) {
+        if(!errors.includes(err)) errors.push(err);
+    }
 
-        const spinner = document.createElement('div');
-        spinner.className = "lds-ring";
-        spinner.innerHTML = "<div></div><div></div><div></div><div></div></div>";
+    function showErrors() {
+        let content = `<p>The following errors occurred:</p><p>${errors.toString()}</p>`;
+        dialogTitle.textContent = "Errors Detected";
+        dialogSpinner.remove();
+        msg.innerHTML = content;
+    }
+
+    function generateDialog() {
+        dialogTitle.textContent = 'Scanning';
+        dialogTitle.style.fontSize = '2rem';
+
+        dialogSpinner.className = "lds-ring";
+        dialogSpinner.innerHTML = "<div></div><div></div><div></div><div></div></div>";
 
         msg.textContent = 'Initializing';
 
-        dialog.append(title);
-        dialog.append(spinner);
+        dialog.append(dialogTitle);
+        dialog.append(dialogSpinner);
         dialog.append(msg);
 
         document.body.appendChild(dialog);
