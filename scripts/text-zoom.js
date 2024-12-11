@@ -1,46 +1,64 @@
 export function toggleZoom(isChecked) {
     let zoomLevel = 2;
-    let css = '';
-    const baseFont = getComputedFontSize();
-    const head = document.head || document.getElementsByTagName('head')[0];
-    const style = document.createElement('style');
+    const textElements = document.querySelectorAll("body *:not(style, script, noscript, iframe, link, embed, hr, br, img, video, canvas, footer)");
     const body = document.body;
+    const prerender = [];
     const zoomLabel = document.createElement('div');
     zoomLabel.style.position = 'fixed';
     zoomLabel.innerHTML = 'Text zoomed 200%';
     zoomLabel.className = 'equa11y-label';
-    style.id = 'equa11y_zoom';
+    zoomLabel.id = 'equa11y_zoom';
     
     isChecked ? textZoom_checked() : textZoom_unchecked();
 
     function textZoom_checked() {
-        // prevent reinit if ext is closed and reopened
         if(!document.getElementById('equa11y_zoom')) {
-            head.appendChild(style);
             body.prepend(zoomLabel);
-            setFontSize(zoomLabel);
+            getFontSize();
         }
     }
 
     function textZoom_unchecked() {
         document.getElementById('equa11y_zoom').remove();
-        document.querySelector('.equa11y-label').remove();
+        document.querySelectorAll('.equa11y-zoom-text').forEach(el => {
+            el.classList.remove('equa11y-text-zoom');
+            el.style['font-size'] = null;
+            el.style['line-height'] = null;
+            el.style['transition'] = null;
+        });
+    }
+
+    function getFontSize() {
+        textElements.forEach((element) => {
+            let attr = {
+                element,
+                lineHeight: getComputedInt(element, 'lineHeight'),
+                fontSize: getComputedInt(element, 'fontSize')
+            };
+            prerender.push(attr);
+        });
+
+        setFontSize();
     }
 
     function setFontSize() {
-        css = `* { font-size: ${baseFont * zoomLevel}px !important; }`;
-        style.appendChild(document.createTextNode(css));
+        prerender.forEach(el => {
+            let { element, lineHeight, fontSize } = el;
+            element.classList.add('equa11y-zoom-text');
+            element.style['transition'] = 'font 0s';
+            addStyle(element, 'font-size', fontSize * zoomLevel);
+            if(lineHeight > 1) addStyle(element, 'line-height', lineHeight);
+        });
     }
 
-    function getComputedFontSize() {
-        const body = document.body;
-        const computedStyle = window.getComputedStyle(body);
-        const fontSize = computedStyle.fontSize;
+    function getComputedInt(element, attr) {
+        const computedStyle = getComputedStyle(element);
+        const style = computedStyle[attr];
         
-        return parseFloat(fontSize);
+        return parseFloat(style);
     }
 
-    function handleZoomChange(evt) {
-
+    function addStyle(el, name, value) {
+        return el.style.cssText += ` ${name}: ${value}px !important;`;
     }
 }
