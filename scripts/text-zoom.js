@@ -12,7 +12,6 @@ export function toggleZoom(isChecked) {
     isChecked ? textZoom_checked() : textZoom_unchecked();
 
     function textZoom_checked() {
-        // prevent reinit if ext is closed and reopened
         if(!document.getElementById('equa11y_zoom')) {
             body.prepend(zoomLabel);
             getFontSize();
@@ -20,7 +19,6 @@ export function toggleZoom(isChecked) {
     }
 
     function textZoom_unchecked() {
-        //document.getElementById('equa11y_zoom').remove();
         document.getElementById('equa11y_zoom').remove();
         document.querySelectorAll('.equa11y-zoom-text').forEach(el => {
             el.classList.remove('equa11y-text-zoom');
@@ -50,7 +48,7 @@ export function toggleZoom(isChecked) {
             element.style['transition'] = 'font 0s';
             addStyle(element, 'font-size', fontSize * zoomLevel);
             if(lineHeight > 1) addStyle(element, 'line-height', lineHeight);
-        })
+        });
     }
 
     function getComputedInt(element, attr) {
