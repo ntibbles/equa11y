@@ -10,6 +10,8 @@ function init() {
     fontSize = getComputedFontSize();
     updateScreen('home');
     restoreState();
+    // prevent unload of Tesseract
+    chrome.tabs.update({ autoDiscardable: false });
 }
 
 function updateScreen(screen) {
