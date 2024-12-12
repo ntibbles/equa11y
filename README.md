@@ -55,7 +55,22 @@ To load an unpacked extension in developer mode:
 2. Enable Developer Mode by clicking the toggle switch next to Developer mode.
 3. Click the Load unpacked button and select the extension directory.
 
-Clickety Click—Barba Trick! 
+Voila! 
+
+## CHANGELOG
+
+### Version 1.1
+[Enhancements]
+- [#1 - Display Screen Reader Text](https://github.com/ntibbles/equa11y/issues/1)
+- [#3 - Highlight Exclusive Text](https://github.com/ntibbles/equa11y/issues/3)
+- [#30 - Display Target Size](https://github.com/ntibbles/equa11y/issues/30)
+- [#31 - Split utils over POUR tabs](https://github.com/ntibbles/equa11y/issues/31)
+- [#32 - Reveal Lang Attribute](https://github.com/ntibbles/equa11y/issues/32)
+- [#47 - Add settings screen](https://github.com/ntibbles/equa11y/issues/47)
+- [#60 - Add font size to settings](https://github.com/ntibbles/equa11y/issues/60
+)
+- Dark Mode added to settings
+- Hide Utils in settings
 
 ## Contributors
 Gabby Alcantara
