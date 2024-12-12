@@ -1,0 +1,83 @@
+.settings-screen fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+.settings-section {
+    margin-bottom: 20px;
+}
+
+.settings-screen fieldset {
+    font-weight: normal;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    list-style-type: none;
+    font-weight: normal;
+}
+
+.settings-screen h1 {
+    margin: 0 0 0.3em 0;
+    display: inline-block;
+    font-size: 1.5em;
+}
+
+h2 {
+    margin: 10px 0;
+    font-size: 1em;
+}
+
+nav {
+    text-align: right;
+}
+
+.list-label {
+    display: block;
+    margin: 10px 0;
+}
+
+#wordList {
+    width: 98%;
+    height: 2em;
+}
+
+#statusMsg {
+    margin-top: 0.5em;
+    display: block;
+    margin-bottom: 1em;
+    font-size: 0.9em;
+}
+
+.settings-screen p:not(.small) {
+    font-size: 0.8em;
+}
+
+.error {
+    color: darkred;
+}
+
+.dark-mode .error {
+    color: yellow;
+}
+
+.error::before {
+    content: '!! ';
+}
+
+.success {
+    color: darkgreen;
+}
+
+.dark-mode .success {
+    color: greenyellow;
+}
+
+.success::before {
+    content: '';
+}

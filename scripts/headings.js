@@ -2,6 +2,7 @@ export function toggleHeadingOutline(isChecked) {
     const headingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
     const allTags = document.querySelectorAll(headingTags.join(','));
     const levels = [];
+    const tagList = ['equa11y-border', 'equa11y-heading-label'];
     const clsList = ['equa11y-label', 'equa11y-headings'];
     let label = {};
     let isSkipped = false;
@@ -10,9 +11,6 @@ export function toggleHeadingOutline(isChecked) {
 
     function heading_checked() {
         allTags.forEach((tag, index) => {
-            tag.style.border = '2px solid blue';
-            tag.style.position = 'relative'; 
-           
             levels.push(Number(tag.nodeName.substring(1)));
 
             if(index === 0 && tag.nodeName !== 'H1') {
@@ -27,24 +25,26 @@ export function toggleHeadingOutline(isChecked) {
                 label.innerText = tag.nodeName.toUpperCase();
             
                 // Append the label to the heading
-                tag.classList.add('equa11y-heading-label')
+                tag.classList.add(...tagList);
                 tag.prepend(label);
             }
 
             if(isSkipped) {
                 label.style.cssText = 'background-color: darkred !important;  outline: 2px dashed black;';
+                label.classList.add('skipped');
             }
         })
 
     }
 
     function heading_unchecked() {
-        allTags.forEach((tag, index) => {
+        allTags.forEach(tag => {
             tag.style.border = ''; 
             const label = tag.querySelector('.equa11y-headings');
             if (label) {
-                tag.classList.remove('equa11y-heading-label');
+                tag.classList.remove(...tagList);
                 tag.removeChild(label); 
+                label.classList.remove('skipped');
             }
         });
     }

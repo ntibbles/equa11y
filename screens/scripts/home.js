@@ -1,25 +1,46 @@
-import { toggleAltTextDisplay } from "./scripts/alt-text.js";
-import { revealViewportTag } from "./scripts/viewport.js";
-import { toggleLandmarkOutlines } from "./scripts/landmarks.js";
-import { toggleHeadingOutline } from "./scripts/headings.js";
-import { toggleInteractiveRoles } from "./scripts/roles.js";
-import { toggleZoom } from "./scripts/text-zoom.js";
-import { processImages } from "./scripts/text-detection.js";
-import { grayscale } from "./scripts/grayscale.js";
+import { toggleScreenReaderTextDisplay } from "../../scripts/screenreader-text.js";
+import { toggleAltTextDisplay } from "../../scripts/alt-text.js";
+import { revealViewportTag } from "../../scripts/viewport.js";
+import { toggleLandmarkOutlines } from "../../scripts/landmarks.js";
+import { toggleHeadingOutline } from "../../scripts/headings.js";
+import { toggleInteractiveRoles } from "../../scripts/roles.js";
+import { toggleZoom } from "../../scripts/text-zoom.js";
+import { processImages } from "../../scripts/text-detection.js";
+import { grayscale } from "../../scripts/grayscale.js";
+import { exclusiveText } from "../../scripts/exclusive-text.js";
+import { revealLang } from "../../scripts/lang.js";
+import { toggleTargetSize } from "../../scripts/target-size.js";
+import { tabController } from "./tab.js";
+import { dispatch } from "./utils/helpers.js";
+import { getTabId } from "./utils/helpers.js";
 
-document.addEventListener('DOMContentLoaded', init);
+// create a Set to map the imports
 
-function getTabId() {
-    return new Promise(resolve => {
-        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-            resolve(tabs[0].id);
-        });
-    })
-}
+document.addEventListener('popup-home', init);
+let zoomSizeSlider = {};
+let settingsBtn = {};
 
 function init() {
+    zoomSizeSlider = document.getElementById('zoomSize');
+    settingsBtn =  document.getElementById('settings');
+
+    tabController();
     setEventListeners();
     checkCORS();
+    checkSettings();
+}
+
+
+
+function checkSettings() {
+    let store = {};
+    getTabId().then(id => {
+        chrome.storage.sync.get(store[id]).then((result) => {
+            if(result['darkMode']?.value === 'true') setDarkMode();
+            if(!result['darkMode'] || result['darkMode']?.value === 'auto') OSdarkMode();
+            if(result['showBeta']?.isChecked) setBetaUtils();
+        });
+    });
 }
 
 async function checkCORS() {
@@ -30,7 +51,7 @@ async function checkCORS() {
     }).then(result => {
         if (result[0].result.hasCors) {
             document.getElementById('displayEmbedded').setAttribute('disabled', true);
-            document.getElementById('embeddedTextStatus').innerHTML = ' (<a href="about.html">Not Available</a>)';
+            document.getElementById('embeddedTextStatus').innerHTML = ' (<a href="https://github.com/ntibbles/equa11y/tree/main?tab=readme-ov-file#why-is-a-utility-not-available">Not Available</a>)';
         }
     });
 }
@@ -73,6 +94,7 @@ async function removeCSS() {
 // explicitly converts function string name on data-func to a function
 function getFunction(name) {
     switch(name) {
+        case 'toggleScreenReaderTextDisplay': return toggleScreenReaderTextDisplay;
         case 'toggleAltTextDisplay': return toggleAltTextDisplay;
         case 'revealViewportTag': return revealViewportTag;
         case 'toggleLandmarkOutlines': return toggleLandmarkOutlines;
@@ -81,13 +103,28 @@ function getFunction(name) {
         case 'toggleZoom': return toggleZoom;
         case 'processImages': return processImages;
         case 'grayscale' : return grayscale;
-        default: return 'serviceWorker';
+        case 'exclusiveText': return exclusiveText;
+        case 'revealLang': return revealLang;
+        case 'toggleTargetSize': return toggleTargetSize;
+        case 'serviceWorker': return 'serviceWorker';
     }
 }
 
+function setDarkMode() {
+    if(!document.body.classList.contains('dark-mode')) document.body.classList.add('dark-mode');
+    document.getElementsByClassName('settings-icon')[0].setAttribute('src', './images/cog-white.svg');
+    document.getElementsByClassName('logo')[0].setAttribute('src', './images/Equally_horizontal-white.svg');
+}
+
+function setBetaUtils() {
+    if(!document.body.classList.contains('hide-beta')) document.body.classList.add('hide-beta');
+}
+
+
+// move state to an import 
 function setState(tabId, event, id) {
     const store = {};
-    chrome.storage.sync.get(store[tabId]).then((result) => {
+    chrome.storage.sync.get(store[tabId]).then(() => {
         const store = {};
         const isChecked = event.target.checked;
         store[id] = {isChecked, tabId};
@@ -103,6 +140,7 @@ function restoreState(tabId, checkbox) {
     chrome.storage.sync.get(store[cbId]).then((result) => {
         if( result[cbId] && result[cbId].tabId === tabId){
             checkbox.checked = result[cbId].isChecked;
+            if(result['zoomText'].isChecked) zoomSizeSlider.disabled = false;
             if(checkbox.checked && func !== "serviceWorker") {
                 injectCSS();
                 loadScript(func, checkbox.checked);
@@ -112,11 +150,12 @@ function restoreState(tabId, checkbox) {
 }
 
 async function loadScript(func, isChecked) {
+    const list = await getUserList();
     const id = await getTabId();
     chrome.scripting.executeScript({
         target: { tabId: id },
         function: func,
-        args: [isChecked, id]
+        args: [isChecked, list]
     });
 } 
 
@@ -134,15 +173,15 @@ async function sendSWMessage(event) {
     }
 }
 
+// simplify this
 async function setEventListeners() {
     const id = await getTabId();
     // grab all checkbox inputs
     let allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
-
     for (const cb of allCheckboxes) {
         let func = getFunction(cb.dataset.func);
         restoreState(id, cb);
-        if(func === 'serviceWorker') {
+        if (func === 'serviceWorker') {
             document.getElementById(cb.id).addEventListener('change', (event) => {
                 setState(id, event, cb.id);
                 sendSWMessage(event);
@@ -155,5 +194,24 @@ async function setEventListeners() {
                 loadScript(func, cb.checked);
             });
         }
+    }
+
+    settingsBtn.addEventListener('click', () => dispatch('popup-load-screen', 'settings'));
+}
+
+async function getUserList() {
+    const tabId = await getTabId();
+    const store = {};
+    return new Promise(resolve => {
+        chrome.storage.sync.get(store[tabId]).then((result) => {
+            let pipeList = result['wordList']?.list.replaceAll(',', '|') || '';
+            resolve(pipeList);
+        });
+    });
+}
+
+function OSdarkMode() {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        setDarkMode();
     }
 }

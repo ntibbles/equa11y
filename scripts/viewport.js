@@ -6,8 +6,8 @@ export function revealViewportTag(isChecked) {
 
     function revealViewportTag_checked() {
         if(!document.getElementById('equa11y-label')) {
-            const viewportText = viewportTag.outerHTML;
-            viewportTextElement.innerText = viewportText;
+            const viewportText = viewportTag?.outerHTML;
+            viewportTextElement.innerText = viewportText ||  "No viewport tag";
             viewportTextElement.className = 'equa11y-label';
             viewportTextElement.style.position = 'fixed';
             viewportTextElement.id = 'equa11y-label';
