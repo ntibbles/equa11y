@@ -4,10 +4,12 @@ export function processImages(isChecked) {
     const dialog = document.createElement('dialog');
     const dialogTitle = document.createElement('h1');
     const dialogSpinner = document.createElement('div');
-    const msg = document.createElement('p');
+    const dialogMsg = document.createElement('p');
+    const dialogErr = document.createElement('p');
+    dialogErr.className = 'errIcon';
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
     const { createWorker } = Tesseract;
-    const errors = ['test error'];
+    const errors = [];
     let numOfJobs = 0;
     let completedJobs = 0;
     let runningJobs = {};
@@ -16,8 +18,8 @@ export function processImages(isChecked) {
     dialog.style.textAlign = 'center';
     dialog.style.borderRadius = '2em';
     dialog.style.minHeight = '250px';
-    msg.style.textTransform = 'Capitalize';
-    msg.setAttribute('aria-live', 'polite');
+    dialogMsg.style.textTransform = 'Capitalize';
+    dialogMsg.setAttribute('aria-live', 'polite');
 
     const dictionaryAsset = chrome.runtime.getURL("deps/dictionary.txt");
     let dictionary;
@@ -69,9 +71,6 @@ export function processImages(isChecked) {
                     logger: m => statusLogger(m),
                     errorHandler: err => console.error(err) 
                 });
-                // await worker.setParameters({
-                //     preserve_interword_spaces: '1'
-                // });
                 const { data: { text } } = await worker.recognize(image);
                 resolve(text);
                 await worker.terminate();
@@ -104,7 +103,7 @@ export function processImages(isChecked) {
     }
 
     function extractText(image) {
-        msg.textContent = 'Reading image content';
+        dialogMsg.textContent = 'Reading image content';
         // Extract text from the image (implementation depends on how text is embedded)
         extractTextFromImage(image).then(resultText => {
             let filteredWords = filterInvalidWordsAndLetters(resultText);
@@ -137,14 +136,14 @@ export function processImages(isChecked) {
                         reader.readAsDataURL(blob)
                     }))
                     .then(dataURL => {
-                        msg.textContent = 'Greyscaling Images';
+                        dialogMsg.textContent = 'Greyscaling Images';
                         makeGrayscale({ img, dataURL })
                         .then(img => {
                             extractText(img);
                         });
                     })
                     .catch(err => {
-                        errorLogger("Blocked from fetching the images");
+                        errorLogger("Some images blocked from loading.");
                         console.error("ET : Blocked from fetching the images: ", err);
                     })
             }
@@ -210,12 +209,12 @@ export function processImages(isChecked) {
             completedJobs++;
         }
 
-        msg.textContent = status;
+        dialogMsg.textContent = status;
 
         if(numOfJobs === completedJobs) {
-            msg.textContent = 'Scanning Complete';
+            dialogMsg.textContent = 'Scanning Complete';
             setTimeout(() => {
-                (!errors.length) ? dialog.close() : showErrors();
+                dialog.close();
                 revertToColour();
             }, 2000);
         }
@@ -223,27 +222,28 @@ export function processImages(isChecked) {
 
     function errorLogger(err) {
         if(!errors.includes(err)) errors.push(err);
-    }
-
-    function showErrors() {
-        let content = `<p>The following errors occurred:</p><p>${errors.toString()}</p>`;
-        dialogTitle.textContent = "Errors Detected";
-        dialogSpinner.remove();
-        msg.innerHTML = content;
+        dialogErr.textContent = errors.toString();
     }
 
     function generateDialog() {
+        const closeButton = document.createElement('button');
+        closeButton.textContent = "X";
+        closeButton.className = 'dialogClose';
+        closeButton.setAttribute('aria-label', 'close');
+        closeButton.addEventListener('click', evt => { evt.preventDefault(); dialog.close(); });
         dialogTitle.textContent = 'Scanning';
         dialogTitle.style.fontSize = '2rem';
 
         dialogSpinner.className = "lds-ring";
         dialogSpinner.innerHTML = "<div></div><div></div><div></div><div></div></div>";
 
-        msg.textContent = 'Initializing';
+        dialogMsg.textContent = 'Initializing';
 
+        dialog.append(closeButton);
         dialog.append(dialogTitle);
         dialog.append(dialogSpinner);
-        dialog.append(msg);
+        dialog.append(dialogMsg);
+        if(errors.length) dialog.append(dialogErr);
 
         document.body.appendChild(dialog);
         dialog.showModal();
