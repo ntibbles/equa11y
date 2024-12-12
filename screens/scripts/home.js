@@ -30,8 +30,6 @@ function init() {
     checkSettings();
 }
 
-
-
 function checkSettings() {
     let store = {};
     getTabId().then(id => {
