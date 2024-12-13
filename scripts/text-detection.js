@@ -7,7 +7,7 @@ export function processImages(isChecked) {
     const msg = document.createElement('p');
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
     const { createWorker } = Tesseract;
-    const errors = ['test error'];
+    const errors = [];
     let numOfJobs = 0;
     let completedJobs = 0;
     let runningJobs = {};
@@ -215,7 +215,7 @@ export function processImages(isChecked) {
         if(numOfJobs === completedJobs) {
             msg.textContent = 'Scanning Complete';
             setTimeout(() => {
-                (!errors.length) ? dialog.close() : showErrors();
+                dialog.close();
                 revertToColour();
             }, 2000);
         }
@@ -223,13 +223,6 @@ export function processImages(isChecked) {
 
     function errorLogger(err) {
         if(!errors.includes(err)) errors.push(err);
-    }
-
-    function showErrors() {
-        let content = `<p>The following errors occurred:</p><p>${errors.toString()}</p>`;
-        dialogTitle.textContent = "Errors Detected";
-        dialogSpinner.remove();
-        msg.innerHTML = content;
     }
 
     function generateDialog() {
