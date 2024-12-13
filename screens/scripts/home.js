@@ -17,7 +17,7 @@ import { getTabId } from "./utils/helpers.js";
 // create a Set to map the imports
 
 document.addEventListener('popup-home', init);
-let settingsBtn = document.getElementById('settings');
+let settingsBtn = {};
 let textPort = 0;
 
 chrome.runtime.onConnect.addListener(function(port) {
@@ -31,6 +31,8 @@ function init() {
     checkSettings();
     zoomChange();
     restoreSlider();
+
+    settingsBtn = document.getElementById('settings');
 }
 
 function checkSettings() {
