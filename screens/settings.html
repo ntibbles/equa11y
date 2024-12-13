@@ -3,41 +3,43 @@
 </nav>
 <main class="settings-screen">
     <h1>Settings</h1>
-    <div class="settings-section">
-        <fieldset>
-            <legend>
-                <h2>Dark Mode</h2>
-            </legend>
+    <div class="settings-row">
+        <div class="settings-section">
+            <fieldset>
+                <legend>
+                    <h2>Dark Mode</h2>
+                </legend>
+                <label>
+                    <input type="radio" id="dmOn" name="darkMode" value="true"></input>
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" id="dmOff" name="darkMode" value="false"></input>
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" id="dmAuto" name="darkMode" value="auto" checked></input>
+                    <span>Auto</span>
+                </label>
+            </fieldset>
+        </div>
+        <div class="settings-section font-size">
             <label>
-                <input type="radio" id="dmOn" name="darkMode" value="true"></input>
-                <span>Dark</span>
+                <h2 class="list-label">Font Size</h2>
+                <input id="fontSize" type="range" min="1" max="2" step="0.1" value="1"/>
+                <output id="sizeValue">100%</output>
             </label>
-            <label>
-                <input type="radio" id="dmOff" name="darkMode" value="false"></input>
-                <span>Light</span>
-            </label>
-            <label>
-                <input type="radio" id="dmAuto" name="darkMode" value="auto" checked></input>
-                <span>Auto</span>
-            </label>
-        </fieldset>
-    </div>
-    <div class="settings-section">
-        <label>
-            <h2 class="list-label">Font Size</h2>
-            <input id="fontSize" type="range" min="1" max="2" step="0.1" value="1"/>
-            <output id="sizeValue">100%</output>
-        </label>
+        </div>
     </div>
     <div class="settings-section">
         <form>
-            <label>
+            <label class="label-word-list">
                 <h2 class="list-label">Exclusive Word List*:</h2>
                 <input type="text" id="wordList" value="see,view,look,watch,peek,stare,glance,sight" required>
                 <span id="statusMsg" aria-live="polite"></span>
             </label>
-            <button id="updateBtn">Update List</button>
-            <button id="resetBtn">Reset List</button>
+            <button id="updateBtn">Update</button>
+            <button id="resetBtn">Reset</button>
         </form>
     </div>
     <div class="settings-section">
@@ -58,5 +60,5 @@
             target="_blank">discussions page</a>.
     </p>
    
-    <p class="small">v1.1.1</p>
+    <p class="small">v1.2</p>
 </main>

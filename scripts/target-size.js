@@ -17,7 +17,7 @@ export function toggleTargetSize(isChecked) {
                     label.classList.add(...clsList);
 
                     if(dimensions.width < 24 || dimensions.height < 24) {
-                        label.style.cssText = 'background-color: darkred !important;  outline: 2px dashed black;';
+                        label.style.cssText = 'background-color: #AB1B18 !important;  outline: 2px dashed black;';
                     }
 
                     element.classList.add(...elList);
