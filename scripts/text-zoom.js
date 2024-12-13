@@ -27,9 +27,8 @@ export function toggleZoom(isChecked) {
         document.getElementById('equa11y_zoom').remove();
         document.getElementById('text_zoom_css').remove();
         document.querySelectorAll('.equa11y-zoom-text').forEach(el => {
-            el.classList.remove('equa11y-text-zoom');
+            el.classList.remove('equa11y-zoom-text');
             el.style['font-size'] = null;
-            el.style['line-height'] = null;
             el.style['transition'] = null;
         });
     }
