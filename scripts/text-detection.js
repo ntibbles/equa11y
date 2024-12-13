@@ -27,6 +27,13 @@ export function processImages(isChecked) {
             dictionary = new Set(text.toLowerCase().split('\n'));
         });
 
+    // let langAsset = chrome.runtime.getURL("deps/tesseract-core/eng.traineddata.gz");
+    // fetch(langAsset)
+    // .then(response => response.text())
+    // .then(text => {
+    //     console.log('text: ', text);
+    // });
+
     if (isChecked) {
         // prevents reinit when the ext is closed and opened
         if(!document.body.classList.contains('equa11y-text-detection')) {  // FIX ME: code stink
@@ -64,10 +71,10 @@ export function processImages(isChecked) {
             (async () => {
                 const worker = await createWorker('eng', 1, { 
                     workerPath: chrome.runtime.getURL("deps/tesseract-core/worker.min.js"),
-                    langPath: chrome.runtime.getURL("deps/tesseract-core/eng.traineddata.gz"),
+                    langPath: chrome.runtime.getURL("deps/tesseract-core/"),
                     corePath: chrome.runtime.getURL("deps/tesseract-core/"),
                     logger: m => statusLogger(m),
-                    errorHandler: err => console.error(err) 
+                    errorHandler: err => console.error(err)
                 });
                 // await worker.setParameters({
                 //     preserve_interword_spaces: '1'
