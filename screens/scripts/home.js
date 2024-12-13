@@ -17,17 +17,20 @@ import { getTabId } from "./utils/helpers.js";
 // create a Set to map the imports
 
 document.addEventListener('popup-home', init);
-let zoomSizeSlider = {};
-let settingsBtn = {};
+let settingsBtn = document.getElementById('settings');
+let textPort = 0;
+
+chrome.runtime.onConnect.addListener(function(port) {
+    textPort = port;
+});
 
 function init() {
-    zoomSizeSlider = document.getElementById('zoomSize');
-    settingsBtn =  document.getElementById('settings');
-
     tabController();
     setEventListeners();
     checkCORS();
     checkSettings();
+    zoomChange();
+    restoreSlider();
 }
 
 function checkSettings() {
@@ -138,11 +141,22 @@ function restoreState(tabId, checkbox) {
     chrome.storage.sync.get(store[cbId]).then((result) => {
         if( result[cbId] && result[cbId].tabId === tabId){
             checkbox.checked = result[cbId].isChecked;
+            if(cbId === 'zoomText') toggleSlider(!result[cbId].isChecked);
             if(checkbox.checked && func !== "serviceWorker") {
                 injectCSS();
                 loadScript(func, checkbox.checked);
             }
         }
+    });
+}
+
+function restoreSlider() {
+    chrome.storage.sync.get().then(result => {
+        const slider = document.getElementById('textZoom');
+        const zoomValue = document.getElementById('zoomValue');
+        const value = result['zoomSlider']?.slider
+        slider.value = value || 2;
+        zoomValue.textContent = `${Math.round(value * 100)}%`;
     });
 }
 
@@ -194,6 +208,12 @@ async function setEventListeners() {
     }
 
     settingsBtn.addEventListener('click', () => dispatch('popup-load-screen', 'settings'));
+    document.getElementById('zoomText').addEventListener('change', evt => { toggleSlider(!evt.target.checked) });
+}
+
+function toggleSlider(checked) {
+    const slider = document.getElementById('textZoom');
+    slider.disabled = checked;
 }
 
 async function getUserList() {
@@ -211,4 +231,18 @@ function OSdarkMode() {
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
         setDarkMode();
     }
+}
+
+function zoomChange() {
+    const input = document.getElementById("textZoom");
+    const value = document.getElementById("zoomValue");
+
+    input.addEventListener("input", (event) => {
+        let store = {};
+        let percent = Number(event.target.value);
+        value.textContent = `${Math.round(percent * 100)}%`;
+        textPort.postMessage({zoomLevel: percent});
+        store['zoomSlider'] = { slider: percent };
+        chrome.storage.sync.set( store );
+    });
 }

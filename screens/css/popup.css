@@ -99,6 +99,10 @@ footer {
     color:white;
 }
 
+input[type='range']{ 
+    accent-color: #AB1B18; 
+}
+
 .equa11y-tabpanel {
     display: none;
     border: 1px gray solid;
