@@ -30,8 +30,6 @@ function init() {
     checkSettings();
 }
 
-
-
 function checkSettings() {
     let store = {};
     getTabId().then(id => {
@@ -140,7 +138,6 @@ function restoreState(tabId, checkbox) {
     chrome.storage.sync.get(store[cbId]).then((result) => {
         if( result[cbId] && result[cbId].tabId === tabId){
             checkbox.checked = result[cbId].isChecked;
-            if(result['zoomText'].isChecked) zoomSizeSlider.disabled = false;
             if(checkbox.checked && func !== "serviceWorker") {
                 injectCSS();
                 loadScript(func, checkbox.checked);
