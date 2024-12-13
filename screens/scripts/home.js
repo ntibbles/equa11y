@@ -19,6 +19,11 @@ import { getTabId } from "./utils/helpers.js";
 document.addEventListener('popup-home', init);
 let zoomSizeSlider = {};
 let settingsBtn = {};
+let textPort = 0;
+
+chrome.runtime.onConnect.addListener(function(port) {
+    textPort = port;
+});
 
 function init() {
     zoomSizeSlider = document.getElementById('zoomSize');
@@ -28,6 +33,7 @@ function init() {
     setEventListeners();
     checkCORS();
     checkSettings();
+    zoomChange();
 }
 
 function checkSettings() {
@@ -137,6 +143,7 @@ function restoreState(tabId, checkbox) {
     const func = getFunction(checkbox.dataset.func);
     chrome.storage.sync.get(store[cbId]).then((result) => {
         if( result[cbId] && result[cbId].tabId === tabId){
+            console.log('store: ', result);
             checkbox.checked = result[cbId].isChecked;
             if(checkbox.checked && func !== "serviceWorker") {
                 injectCSS();
@@ -211,4 +218,29 @@ function OSdarkMode() {
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
         setDarkMode();
     }
+}
+
+function zoomChange() {
+    const store = {};
+    const input = document.getElementById("textZoom");
+    const value = document.getElementById("zoomValue");
+    let zoomText = {};
+
+    getTabId().then(tabId => {
+        chrome.storage.sync.get(store['zoomText']).then(result => {
+            zoomText = result['zoomText'];
+        })
+    });
+
+    console.log('zoomText: ', zoomText);
+    // store['zoomText'] = { slider: 2 };
+    // chrome.storage.sync.set( store );
+
+    input.addEventListener("input", (event) => {
+        let percent = Number(event.target.value);
+        value.textContent = `${Math.round(percent * 100)}%`;
+        textPort.postMessage({zoomLevel: percent});
+        // store['zoomText'] = { slider: percent };
+        // chrome.storage.sync.set( store );
+    });
 }

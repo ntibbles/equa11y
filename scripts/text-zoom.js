@@ -7,10 +7,13 @@ export function toggleZoom(isChecked) {
     const css = `* { font-size: ${initialFontSize * zoomLevel}px !important; }`;
     const head = document.head || document.getElementsByTagName('head')[0];
     const style = document.createElement('style');
+    const port = chrome.runtime.connect({name: "text-zoom"});
+    port.postMessage({status: 'connected'});
+    port.onMessage.addListener(handleZoomChange);
     style.id = 'text_zoom_css';
     const zoomLabel = document.createElement('div');
-    zoomLabel.style.position = 'fixed';
     zoomLabel.innerHTML = `Text zoomed ${zoomLevel*100}%`;
+    zoomLabel.style.position = 'fixed';
     zoomLabel.className = 'equa11y-label';
     zoomLabel.id = 'equa11y_zoom';
     
@@ -67,5 +70,19 @@ export function toggleZoom(isChecked) {
 
     function addStyle(el, name, value) {
         return el.style.cssText += ` ${name}: ${value}px !important;`;
+    }
+
+    function updateFontSize() {
+        document.getElementById('text_zoom_css').textContent = `* { font-size: ${initialFontSize * zoomLevel}px !important; }`;
+        zoomLabel.innerHTML = `Text zoomed ${zoomLevel*100}%`;
+        prerender.forEach(el => {
+            let { element, fontSize } = el;
+            addStyle(element, 'font-size', fontSize * zoomLevel);
+        });
+    }
+
+    function handleZoomChange(msg) {
+        zoomLevel = msg.zoomLevel;
+        updateFontSize();
     }
 }
