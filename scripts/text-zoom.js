@@ -1,27 +1,28 @@
 export function toggleZoom(isChecked) {
     let zoomLevel = 2;
-    const textElements = document.querySelectorAll("body *:not(style, script, noscript, iframe, link, embed, hr, br, img, video, canvas, footer, #equa11y_zoom)");
+    let zoomLabel = {};
     const body = document.body;
     const prerender = [];
     const initialFontSize = getComputedInt(body, 'fontSize');
     const css = `* { font-size: ${initialFontSize * zoomLevel}px !important; }`;
     const head = document.head || document.getElementsByTagName('head')[0];
     const style = document.createElement('style');
+    style.id = 'text_zoom_css';
     const port = chrome.runtime.connect({name: "text-zoom"});
-    let zoomLabel = {};
     port.postMessage({status: 'connected'});
     port.onMessage.addListener(handleZoomChange);
-    style.id = 'text_zoom_css';
+    const textElements = document.querySelectorAll("body *:not(style, script, noscript, iframe, link, embed, hr, br, img, video, canvas, footer, #equa11y_zoom)");
+
     isChecked ? textZoom_checked() : textZoom_unchecked();
 
     function textZoom_checked() {
-        if(!document.body.classList.contains('equa11y-zoom')) {
+        if(!body.classList.contains('equa11y-zoom')) {
             chrome.storage.sync.get().then(result => {
                 zoomLevel = result['zoomSlider']?.slider || 2;
                 generateZoomLabel();
                 getFontSize();
                 setFontSize();
-                document.body.classList.add('equa11y-zoom');
+                body.classList.add('equa11y-zoom');
             });
         } else {
             getFontSize();
@@ -30,15 +31,14 @@ export function toggleZoom(isChecked) {
 
     function textZoom_unchecked() {
         document.getElementById('equa11y_zoom').remove();
-        document.body.classList.remove('equa11y-zoom');
+        body.classList.remove('equa11y-zoom');
         removeFontSize();
     }
 
     function generateZoomLabel() {
         if(!document.getElementById('equa11y_zoom')) {
             zoomLabel = document.createElement('div');
-            zoomLabel.innerHTML = `Text zoomed ${Math.round(zoomLevel*100)}%`;
-            //zoomLabel.style.position = 'fixed';
+            zoomLabel.innerHTML = `Text resized: ${Math.round(zoomLevel*100)}%`;
             zoomLabel.className = 'equa11y-label';
             zoomLabel.id = 'equa11y_zoom';
             zoomLabel.style.cssText = `position: fixed; font-size: 16px !important;`
@@ -93,7 +93,7 @@ export function toggleZoom(isChecked) {
 
     function updateFontSize() {
         document.getElementById('text_zoom_css').textContent = `* { font-size: ${initialFontSize * zoomLevel}px !important; }`;
-        document.getElementById('equa11y_zoom').innerHTML = `Text zoomed ${Math.round(zoomLevel*100)}%`;
+        document.getElementById('equa11y_zoom').innerHTML = `Text resized: ${Math.round(zoomLevel*100)}%`;
         prerender.forEach(el => {
             let { element, fontSize } = el;
             addStyle(element, 'font-size', fontSize * zoomLevel);
