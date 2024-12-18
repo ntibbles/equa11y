@@ -27,13 +27,6 @@ export function processImages(isChecked) {
             dictionary = new Set(text.toLowerCase().split('\n'));
         });
 
-    // let langAsset = chrome.runtime.getURL("deps/tesseract-core/eng.traineddata.gz");
-    // fetch(langAsset)
-    // .then(response => response.text())
-    // .then(text => {
-    //     console.log('text: ', text);
-    // });
-
     if (isChecked) {
         // prevents reinit when the ext is closed and opened
         if(!document.body.classList.contains('equa11y-text-detection')) {  // FIX ME: code stink
