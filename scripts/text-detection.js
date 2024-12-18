@@ -69,9 +69,6 @@ export function processImages(isChecked) {
                     logger: m => statusLogger(m),
                     errorHandler: err => console.error(err)
                 });
-                // await worker.setParameters({
-                //     preserve_interword_spaces: '1'
-                // });
                 const { data: { text } } = await worker.recognize(image);
                 resolve(text);
                 await worker.terminate();
