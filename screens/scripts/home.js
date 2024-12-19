@@ -208,9 +208,9 @@ async function setEventListeners() {
             });
         }
     }
-    console.log('set handlers');
+
     settingsBtn.addEventListener('click', () => dispatch('popup-load-screen', 'settings'));
-    document.getElementById('zoomText').addEventListener('change', evt => { toggleSlider(!evt.target.checked) });
+    
 }
 
 function toggleSlider(checked) {

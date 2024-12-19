@@ -59,6 +59,14 @@ Voila!
 
 ## CHANGELOG
 
+### Version 1.2
+[Enhancements]
+
+- Added slider to text zoom
+- Removed Embedded Text from extension
+- 'Outline Event Listeners' is no longer Beta
+- Removed 'Hide Beta Utils' from settings
+
 ### Version 1.1.1 
 [Bugfixes]
 - [#25 - Tesseract doesn't load](https://github.com/ntibbles/equa11y/issues/25)

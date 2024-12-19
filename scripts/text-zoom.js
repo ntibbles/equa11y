@@ -50,6 +50,7 @@ export function toggleZoom(isChecked) {
         textElements.forEach((element) => {
             let attr = {
                 element,
+                lineHeight: getComputedInt(element, 'line-height'),
                 fontSize: getComputedInt(element, 'fontSize')
             };
             prerender.push(attr);
@@ -58,10 +59,11 @@ export function toggleZoom(isChecked) {
 
     function setFontSize() {
         prerender.forEach(el => {
-            let { element, fontSize } = el;
+            let { element, lineHeight, fontSize } = el;
             element.classList.add('equa11y-zoom-text');
             element.style['transition'] = 'font 0s';
             element.dataset.font = fontSize;
+            addStyle(element, 'line-height', lineHeight * zoomLevel);
             addStyle(element, 'font-size', fontSize * zoomLevel);
         });
 
@@ -73,7 +75,6 @@ export function toggleZoom(isChecked) {
         document.querySelectorAll('.equa11y-zoom-text').forEach(el => {
             el.classList.remove('equa11y-text-zoom');
             el.style['font-size'] = null;
-            el.style['line-height'] = null;
             el.style['transition'] = null;
         });
         document.getElementById('text_zoom_css').remove();
@@ -95,7 +96,8 @@ export function toggleZoom(isChecked) {
         document.getElementById('text_zoom_css').textContent = `* { font-size: ${initialFontSize * zoomLevel}px !important; }`;
         document.getElementById('equa11y_zoom').innerHTML = `Text resized: ${Math.round(zoomLevel*100)}%`;
         prerender.forEach(el => {
-            let { element, fontSize } = el;
+            let { element, lineHeight, fontSize } = el;
+            addStyle(element, 'line-height', lineHeight * zoomLevel);
             addStyle(element, 'font-size', fontSize * zoomLevel);
         });
     }
