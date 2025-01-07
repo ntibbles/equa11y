@@ -31,6 +31,7 @@ export function toggleZoom(isChecked) {
 
     function textZoom_unchecked() {
         document.getElementById('equa11y_zoom')?.remove();
+        document.getElementById('text_zoom_css')?.remove();
         body.classList.remove('equa11y-zoom');
         removeFontSize();
     }
