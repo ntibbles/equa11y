@@ -156,7 +156,7 @@ function restoreSlider() {
     chrome.storage.sync.get().then(result => {
         const slider = document.getElementById('textZoom');
         const zoomValue = document.getElementById('zoomValue');
-        const value = result['zoomSlider']?.slider
+        const value = result['zoomSlider']?.slider;
         slider.value = value || 2;
         zoomValue.textContent = `${Math.round(value * 100)}%`;
     });
@@ -210,7 +210,7 @@ async function setEventListeners() {
     }
 
     settingsBtn.addEventListener('click', () => dispatch('popup-load-screen', 'settings'));
-    
+    document.getElementById('zoomText').addEventListener('change', evt => { toggleSlider(!evt.target.checked) });
 }
 
 function toggleSlider(checked) {
