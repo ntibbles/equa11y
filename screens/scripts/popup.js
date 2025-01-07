@@ -15,7 +15,6 @@ function init() {
 }
 
 function updateScreen(screen) {
-    console.log('updateScreen: ', screen);
     removeLoadedScript();
     const screenPath = chrome.runtime.getURL(`./screens/${screen}.html`);
     fetch(screenPath)
