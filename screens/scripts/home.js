@@ -10,6 +10,7 @@ import { grayscale } from "../../scripts/grayscale.js";
 import { exclusiveText } from "../../scripts/exclusive-text.js";
 import { revealLang } from "../../scripts/lang.js";
 import { toggleTargetSize } from "../../scripts/target-size.js";
+import { togglePageTitle } from "../../scripts/page-title.js";
 import { tabController } from "./tab.js";
 import { dispatch } from "./utils/helpers.js";
 import { getTabId } from "./utils/helpers.js";
@@ -109,6 +110,7 @@ function getFunction(name) {
         case 'exclusiveText': return exclusiveText;
         case 'revealLang': return revealLang;
         case 'toggleTargetSize': return toggleTargetSize;
+        case 'togglePageTitle': return togglePageTitle;
         case 'serviceWorker': return 'serviceWorker';
     }
 }
