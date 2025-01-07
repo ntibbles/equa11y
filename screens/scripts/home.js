@@ -11,9 +11,11 @@ import { exclusiveText } from "../../scripts/exclusive-text.js";
 import { revealLang } from "../../scripts/lang.js";
 import { toggleTargetSize } from "../../scripts/target-size.js";
 import { togglePageTitle } from "../../scripts/page-title.js";
+import { toggleTextSpacing } from "../../scripts/text-spacing.js";
 import { tabController } from "./tab.js";
 import { dispatch } from "./utils/helpers.js";
 import { getTabId } from "./utils/helpers.js";
+import * as helpers from "./utils/helpers.js";
 
 // create a Set to map the imports
 
@@ -111,6 +113,7 @@ function getFunction(name) {
         case 'revealLang': return revealLang;
         case 'toggleTargetSize': return toggleTargetSize;
         case 'togglePageTitle': return togglePageTitle;
+        case 'toggleTextSpacing': return toggleTextSpacing;
         case 'serviceWorker': return 'serviceWorker';
     }
 }
@@ -165,12 +168,13 @@ function restoreSlider() {
 }
 
 async function loadScript(func, isChecked) {
+    console.log('loadScript: ', helpers);
     const list = await getUserList();
     const id = await getTabId();
     chrome.scripting.executeScript({
         target: { tabId: id },
         function: func,
-        args: [isChecked, list]
+        args: [isChecked, list, helpers]
     });
 } 
 
