@@ -169,7 +169,7 @@ async function loadScript(func, isChecked) {
     chrome.scripting.executeScript({
         target: { tabId: id },
         function: func,
-        args: [isChecked, list, helpers]
+        args: [isChecked, list]
     });
 } 
 

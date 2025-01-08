@@ -79,7 +79,7 @@ export function toggleZoom(isChecked) {
             el.style['transition'] = null;
             el.classList.remove('equa11y-zoom-text');
         });
-        document.getElementById('text_zoom_css').textContent = '';
+        if(document.getElementById('text_zoom_css')) document.getElementById('text_zoom_css').textContent = '';
     }
 
     function getComputedInt(element, attr) {
