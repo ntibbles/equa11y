@@ -59,6 +59,11 @@ Voila!
 
 ## CHANGELOG
 
+### Version 1.1.1 
+[Bugfixes]
+- [#25 - Tesseract doesn't load](https://github.com/ntibbles/equa11y/issues/25)
+- [#73 - Zoom text headings](https://github.com/ntibbles/equa11y/issues/73)
+
 ### Version 1.1
 [Enhancements]
 - [#1 - Display Screen Reader Text](https://github.com/ntibbles/equa11y/issues/1)
