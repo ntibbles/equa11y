@@ -1,14 +1,13 @@
 # Equa11y: Accessibility Testing Utilities
 The Equa11y extension is to help test a webpage for accessibility. It is designed to improve the efficiency of accessibility testing with various utilities.
 
-## What's New in Version 1.1!
+## What's New in Version 1.2!
 ### New Functionality
-- **Display Target Size** - Displays the current target size of an interactive element.
-- **Display Screen Reader Text** - Displays the hidden text that a screen reader would announce. It takes into consideration the precedence of aria-label, aria-labelledby, and aria-describedby.
-- **Highlight Exclusive Text** - Scans the page for exclusive words (e.g - "See", "View", etc) and highlights them. You can also modify the list in the **NEW** "settings" page.
-- **Reveal Lang Attribute** - Displays the lang attribute for the pagae and any in-page elements.
+- **Text Spacing** - Increase the text spacing on the page.
+- **Reveal Pagae Title** - Displays the page title of the page.
+- **Text Zoom Control** - Adjust the text zoom from 100 - 200%.
 
-### New UI
+### UI
 All utilities are now broken into tabs by WCAG (Web Content Accessibility Guideline) principle:
 - Perceivable
 - Operable
@@ -17,7 +16,7 @@ All utilities are now broken into tabs by WCAG (Web Content Accessibility Guidel
 
 And includes the success criteria for each test.
 
-**NEW Settings** page allows you to do the following:
+**Settings** page allows you to do the following:
 - Set Dark Mode
 - Hide the beta utilities
 - Change the list of exclusive words
@@ -30,6 +29,10 @@ And includes the success criteria for each test.
 - **Display Heading Levels** - Outlines and labels all headings on the page.
 - **Reveal Viewport Tag** - Displays the viewport tag.
 - **Zoom Text 200%** - Zooms text-only on the page by 200%.
+- **Display Target Size** - Displays the current target size of an interactive element.
+- **Display Screen Reader Text** - Displays the hidden text that a screen reader would announce. It takes into consideration the precedence of aria-label, aria-labelledby, and aria-describedby.
+- **Highlight Exclusive Text** - Scans the page for exclusive words (e.g - "See", "View", etc) and highlights them. You can also modify the list in the **NEW** "settings" page.
+- **Reveal Lang Attribute** - Displays the lang attribute for the pagae and any in-page elements.
 
 ### Core Utility Limitations
 - **Zoom Text 200%** detects and inserts a new stylesheet that doubles the current font size. If the page contains elements with styles including !important, the text will not zoom.
@@ -61,11 +64,9 @@ Voila!
 
 ### Version 1.2
 [Enhancements]
-
-- Added slider to text zoom
-- Removed Embedded Text from extension
-- 'Outline Event Listeners' is no longer Beta
-- Removed 'Hide Beta Utils' from settings
+- [#62 - Added 'Text Spacing' utility](https://github.com/ntibbles/equa11y/issues/62)
+- [#63 - Added 'Reveal Page Title' utility](https://github.com/ntibbles/equa11y/issues/63)
+- [#75 - Added slider to text zoom](https://github.com/ntibbles/equa11y/issues/75)
 
 ### Version 1.1.1 
 [Bugfixes]
