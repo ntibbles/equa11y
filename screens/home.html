@@ -52,14 +52,22 @@
                         </li>
                         <li>
                             <label>
-                                <input type="checkbox" id="zoomText" data-func="toggleZoom">
-                                Zoom Text 200% <span class="small">(<a href="https://www.w3.org/TR/WCAG22/#resize-text" target="_blank">1.4.4</a>) </span>
+                                <input type="checkbox" id="zoomText" data-func="toggleZoom" />
+                                Resize Text <span class="small">(<a href="https://www.w3.org/TR/WCAG22/#resize-text" target="_blank">1.4.4</a>) </span>
+                                <input id="textZoom" type="range" min="1" max="2" step="0.1" value="2" disabled/>
+                                <output id="zoomValue">200%</output>
                             </label>
                         </li>
                         <li class="beta-util">
                             <label>
                                 <input type="checkbox" id="displayEmbedded" data-func="processImages">
                                 <span id="outline">Outline Embedded Text (en)^ </span><span class="small">(<a href="https://www.w3.org/TR/WCAG22/#images-of-text" target="_blank">1.4.5</a>)</span> <span id="embeddedTextStatus" aria-labelledby="outline"></span>
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" id="textSpacing" data-func="toggleTextSpacing">
+                                Text Spacing <span class="small">(<a href="https://www.w3.org/TR/WCAG22/#text-spacing" target="_blank">1.4.12</a>)</span>
                             </label>
                         </li>
                     </ul>
@@ -71,6 +79,12 @@
                 <legend class="sr-only">Operable Utils</legend>
                 <div class="item-container">
                     <ul>
+                        <li>
+                            <label>
+                                <input type="checkbox" id="displayPageTitle" data-func="togglePageTitle">
+                                Reveal Page Title <span class="small">(<a href="https://www.w3.org/TR/WCAG22/#page-titled" target="_blank">2.4.2</a>)</span>
+                            </label>
+                        </li>
                         <li>
                             <label>
                                 <input type="checkbox" id="displaySrText" data-func="toggleScreenReaderTextDisplay">

@@ -2,7 +2,7 @@
 body {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     padding: 10px 10px 0;
-    min-width: 93vw;
+    min-width: 92vw;
     font-size: 0.9em;
     height: 100%;
 }
@@ -97,6 +97,10 @@ footer {
 .equa11y-tabs[tabindex='0'] {
     background-color: #AB1B18;
     color:white;
+}
+
+input[type='range']{ 
+    accent-color: #AB1B18; 
 }
 
 .equa11y-tabpanel {

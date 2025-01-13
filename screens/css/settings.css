@@ -1,15 +1,29 @@
+.settings-screen {
+    margin-top: -20px;
+}
+
 .settings-screen fieldset {
     border: none;
     padding: 0;
     margin: 0;
+    font-weight: normal;
 }
 
 .settings-section {
-    margin-bottom: 20px;
+    margin-bottom: 5px;
 }
 
-.settings-screen fieldset {
-    font-weight: normal;
+.settings-row {
+    display: flex;
+}
+
+.settings-row .font-size {
+    margin-left: 20px;
+}
+
+.label-word-list {
+    display: inline-block;
+    width: 60%;
 }
 
 ul {
@@ -80,4 +94,9 @@ nav {
 
 .success::before {
     content: '';
+}
+
+#updateBtn,
+#resetBtn {
+    height: 32px;
 }
