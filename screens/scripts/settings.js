@@ -162,7 +162,6 @@ function setEventListeners() {
     document.getElementById('back').addEventListener('click', () => dispatch('popup-load-screen', 'home'));
     document.getElementById('updateBtn').addEventListener('click', setWordList);
     document.getElementById('resetBtn').addEventListener('click', resetWordList);
-    document.getElementById('showBeta').addEventListener('click', toggleBetaUtils);
 
     const darkMode = document.querySelectorAll('input[type="radio"]');
     for(let btn of darkMode) {

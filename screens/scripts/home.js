@@ -5,7 +5,6 @@ import { toggleLandmarkOutlines } from "../../scripts/landmarks.js";
 import { toggleHeadingOutline } from "../../scripts/headings.js";
 import { toggleInteractiveRoles } from "../../scripts/roles.js";
 import { toggleZoom } from "../../scripts/text-zoom.js";
-import { processImages } from "../../scripts/text-detection.js";
 import { grayscale } from "../../scripts/grayscale.js";
 import { exclusiveText } from "../../scripts/exclusive-text.js";
 import { revealLang } from "../../scripts/lang.js";
@@ -15,18 +14,22 @@ import { toggleTextSpacing } from "../../scripts/text-spacing.js";
 import { tabController } from "./tab.js";
 import { dispatch, getTabId } from "./utils/helpers.js";
 
+const headingsPanel = 'sidepanels/headings.html';
+
 document.addEventListener('popup-home', init);
 let settingsBtn = {};
 let textPort = 0;
 
 chrome.runtime.onConnect.addListener(function(port) {
-    textPort = port;
+    console.log('port: ', port.name);
+    if(port.name === 'text-zoom') {
+        textPort = port;
+    }
 });
 
 function init() {
     tabController();
     setEventListeners();
-    checkCORS();
     checkSettings();
     zoomChange();
     restoreSlider();
@@ -42,37 +45,6 @@ function checkSettings() {
             if(!result['darkMode'] || result['darkMode']?.value === 'auto') OSdarkMode();
             if(result['showBeta']?.isChecked) setBetaUtils();
         });
-    });
-}
-
-async function checkCORS() {
-    const id = await getTabId();
-    chrome.scripting.executeScript({
-        target: { tabId: id },
-        function: checkFirstImage
-    }).then(result => {
-        if (result[0].result.hasCors) {
-            document.getElementById('displayEmbedded').setAttribute('disabled', true);
-            document.getElementById('embeddedTextStatus').innerHTML = ' (<a href="https://github.com/ntibbles/equa11y/tree/main?tab=readme-ov-file#why-is-a-utility-not-available">Not Available</a>)';
-        }
-    });
-}
-
-function checkFirstImage() {
-    return new Promise(resolve => {
-        const images = document.getElementsByTagName('img');
-        if (images.length > 0) {
-            const firstImage = images[Math.round(images.length/2)];
-            fetch(firstImage.src).then(resp => {
-                if (resp.type === 'basic' && resp.url === window.location.origin+'/') {
-                    resolve({ hasCors: true });
-                } else {
-                    resolve({ hasCors: false });
-                }
-            }).catch(() => {
-                resolve({ hasCors: true });
-            });
-        }
     });
 }
 
@@ -103,7 +75,6 @@ function getFunction(name) {
         case 'toggleHeadingOutline': return toggleHeadingOutline;
         case 'toggleInteractiveRoles': return toggleInteractiveRoles;
         case 'toggleZoom': return toggleZoom;
-        case 'processImages': return processImages;
         case 'grayscale' : return grayscale;
         case 'exclusiveText': return exclusiveText;
         case 'revealLang': return revealLang;
@@ -203,7 +174,14 @@ async function setEventListeners() {
         } else {
             // set the handlers
             document.getElementById(cb.id).addEventListener('change', (event) => {
-                (cb.checked) ? injectCSS() : removeCSS();
+                if(cb.checked) {
+                    injectCSS(); 
+                   // openPanel(headingsPanel);
+                } else {
+                    removeCSS();
+                    closePanel();
+                }
+    
                 setState(id, event, cb.id);
                 loadScript(func, cb.checked);
             });
@@ -249,3 +227,21 @@ function zoomChange() {
         chrome.storage.sync.set( store );
     });
 }
+
+async function openPanel(panel) {
+    const tabId = await getTabId();
+    chrome.sidePanel.setOptions({ 
+        tabId,
+        path: panel,
+        enabled: true
+    });
+    chrome.sidePanel.open( { tabId });
+}
+
+async function closePanel() {
+    const tabId = await getTabId();
+    chrome.sidePanel.setOptions({ 
+        tabId,
+        enabled: false
+    });
+};

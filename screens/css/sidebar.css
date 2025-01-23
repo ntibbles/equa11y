@@ -1,0 +1,57 @@
+.equa11y-sidebar {
+    padding: 20px !important;
+    border-style: none;
+    position: fixed !important;
+    top: 0 !important;
+    height: 100vh !important;
+    margin: 0 !important;
+    border-right: 2px solid;
+    margin-right: 2px!important;
+    display: none;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    background-color: rgb(60, 60, 60);
+    transition: width .3s ease;
+    box-shadow:4px 7px 10px rgba(0,0,0,.4);
+    color:white;
+    overflow-y: scroll;
+    width: 0;
+}
+
+.equa11y-sidebar.open {
+    width: 280px !important;
+    display: block;
+}
+
+.equa11y-sidebar .sidebar-close {
+    padding: 5px 8px;
+    border: 1px solid;
+    border-radius: 20px;
+    position: absolute;
+    right: 20px;
+    background-color: transparent;
+    color:white;
+}
+
+.equa11y-sidebar .skipped {
+    background-color: #AB1B18 !important;
+    outline: 2px dashed white !important;
+    margin-left: 5px;
+}
+
+.equa11y-sidebar .hidden {
+    background-color: #FFF !important;
+    color: #000 !important;
+    outline: 2px dashed #FFF !important;
+    opacity: 0.75;
+    text-decoration: line-through;
+    visibility: visible !important;
+}
+
+.equa11y-sidebar_content div {
+    margin: 15px;
+}
+
+.equa11y-sidebar_content strong {
+    font-size: 1.1em;
+    margin-right: 10px !important;
+}
