@@ -63,7 +63,7 @@ export function toggleHeadingOutline(isChecked = false) {
 
     function findHeadingTags(nodeList) {
         const headings = []; // Array to store found heading elements
-        const stack = Array.from(nodeList); // Use a stack to process nodes iteratively
+        const stack = Array.from(nodeList).reverse(); // Use a stack to process nodes iteratively
         let isSkipped = false;
         let i = 0;
 
@@ -78,7 +78,7 @@ export function toggleHeadingOutline(isChecked = false) {
                     if (headings.length > 1) {
                         let curHeading = parseInt(node.tagName.replace("H", ""), 10);
                         let prevHeading = parseInt(headings[i - 1].el.tagName.replace("H", ""), 10);
-                        isSkipped = ((prevHeading - curHeading) > 1) ;
+                        isSkipped = ((curHeading - prevHeading) > 1) ;
                     } 
                     headings.splice(headings.length - 1, 1, { el: node, isSkipped});
 
