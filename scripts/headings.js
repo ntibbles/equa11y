@@ -1,6 +1,5 @@
 export function toggleHeadingOutline(isChecked = false) {
     const headingTags = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
-    const main = document.getElementsByTagName('main')[0];
     const tagList = ['equa11y-border', 'equa11y-heading-label'];
     const clsList = ['equa11y-label', 'equa11y-headings'];
     const config = { childList: true, subtree: true };
@@ -11,7 +10,7 @@ export function toggleHeadingOutline(isChecked = false) {
     function heading_checked() {
         buildHeadingTree();
         window.equa11y_observer = window.equa11y_observer || new MutationObserver(headingChange);
-        window.equa11y_observer.observe(main, config);
+        window.equa11y_observer.observe(document.body, config);
     }
 
     function heading_unchecked() {
