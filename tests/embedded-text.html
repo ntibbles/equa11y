@@ -24,6 +24,7 @@
         <h3>heading 3</h3>
         <h2>heading 2</h2>
         <h4>heading 4</h4>
+        <span id="toggle"><h5>heading 5 - add/remove</h5></span>
         <p>This text contains the exclusive text of hear, look, and observe, and peek.</p>
         <p>This word is in <span lang="fr">French.</span></p>
         <button>Watch Video</button>
@@ -35,6 +36,7 @@
             <input typ="text" />
             This is a label
         </label>
+        <br /><button id="headingToggle">Toggle Heading Visibility</button>
     </div>
    
         <!-- <canvas id="contrast"></canvas> -->
@@ -54,5 +56,16 @@
         </div>
         
     </footer>
+    <script>
+        const btn = document.getElementById('headingToggle');
+        const container = document.getElementById('toggle');
+        btn.addEventListener('click', () => {
+            if(container.children.length) {
+                container.innerHTML = '';
+            } else {
+                container.innerHTML = "<h5>heading 5 - add/remove</h5><h4>heading 4 - add/remove</h4>";
+            }
+        });
+    </script>
 </body>
 </html>

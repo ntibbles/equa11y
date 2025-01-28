@@ -23,7 +23,6 @@
       "js": [
         "deps/tesseract.min.js",
         "screens/scripts/sidebar.js"
-
       ],
       "css": [
         "screens/css/sidebar.css"

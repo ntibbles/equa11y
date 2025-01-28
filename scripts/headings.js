@@ -1,55 +1,54 @@
-export function toggleHeadingOutline(isChecked) {
-    const headingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
-    const body = document.body;
-    const allTags = body.querySelectorAll(headingTags.join(','));
-    const levels = [];
-    const structure = [];
+export function toggleHeadingOutline(isChecked = false) {
+    const headingTags = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
+    const main = document.getElementsByTagName('main')[0];
     const tagList = ['equa11y-border', 'equa11y-heading-label'];
     const clsList = ['equa11y-label', 'equa11y-headings'];
+    const config = { childList: true, subtree: true };
+    const structure = [];
     let label = {};
-    let isSkipped = false;
 
     isChecked ? heading_checked() : heading_unchecked();
 
     function heading_checked() {
-        allTags.forEach((tag, index) => {
-            levels.push(Number(tag.nodeName.substring(1)));
+        buildHeadingTree();
+        window.equa11y_observer = window.equa11y_observer || new MutationObserver(headingChange);
+        window.equa11y_observer.observe(main, config);
+    }
 
-            if(index === 0 && tag.nodeName !== 'H1') {
-                isSkipped = true;
-            } else {
-                isSkipped = findSkippedNumbers([levels[index - 1], levels[index]]).length;
-            }
+    function heading_unchecked() {
+        window.equa11y_observer.disconnect();
+        clearHeadingTree();
+    }
 
-            if(!tag.classList.contains('equa11y-heading-label')) {
-                // send data to sidepanel
-                addSidebarContent({level: tag.nodeName, title: tag.textContent, isSkipped, isHidden: isElementHidden(tag)});
-
+    function buildHeadingTree() {
+        findHeadingTags(main.querySelectorAll(headingTags.join(','))).forEach(tag => {
+            addSidebarContent({ title: tag.el.textContent, level: tag.el.nodeName, isSkipped: tag.isSkipped, isHidden: isElementHidden(tag.el)});
+            if (!tag.el.classList.contains('equa11y-heading-label')) {
                 label = document.createElement('div');
                 label.classList.add(...clsList);
-                label.innerText = tag.nodeName.toUpperCase();
-            
+                label.innerText = tag.el.nodeName.toUpperCase();
+
                 // Append the label to the heading
-                tag.classList.add(...tagList);
-                tag.prepend(label);
+                tag.el.classList.add(...tagList);
+                tag.el.prepend(label);
             }
 
-            if(isSkipped && label instanceof HTMLElement) {
+            if (tag.isSkipped && label.style) {
                 label.style.cssText = 'background-color: #AB1B18 !important;  outline: 2px dashed black;';
                 label.classList.add('skipped');
             }
         });
-       
-        document.dispatchEvent(new CustomEvent('open-sidebar', { detail: { title: 'Headings', content: structure } }));
+
+        document.dispatchEvent(new CustomEvent('open-sidebar', { detail: { title: 'Headings', content: structure.reverse() } }));
     }
 
-    function heading_unchecked() {
-        allTags.forEach(tag => {
-            tag.style.border = ''; 
-            const label = tag.querySelector('.equa11y-headings');
+    function clearHeadingTree() {
+        findHeadingTags(main.querySelectorAll(headingTags.join(','))).forEach(tag => {
+            tag.el.style.border = '';
+            const label = tag.el.querySelector('.equa11y-headings');
             if (label) {
-                tag.classList.remove(...tagList);
-                tag.removeChild(label); 
+                tag.el.classList.remove(...tagList);
+                tag.el.removeChild(label);
                 label.classList.remove('skipped');
             }
         });
@@ -57,20 +56,51 @@ export function toggleHeadingOutline(isChecked) {
         document.dispatchEvent(new CustomEvent('close-sidebar'));
     }
 
-    function findSkippedNumbers(arr) {
-        arr.sort((a, b) => a - b);
+    function headingChange(mutationList) {
+        for (let list of mutationList) {
+            if (list.addedNodes.length && isChecked) {
+                if (findHeadingTags(list.addedNodes).length) {
+                    clearHeadingTree();
+                    buildHeadingTree();
+                }
+            }
+        }
+    }
 
-        const skippedNumbers = [];
-        let start = arr[0];
-        let end = arr[arr.length - 1];
+    function findHeadingTags(nodeList) {
+        const headings = []; // Array to store found heading elements
+        const stack = Array.from(nodeList); // Use a stack to process nodes iteratively
+        let isSkipped = false;
+        let i = 0;
 
-        for (let i = start + 1; i < end; i++) {
-            if (!arr.includes(i)) {
-                skippedNumbers.push(i);
+        console.log('stack: ', stack);
+
+        while (stack.length > 0) {
+            const node = stack.pop();
+
+            // Check if the current node is an element
+            if (node.nodeType === Node.ELEMENT_NODE) {
+                // If it's a heading tag, add it to the list
+                if (headingTags.includes(node.tagName)) {
+                    headings.push({ el: node });
+                    if (headings.length > 1) {
+                        let curHeading = parseInt(node.tagName.replace("H", ""), 10);
+                        let prevHeading = parseInt(headings[i - 1].el.tagName.replace("H", ""), 10);
+                        isSkipped = ((prevHeading - curHeading) > 1) ;
+                    } 
+                    headings.splice(headings.length - 1, 1, { el: node, isSkipped});
+
+                    i++;
+                }
+
+                // Add child nodes to the stack for further processing
+                if (node.hasChildNodes()) {
+                    stack.push(...node.childNodes);
+                }
             }
         }
 
-        return skippedNumbers;
+        return headings;
     }
 
     function isElementHidden(element) {
