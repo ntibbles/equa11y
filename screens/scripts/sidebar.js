@@ -1,53 +1,25 @@
 (function sidebar() {
     const body = document.body;
-    const config = { attributes: true, childList: true, subtree: true };
     let sidebarContainer = {};
     let sidebarContent = {};
     let closeBtn = {};
     let isInit = false;
    
     function initListeners() {
-        console.log('init');
         document.addEventListener('open-sidebar', open);
         document.addEventListener('close-sidebar', close);
+        document.addEventListener('update-sidebar', insertContent);
         closeBtn.addEventListener('click', close);
     }
-
-    // const loaded = (mutationList, observer) => {
-    //     //console.log('loaded: ', mutationList);
-    //     sidebarContainer = document.getElementById("equa11y-sidebar");
-    //     console.log('loaded: ', sidebarContainer);
-    //     closeBtn = document.getElementById('sidebar-close');
-    //     initListeners();
-    // }
-
-    // const observer = new MutationObserver(loaded);
-    // observer.observe(body, config);
-
-    // function generateSidebar() {
-    //     sidebarContainer = document.createElement('div');
-    //     sidebarContainer.id = "equa11y-sidebar";
-    //     sidebarContainer.classList.add('equa11y-sidebar');
-    //     head.after(sidebarContainer);
-    //     body.style.position = 'relative';
-    // }
-
-    // function generateClose() {
-    //     closeBtn = document.createElement('button');
-    //     closeBtn.classList.add('sidebar-close');
-    //     closeBtn.textContent = 'X';
-    //     closeBtn.setAttribute('aria-label', 'close');
-    //     closeBtn.addEventListener('click', close);
-    //     sidebarContainer.prepend(closeBtn);
-    // }
 
     function insertHeading(heading) {
         sidebarHeader.textContent = heading;
         sidebarContainer.appendChild(sidebarHeader);
     }
 
-    function insertContent(content) {
-        sidebarContent.classList.add('equa11y-sidebar_content');
+    function insertContent(evt) {
+        const { content } = evt.detail;
+        sidebarContent.innerHTML = '';
         content.forEach(element => {
             sidebarContent.appendChild(element);
         });
@@ -55,12 +27,10 @@
     }
 
     function open(evt) {
+        const { title } = evt.detail;
         if(!isInit) {
-            const { title, content } = evt.detail;
             isInit = true;
-
             insertHeading(title);
-            insertContent(content);
         }
         sidebarContainer.classList.add('open');
         body.setAttribute('style', 'margin-left: 325px !important');

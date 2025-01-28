@@ -21,7 +21,6 @@
   "content_scripts": [
     {
       "js": [
-        "deps/tesseract.min.js",
         "screens/scripts/sidebar.js"
       ],
       "css": [
@@ -36,13 +35,6 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "deps/dictionary.txt",
-        "deps/tesseract-core/worker.min.js",
-        "deps/tesseract-core/tesseract-core.wasm.js",
-        "deps/tesseract-core/tesseract-core-simd.wasm.js",
-        "deps/tesseract-core/tesseract-core-simd-lstm.wasm.js",
-        "deps/tesseract-core/tesseract-core-lstm.wasm.js",
-        "deps/tesseract-core/eng.traineddata.gz",
         "screens/sidebar.html"
       ],
       "matches": [

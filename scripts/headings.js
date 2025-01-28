@@ -1,27 +1,28 @@
 export function toggleHeadingOutline(isChecked = false) {
     const headingTags = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
-    const main = document.getElementsByTagName('main')[0];
     const tagList = ['equa11y-border', 'equa11y-heading-label'];
     const clsList = ['equa11y-label', 'equa11y-headings'];
     const config = { childList: true, subtree: true };
-    const structure = [];
+    let structure = [];
     let label = {};
 
     isChecked ? heading_checked() : heading_unchecked();
 
     function heading_checked() {
-        buildHeadingTree();
         window.equa11y_observer = window.equa11y_observer || new MutationObserver(headingChange);
-        window.equa11y_observer.observe(main, config);
+        window.equa11y_observer.observe(document.body, config);
+        document.dispatchEvent(new CustomEvent('open-sidebar', { detail: { title: 'Headings' } }));
+        buildHeadingTree();
     }
 
     function heading_unchecked() {
         window.equa11y_observer.disconnect();
         clearHeadingTree();
+        document.dispatchEvent(new CustomEvent('close-sidebar'));
     }
 
     function buildHeadingTree() {
-        findHeadingTags(main.querySelectorAll(headingTags.join(','))).forEach(tag => {
+        findHeadingTags(document.body.querySelectorAll(headingTags.join(','))).forEach(tag => {
             addSidebarContent({ title: tag.el.textContent, level: tag.el.nodeName, isSkipped: tag.isSkipped, isHidden: isElementHidden(tag.el)});
             if (!tag.el.classList.contains('equa11y-heading-label')) {
                 label = document.createElement('div');
@@ -39,11 +40,11 @@ export function toggleHeadingOutline(isChecked = false) {
             }
         });
 
-        document.dispatchEvent(new CustomEvent('open-sidebar', { detail: { title: 'Headings', content: structure.reverse() } }));
+        document.dispatchEvent(new CustomEvent('update-sidebar', { detail: { content: structure } }));
     }
 
     function clearHeadingTree() {
-        findHeadingTags(main.querySelectorAll(headingTags.join(','))).forEach(tag => {
+        findHeadingTags(document.body.querySelectorAll(headingTags.join(','))).forEach(tag => {
             tag.el.style.border = '';
             const label = tag.el.querySelector('.equa11y-headings');
             if (label) {
@@ -52,14 +53,14 @@ export function toggleHeadingOutline(isChecked = false) {
                 label.classList.remove('skipped');
             }
         });
-
-        document.dispatchEvent(new CustomEvent('close-sidebar'));
+        structure.splice(0, structure.length);
     }
 
     function headingChange(mutationList) {
         for (let list of mutationList) {
-            if (list.addedNodes.length && isChecked) {
-                if (findHeadingTags(list.addedNodes).length) {
+            let changedNodes = (list.addedNodes.length) ? list.addedNodes : list.removedNodes;
+            if (changedNodes.length && isChecked) {
+                if (findHeadingTags(changedNodes).length) {
                     clearHeadingTree();
                     buildHeadingTree();
                 }
@@ -69,11 +70,9 @@ export function toggleHeadingOutline(isChecked = false) {
 
     function findHeadingTags(nodeList) {
         const headings = []; // Array to store found heading elements
-        const stack = Array.from(nodeList); // Use a stack to process nodes iteratively
+        const stack = Array.from(nodeList).reverse(); // Use a stack to process nodes iteratively
         let isSkipped = false;
         let i = 0;
-
-        console.log('stack: ', stack);
 
         while (stack.length > 0) {
             const node = stack.pop();
@@ -86,7 +85,7 @@ export function toggleHeadingOutline(isChecked = false) {
                     if (headings.length > 1) {
                         let curHeading = parseInt(node.tagName.replace("H", ""), 10);
                         let prevHeading = parseInt(headings[i - 1].el.tagName.replace("H", ""), 10);
-                        isSkipped = ((prevHeading - curHeading) > 1) ;
+                        isSkipped = ((curHeading - prevHeading) > 1) ;
                     } 
                     headings.splice(headings.length - 1, 1, { el: node, isSkipped});
 
