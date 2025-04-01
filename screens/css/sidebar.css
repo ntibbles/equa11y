@@ -32,12 +32,6 @@
     color:white;
 }
 
-.equa11y-sidebar .skipped {
-    background-color: #AB1B18 !important;
-    outline: 2px dashed white !important;
-    margin-left: 5px;
-}
-
 .equa11y-sidebar .hidden {
     background-color: #FFF !important;
     color: #000 !important;

@@ -27,6 +27,7 @@ export function toggleHeadingOutline(isChecked = false) {
             if (!tag.el.classList.contains('equa11y-heading-label')) {
                 label = document.createElement('div');
                 label.classList.add(...clsList);
+                label.classList.add(`level-${tag.el.nodeName}`);
                 label.innerText = tag.el.nodeName.toUpperCase();
 
                 // Append the label to the heading
@@ -35,7 +36,7 @@ export function toggleHeadingOutline(isChecked = false) {
             }
 
             if (tag.isSkipped && label.style) {
-                label.style.cssText = 'background-color: #AB1B18 !important;  outline: 2px dashed black;';
+                //label.style.cssText = 'outline: 2px dashed black;';
                 label.classList.add('skipped');
             }
         });
@@ -133,9 +134,12 @@ export function toggleHeadingOutline(isChecked = false) {
     function addSidebarContent(details) {
         let div = document.createElement('div');
         let heading = document.createElement('strong');
-        heading.classList.add('equa11y-label');
+        heading.classList.add(...['equa11y-label', `level-${details.level}`]);
         heading.textContent = details.level;
-        if(details.isSkipped) heading.classList.add('skipped');
+        if(details.isSkipped) {
+            heading.setAttribute('aria-label', `${details.level}, skipped heading`);
+            heading.classList.add('skipped');
+        }
         if(details.isHidden)  heading.classList.add('hidden');
         div.prepend(heading);
         div.innerHTML += `<span>${details.title}</span>`;
