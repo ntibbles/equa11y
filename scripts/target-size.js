@@ -1,5 +1,5 @@
 export function toggleTargetSize(isChecked) {
-    const interactiveRoles = ['button', 'a', 'checkbox', 'radio', 'slider', 'textbox', 'combobox', 'menuitem', 'option', '[role="button"]', '[role="link"]'];
+    const interactiveRoles = ['button', 'a', '[type="checkbox"]', '[type="radio"]', '[type="slider"]', 'textbox', 'option', '[role="button"]', '[role="link"]'];
     const roleList =  document.querySelectorAll(interactiveRoles.join(','));
     const clsList = ['equa11y-label'];
     const elList = ['equa11y-border', 'equa11y-size'];
