@@ -1,6 +1,6 @@
 export function toggleInteractiveRoles(isChecked) {
     // List of common interactive roles and their corresponding elements
-    const interactiveRoles = ['button', 'a', 'checkbox', 'radio', 'slider', 'textbox', 'combobox', 'menuitem', 'option', '[role="button"]', '[role="link"]'];
+    const interactiveRoles = ['button', 'a', '[type="checkbox"]', '[type="radio"]', '[type="slider"]', 'textbox', 'option', '[role="button"]', '[role="link"]'];
     const outlinedElements = document.querySelectorAll('.outlined-role');
     const elList = ['equa11y-border', 'outlined-role'];
     const clsList = ['equa11y-label', 'equa11y-roles'];
