@@ -62,6 +62,15 @@ Voila!
 
 ## CHANGELOG
 
+### Version 1.3
+[Enhancements]
+- [Display Headings Levels now account for the use of 'aria-level' and dynamic headings that added/removed from the page](https://github.com/ntibbles/equa11y/issues/89)
+- [Display Headings Levels now account for dynamic headings that added/removed from the page](https://github.com/ntibbles/equa11y/issues/85)
+- [Display Alt Text now reveals when the alt attribute is missing](https://github.com/ntibbles/equa11y/issues/88)
+
+[Bugfixes]
+- [Display SR Text fails with empty attributes](https://github.com/ntibbles/equa11y/issues/87)
+
 ### Version 1.2
 [Enhancements]
 - [#62 - Added 'Text Spacing' utility](https://github.com/ntibbles/equa11y/issues/62)
