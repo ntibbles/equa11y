@@ -40,7 +40,8 @@ export function toggleScreenReaderTextDisplay(isChecked) {
 
     function getAriaText(id) {
         let idArr = id.split(' ');
-        const ariaTextArr = idArr.map((elementId) => document.getElementById(elementId).innerText);
+        const ariaTextArr = idArr.map((elementId) => document.getElementById(elementId)?.innerText || '');
+        console.log('ariaTextArr: ',ariaTextArr);
         return ariaTextArr.join(', ');
     }
 }
