@@ -23,7 +23,12 @@ export function toggleHeadingOutline(isChecked = false) {
             if (!tag.el.classList.contains('equa11y-heading-label')) {
                 label = document.createElement('div');
                 label.classList.add(...clsList);
-                label.innerText = tag.el.nodeName.toUpperCase();
+                // Use aria-level if present, otherwise use tagName
+                if (tag.el.hasAttribute('aria-level')) {
+                    label.innerText = `H${tag.el.getAttribute('aria-level')}`;
+                } else {
+                    label.innerText = tag.el.nodeName.toUpperCase();
+                }
 
                 // Append the label to the heading
                 tag.el.classList.add(...tagList);
@@ -73,13 +78,23 @@ export function toggleHeadingOutline(isChecked = false) {
             if (node.nodeType === Node.ELEMENT_NODE) {
                 // If it's a heading tag, add it to the list
                 if (headingTags.includes(node.tagName)) {
+                    // Use aria-level if present, otherwise use tagName
+                    let currentLevel = node.hasAttribute('aria-level')
+                        ? parseInt(node.getAttribute('aria-level'), 10)
+                        : parseInt(node.tagName.replace("H", ""), 10);
+
                     headings.push({ el: node });
+
                     if (headings.length > 1) {
-                        let curHeading = parseInt(node.tagName.replace("H", ""), 10);
-                        let prevHeading = parseInt(headings[i - 1].el.tagName.replace("H", ""), 10);
-                        isSkipped = ((curHeading - prevHeading) > 1) ;
-                    } 
-                    headings.splice(headings.length - 1, 1, { el: node, isSkipped});
+                        let prevNode = headings[i - 1].el;
+                        let prevLevel = prevNode.hasAttribute('aria-level')
+                            ? parseInt(prevNode.getAttribute('aria-level'), 10)
+                            : parseInt(prevNode.tagName.replace("H", ""), 10);
+
+                        isSkipped = ((currentLevel - prevLevel) > 1);
+                    }
+
+                    headings.splice(headings.length - 1, 1, { el: node, isSkipped });
 
                     i++;
                 }
