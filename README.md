@@ -1,11 +1,10 @@
 # Equa11y: Accessibility Testing Utilities
 The Equa11y extension is to help test a webpage for accessibility. It is designed to improve the efficiency of accessibility testing with various utilities.
 
-## What's New in Version 1.2!
-### New Functionality
-- **Text Spacing** - Increase the text spacing on the page.
-- **Reveal Pagae Title** - Displays the page title of the page.
-- **Text Zoom Control** - Adjust the text zoom from 100 - 200%.
+## What's New in Version 1.3!
+### Enhancements
+- **Display Heading Levels** - Now account for the use of 'aria-level' and dynamic headings that are added/removed from the page 
+- **Display Alt Text** - Now reveals when the alt attribute is missing
 
 ### UI
 All utilities are now broken into tabs by WCAG (Web Content Accessibility Guideline) principle:
