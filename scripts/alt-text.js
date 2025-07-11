@@ -9,12 +9,16 @@ export function toggleAltTextDisplay(isChecked) {
     function altText_checked() {
         images.forEach(img => {
             if(!img.classList.contains('equa11y-alt-container')) {
-                const altText = img.alt ? img.alt : '';
+                const altText = img.hasAttribute('alt') ? `alt="${img.alt}"` : 'missing alt attribute';
                 const altTextElement = document.createElement('div');
                 img.classList.add(...imgCls);
-                altTextElement.innerText = `alt="${altText}"`;
+                altTextElement.innerText = altText;
                 altTextElement.classList.add(...clsList);
                 img.parentNode.insertBefore(altTextElement, img);
+
+                if(!img.hasAttribute('alt')) {
+                    altTextElement.style.cssText = 'background-color: #AB1B18 !important;  outline: 2px dashed black;';
+                }
             }
         });
     }
