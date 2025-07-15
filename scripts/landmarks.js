@@ -1,44 +1,47 @@
 export function toggleLandmarkOutlines(isChecked) {
     const landmarks = [
-        'header', 'nav', 'main', 'footer', 'aside', 'search', 'form'
+        'section', 'header', 'nav', 'main', 'footer', 'aside', 'search', 'form',
+        '[role="region"]', '[role="complementary"]', '[role="contentinfo"]', '[role="search"]',
+        '[role="main"]', '[role="contentinfo"]', '[role="banner"]', '[role="navigation"]'
     ];
+    const elCls = ['equa11y-border', 'equa11y-landmark'];
+    const clsList = ['equa11y-label', 'equa11y-landmarks'];
 
-    if (isChecked) {
+    isChecked ? toggleLandmarks_checked() : toggleLandmarks_unchecked();
+
+    function toggleLandmarks_checked() {
         landmarks.forEach(landmark => {
             document.querySelectorAll(landmark).forEach(element => {
-                // Add border and label
-                element.style.border = '2px solid blue';
-                element.style.position = 'relative';
+               
+               
+                ariaLabel = element.getAttribute('aria-label');
 
-                // Check if label already exists
-                if (!element.querySelector('.landmark-label')) {
+                if (landmark.indexOf("role") > -1) {
+                    landmark = landmark.substring(7, landmark.indexOf(']') - 1);
+                }
+
+                if(!element.classList.contains('equa11y-landmark')) {
                     const label = document.createElement('div');
-                    label.textContent = landmark;
-                    label.classList.add('landmark-label');
-                    label.style.position = 'absolute';
-                    label.style.top = '0';
-                    label.style.left = '0';
-                    label.style.backgroundColor = 'blue';
-                    label.style.padding = '2px';
-                    label.style.fontSize = '12px';
-                    label.style.color = 'white';
-                    label.style.border = '1px solid blue';
-                    label.style.zIndex = '10000'; // Ensures label stays on top
-                    element.appendChild(label);
+                    label.textContent = ariaLabel ? `${ariaLabel} [${landmark}]` : landmark;
+                    label.classList.add(...clsList);
+
+                    element.classList.add(...elCls);
+                    element.prepend(label);
                 }
             });
         });
-    } else {
-        // Remove all borders and labels
+    }
+
+    function toggleLandmarks_unchecked() {
         landmarks.forEach(landmark => {
             document.querySelectorAll(landmark).forEach(element => {
-                element.style.border = 'none';
+                element.classList.remove(...elCls);
             });
-
+    
             // Remove existing label
-            document.querySelectorAll('.landmark-label').forEach(element => {
+            document.querySelectorAll('.equa11y-landmarks').forEach(element => {
                 element.remove();
             })
-        });
+        });    
     }
 }

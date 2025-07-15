@@ -1,46 +1,35 @@
 export function toggleInteractiveRoles(isChecked) {
     // List of common interactive roles and their corresponding elements
-    const interactiveRoles = ['button', 'a', 'checkbox', 'radio', 'slider', 'textbox', 'combobox', 'menuitem', 'option', '[role="button"]', '[role="link"]'];
+    const interactiveRoles = ['button', 'a', '[type="checkbox"]', '[type="radio"]', '[type="slider"]', 'textbox', 'option', '[role="button"]', '[role="link"]'];
+    const outlinedElements = document.querySelectorAll('.outlined-role');
+    const elList = ['equa11y-border', 'outlined-role'];
+    const clsList = ['equa11y-label', 'equa11y-roles'];
 
-    if (isChecked) {
-        // Add border and label for each interactive element
+    isChecked ? interactiveRoles_checked() : interactiveRoles_unchecked();
+
+    function interactiveRoles_checked() {
         interactiveRoles.forEach(role => {
             const elements = document.querySelectorAll(role);
 
             elements.forEach(el => {
-                // Create a label for the role
-                const roleLabel = document.createElement('span');
-                roleLabel.textContent = role;
-                roleLabel.className = 'role-label';
-                roleLabel.style.position = 'absolute';
-                roleLabel.style.top = '0';
-                roleLabel.style.left = '0';
-                roleLabel.style.backgroundColor = 'blue';
-                roleLabel.style.color = 'white';
-                roleLabel.style.fontSize = '1em';
-                roleLabel.style.padding = '2px';
-                roleLabel.style.zIndex = '1000';
-
-                // Position the label relative to the element
-                el.style.position = 'relative';
-
-                // Add the border and append the label
-                el.style.border = '2px solid blue';
-                el.classList.add('outlined-role'); // Add a class for later removal
-                el.appendChild(roleLabel);
+                if(!el.classList.contains('outlined-role')) {
+                    const roleLabel = document.createElement('span');
+                    roleLabel.textContent = (role === 'a') ? 'link [a]' : role;
+                    roleLabel.classList.add(...clsList);
+                  
+                    el.classList.add(...elList);
+                    el.prepend(roleLabel);
+                }
             });
         });
-    } else {
-        // Remove borders and labels
-        const outlinedElements = document.querySelectorAll('.outlined-role');
+    }
 
+    function interactiveRoles_unchecked() {
         outlinedElements.forEach(el => {
-            el.style.border = ''; // Remove border
-            el.style.position = ''; // Remove relative positioning
-            el.classList.remove('outlined-role'); // Remove the class
+            el.classList.remove(...elList);
         });
-
-        document.querySelectorAll('.role-label').forEach(el => {
+    
+        document.querySelectorAll('.equa11y-roles').forEach(el => {
             el.remove();
         });
     }

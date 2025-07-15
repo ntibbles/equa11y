@@ -2,9 +2,12 @@ export function processImages(isChecked) {
     const images = document.getElementsByTagName('img');
     const canvas = document.createElement('canvas');
     const dialog = document.createElement('dialog');
+    const dialogTitle = document.createElement('h1');
+    const dialogSpinner = document.createElement('div');
     const msg = document.createElement('p');
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
     const { createWorker } = Tesseract;
+    const errors = [];
     let numOfJobs = 0;
     let completedJobs = 0;
     let runningJobs = {};
@@ -12,7 +15,7 @@ export function processImages(isChecked) {
     dialog.style.width = '15em';
     dialog.style.textAlign = 'center';
     dialog.style.borderRadius = '2em';
-    dialog.style.minHeight = '200px';
+    dialog.style.minHeight = '250px';
     msg.style.textTransform = 'Capitalize';
     msg.setAttribute('aria-live', 'polite');
 
@@ -26,17 +29,18 @@ export function processImages(isChecked) {
 
     if (isChecked) {
         // prevents reinit when the ext is closed and opened
-        if(!document.body.classList.contains('aid-text-detection')) {
+        if(!document.body.classList.contains('equa11y-text-detection')) {  // FIX ME: code stink
             generateDialog();
             for (let i = 0; i < images.length; i++) {
                 const image = images[i];
                 image.setAttribute('crossorigin', 'anonymous');
                 toDataURL(image);
             }
-            document.body.classList.add('aid-text-detection');
+            document.body.classList.add('equa11y-text-detection');
         }
     } else {
-        document.body.classList.remove('aid-text-detection');
+        document.body.classList.remove('equa11y-text-detection');
+        window.focus();
         dialog.close();
         for (let i = 0; i < images.length; i++) {
             const image = images[i];
@@ -56,14 +60,21 @@ export function processImages(isChecked) {
     }
 
     function extractTextFromImage(image) {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             (async () => {
-                //const worker = await createWorker('eng');
-                const worker = await createWorker('eng', 1, { logger: m => statusLogger(m) });
+                const worker = await createWorker('eng', 1, { 
+                    workerPath: chrome.runtime.getURL("deps/tesseract-core/worker.min.js"),
+                    langPath: chrome.runtime.getURL("deps/tesseract-core/"),
+                    corePath: chrome.runtime.getURL("deps/tesseract-core/"),
+                    logger: m => statusLogger(m),
+                    errorHandler: err => console.error(err)
+                });
                 const { data: { text } } = await worker.recognize(image);
                 resolve(text);
                 await worker.terminate();
             })();
+        }).catch(err => {
+            console.warn("Error occurred within Tesseract: ", err);
         });
     }
 
@@ -103,15 +114,7 @@ export function processImages(isChecked) {
                 const label = document.createElement('div');
                 //label.textContent = 'Embedded text: ' + filteredWords;
                 label.textContent = 'Embedded text';
-                label.class = 'aid-embed-label';
-                label.style.position = 'relative';
-                label.style.top = '20px';
-                label.style.textAlign= 'left';
-                label.style.color = 'white';
-                label.style.width = (image.width - 10) + 'px';
-                label.style.backgroundColor = 'rgba(0, 0, 255, 0.7)';
-                label.style.padding = '2px 5px';
-                label.style.fontSize = '12px';
+                label.className = 'equa11y-label';
         
                 // Add the label to the image or a container
                 image.parentNode.insertBefore(label, image); 
@@ -121,24 +124,27 @@ export function processImages(isChecked) {
 
     function toDataURL(img) {
         try {
-            fetch(img.src)
-                .then(response => response.blob())
-                .then(blob => new Promise((resolve, reject) => {
-                    const reader = new FileReader()
-                    reader.onloadend = () => resolve(reader.result)
-                    reader.onerror = reject
-                    reader.readAsDataURL(blob)
-                }))
-                .then(dataURL => {
-                    msg.textContent = 'Greyscaling Images';
-                    makeGrayscale({ img, dataURL })
-                    .then(img => {
-                        extractText(img);
-                    });
-                })
-                .catch(err => {
-                    console.error("Can't fetch the resource");
-                })
+            if(!img.src.includes('undefined')) {
+                fetch(img.src)
+                    .then(response => response.blob())
+                    .then(blob => new Promise((resolve, reject) => {
+                        const reader = new FileReader()
+                        reader.onloadend = () => resolve(reader.result)
+                        reader.onerror = reject
+                        reader.readAsDataURL(blob)
+                    }))
+                    .then(dataURL => {
+                        msg.textContent = 'Greyscaling Images';
+                        makeGrayscale({ img, dataURL })
+                        .then(img => {
+                            extractText(img);
+                        });
+                    })
+                    .catch(err => {
+                        errorLogger("Blocked from fetching the images");
+                        console.error("ET : Blocked from fetching the images: ", err);
+                    })
+            }
         } catch (err) {
             console.warn(`Image could not be converted to dataURI: ${img.src} with error: ${err}`);
         }
@@ -187,7 +193,6 @@ export function processImages(isChecked) {
         for (let i = 0; i < images.length; i++) {
             // revert to colour
             images[i].src = images[i].dataset.src;
-            //images[i].removeAttribute('data-src');
         };
     }
 
@@ -213,19 +218,24 @@ export function processImages(isChecked) {
         }
     }
 
+    function errorLogger(err) {
+        if(!errors.includes(err)) errors.push(err);
+    }
+
     function generateDialog() {
-        const title = document.createElement('h1');
-        title.textContent = 'Scanning';
-        title.style.fontSize = '2rem';
-        title.style.paddingBottom = '1rem';
+        dialogTitle.textContent = 'Scanning';
+        dialogTitle.style.fontSize = '2rem';
+
+        dialogSpinner.className = "lds-ring";
+        dialogSpinner.innerHTML = "<div></div><div></div><div></div><div></div></div>";
 
         msg.textContent = 'Initializing';
 
-        dialog.append(title);
+        dialog.append(dialogTitle);
+        dialog.append(dialogSpinner);
         dialog.append(msg);
 
         document.body.appendChild(dialog);
         dialog.showModal();
     }
 }
-  

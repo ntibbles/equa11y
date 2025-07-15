@@ -1,50 +1,111 @@
-export function toggleHeadingOutline(isChecked) {
-    // Define the list of heading tags
-    const headingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+export function toggleHeadingOutline(isChecked = false) {
+    const headingTags = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
+    const tagList = ['equa11y-border', 'equa11y-heading-label'];
+    const clsList = ['equa11y-label', 'equa11y-headings'];
+    const config = { childList: true, subtree: true };
+    let label = {};
 
-    // Loop through each heading tag
-    headingTags.forEach(tag => {
-        // Get all elements with the specified heading tag
-        const headings = document.querySelectorAll(tag);
+    isChecked ? heading_checked() : heading_unchecked();
 
-        // Iterate through each heading element
-        headings.forEach(heading => {
-            if (isChecked) {
-                // If isChecked is true, add border and label
-                heading.style.border = '2px solid blue';
-                heading.style.position = 'relative';  // Ensure relative positioning for label placement
+    function heading_checked() {
+        buildHeadingTree();
+        window.equa11y_observer = window.equa11y_observer || new MutationObserver(headingChange);
+        window.equa11y_observer.observe(document.body, config);
+    }
 
-                // Check if the label already exists, and avoid creating a new one
-                if (!heading.querySelector('.heading-label')) {
-                    // Create a label for the heading level
-                    const label = document.createElement('div');
-                    label.className = 'heading-label';  // Assign a class for easy identification
-                    label.innerText = tag.toUpperCase();  // Heading level (e.g., H1, H2)
-                    label.style.position = 'absolute';
-                    label.style.top = '0';
-                    label.style.left = '0';
-                    label.style.backgroundColor = 'blue';  // Background for readability
-                    label.style.color = 'white';  // Text color
-                    label.style.padding = '2px 5px';  // Padding around the text
-                    label.style.fontSize = '12px';  // Smaller font size
-                    label.style.fontWeight = 'bold';
-                    label.style.zIndex = '1000';  // Ensure it's above other content
+    function heading_unchecked() {
+        window.equa11y_observer.disconnect();
+        clearHeadingTree();
+    }
 
-                    // Append the label to the heading
-                    heading.appendChild(label);
+    function buildHeadingTree() {
+        findHeadingTags(document.querySelectorAll(headingTags.join(','))).forEach(tag => {
+            if (!tag.el.classList.contains('equa11y-heading-label')) {
+                label = document.createElement('div');
+                label.classList.add(...clsList);
+                // Use aria-level if present, otherwise use tagName
+                if (tag.el.hasAttribute('aria-level')) {
+                    label.innerText = `H${tag.el.getAttribute('aria-level')}`;
+                } else {
+                    label.innerText = tag.el.nodeName.toUpperCase();
                 }
-            } else {
-                // If isChecked is false, remove border and label
-                heading.style.border = '';  // Reset the border
-                const label = heading.querySelector('.heading-label');
-                if (label) {
-                    heading.removeChild(label);  // Remove the label
-                }
+
+                // Append the label to the heading
+                tag.el.classList.add(...tagList);
+                tag.el.prepend(label);
+            }
+
+            if (tag.isSkipped && label.style) {
+                label.style.cssText = 'background-color: #AB1B18 !important;  outline: 2px dashed black;';
+                label.classList.add('skipped');
             }
         });
-    });
-}
+    }
 
-// Example usage:
-// Call toggleHeadingOutline(true) to add borders and labels
-// Call toggleHeadingOutline(false) to remove borders and labels
+    function clearHeadingTree() {
+        findHeadingTags(document.querySelectorAll(headingTags.join(','))).forEach(tag => {
+            tag.el.style.border = '';
+            const label = tag.el.querySelector('.equa11y-headings');
+            if (label) {
+                tag.el.classList.remove(...tagList);
+                tag.el.removeChild(label);
+                label.classList.remove('skipped');
+            }
+        });
+    }
+
+    function headingChange(mutationList) {
+        for (let list of mutationList) {
+            if (list.addedNodes.length && isChecked) {
+                if (findHeadingTags(list.addedNodes).length) {
+                    clearHeadingTree();
+                    buildHeadingTree();
+                }
+            }
+        }
+    }
+
+    function findHeadingTags(nodeList) {
+        const headings = []; // Array to store found heading elements
+        const stack = Array.from(nodeList).reverse(); // Use a stack to process nodes iteratively
+        let isSkipped = false;
+        let i = 0;
+
+        while (stack.length > 0) {
+            const node = stack.pop();
+
+            // Check if the current node is an element
+            if (node.nodeType === Node.ELEMENT_NODE) {
+                // If it's a heading tag, add it to the list
+                if (headingTags.includes(node.tagName)) {
+                    // Use aria-level if present, otherwise use tagName
+                    let currentLevel = node.hasAttribute('aria-level')
+                        ? parseInt(node.getAttribute('aria-level'), 10)
+                        : parseInt(node.tagName.replace("H", ""), 10);
+
+                    headings.push({ el: node });
+
+                    if (headings.length > 1) {
+                        let prevNode = headings[i - 1].el;
+                        let prevLevel = prevNode.hasAttribute('aria-level')
+                            ? parseInt(prevNode.getAttribute('aria-level'), 10)
+                            : parseInt(prevNode.tagName.replace("H", ""), 10);
+
+                        isSkipped = ((currentLevel - prevLevel) > 1);
+                    }
+
+                    headings.splice(headings.length - 1, 1, { el: node, isSkipped });
+
+                    i++;
+                }
+
+                // Add child nodes to the stack for further processing
+                if (node.hasChildNodes()) {
+                    stack.push(...node.childNodes);
+                }
+            }
+        }
+
+        return headings;
+    }
+}

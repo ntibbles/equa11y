@@ -1,0 +1,186 @@
+
+body {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    padding: 10px 10px 0;
+    min-width: 92vw;
+    font-size: 0.9em;
+    height: 100%;
+}
+
+fieldset {
+    border: none;
+    padding: 10px 10px 0;
+    font-weight: bold;
+    margin: 0.5em 0.5em 0;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 5px;
+    list-style-type: none;
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+}
+
+h1, h2 {
+    margin: 0;
+    display: inline-block;
+    margin: 0 5px 20px;
+    font-size: 1.5em;
+}
+
+h2 {
+    margin: 10px 0;
+    font-size: 1.1em;
+}
+
+nav {
+    text-align: right;
+}
+
+footer {
+    text-align: right;
+}
+
+.item-container {
+    display: flex;
+    padding-bottom: 1rem;
+}
+
+.small {
+    font-size: .7rem;
+    text-align: right;
+    vertical-align: super;
+}
+
+.byline {
+    top: -30px;
+    position: relative;
+    text-align: center;
+    margin-bottom: -10px;
+}
+
+.superscript {
+    position: relative; 
+    top: -0.5em; 
+    font-size: 60%;
+    font-style: italic;
+}
+
+.logo {
+    width: 180px;
+    margin-top: 12px;
+}
+
+/* Tabs */
+:host {
+    display: block;
+    container-type: inline-size;
+}
+
+.equa11y-tabs {
+    border: 1px solid gray;
+    border-bottom: none;
+    background-color: white;
+    padding: 5px;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.equa11y-tabs:focus,
+.equa11y-tabs[tabindex='0'] {
+    background-color: #AB1B18;
+    color:white;
+}
+
+input[type='range']{ 
+    accent-color: #AB1B18; 
+}
+
+.equa11y-tabpanel {
+    display: none;
+    border: 1px gray solid;
+    border-radius: 5px;
+}
+
+.equa11y-instructions {
+    display:none;
+}
+
+.equa11y-tablist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.equa11y-tablist li {
+    margin: 0 1px 0 2px;
+    display: inline;
+}
+
+#tabs:focus-within > .equa11y-instructions {
+    display: block;
+}
+
+.visible {
+    display: block;
+}
+
+.sr-only {
+    clip: rect(1px, 1px, 1px, 1px);
+    -webkit-clip-path: inset(50%);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+    margin: -1px;
+}
+
+.settings {
+    position: absolute;
+    right: 20px;
+    top: 17px;
+}
+
+.settings-icon {
+    width: 25px;
+}
+
+.dark-mode {
+    background-color: rgb(60, 60, 60);
+    color: white;
+}
+
+.dark-mode .settings-icon,
+.dark-mode a:not(.a-logo) {
+    filter: invert(1);
+}
+
+.hide-beta .beta-util {
+    display: none;
+}
+
+footer .small {
+    float: left;
+}
+
+#zoomSize {
+    display: inline;
+    width: 35%;
+}
+
+input[type="checkbox"] {
+    accent-color: #AB1B18;
+}
+
+.dark-mode input[type="checkbox"]:checked {
+    outline: 1px solid grey;
+}
