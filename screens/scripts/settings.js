@@ -1,4 +1,5 @@
 import { dispatch } from "./utils/helpers.js";
+import { stopAllMotion } from "../../scripts/stop-animations.js";
 let fontSize = 1;
 
 document.addEventListener('popup-settings', init);
@@ -162,6 +163,16 @@ function setEventListeners() {
     document.getElementById('back').addEventListener('click', () => dispatch('popup-load-screen', 'home'));
     document.getElementById('updateBtn').addEventListener('click', setWordList);
     document.getElementById('resetBtn').addEventListener('click', resetWordList);
+    document.getElementById('stopMotion').addEventListener('click', (evt) => {
+        getTabId().then(id => {
+            chrome.scripting.executeScript({
+                target: { tabId: id },
+                function: stopAllMotion,
+                args: [evt.target.checked]      
+            });
+            setState(id, evt, evt.target.id);
+        });
+    });
     document.getElementById('showBeta').addEventListener('click', toggleBetaUtils);
 
     const darkMode = document.querySelectorAll('input[type="radio"]');
@@ -173,7 +184,7 @@ function setEventListeners() {
 function getComputedFontSize() {
     const body = document.body;
     const computedStyle = window.getComputedStyle(body);
-    const fontSize = computedStyle.fontSize;
+    fontSize = computedStyle.fontSize;
     
     return parseFloat(fontSize);
 }
