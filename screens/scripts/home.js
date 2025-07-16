@@ -12,6 +12,7 @@ import { revealLang } from "../../scripts/lang.js";
 import { toggleTargetSize } from "../../scripts/target-size.js";
 import { togglePageTitle } from "../../scripts/page-title.js";
 import { toggleTextSpacing } from "../../scripts/text-spacing.js";
+import { toggleTabbingOrder } from "../../scripts/tabbing-order.js";
 import { tabController } from "./tab.js";
 import { dispatch, getTabId } from "./utils/helpers.js";
 
@@ -51,7 +52,7 @@ async function checkCORS() {
         target: { tabId: id },
         function: checkFirstImage
     }).then(result => {
-        if (result[0].result.hasCors) {
+        if (result[0].result?.hasCors) {
             document.getElementById('displayEmbedded').setAttribute('disabled', true);
             document.getElementById('embeddedTextStatus').innerHTML = ' (<a href="https://github.com/ntibbles/equa11y/tree/main?tab=readme-ov-file#why-is-a-utility-not-available">Not Available</a>)';
         }
@@ -110,6 +111,7 @@ function getFunction(name) {
         case 'toggleTargetSize': return toggleTargetSize;
         case 'togglePageTitle': return togglePageTitle;
         case 'toggleTextSpacing': return toggleTextSpacing;
+        case 'toggleTabbingOrder': return toggleTabbingOrder;
         case 'serviceWorker': return 'serviceWorker';
     }
 }
