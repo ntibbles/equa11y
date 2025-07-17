@@ -22,22 +22,25 @@ And includes the success criteria for each test.
 - Increase the font size of the extension
 
 ## Core Utilities
-- **Display Alt Text** - Outlines and labels images with their alternative text.
-- **Display Landmark Regions** - Outlines and labels landmark regions with there role and label.
+- **Display Alt Text** - Outlines and labels images with their alternative text. If an image is missing an `alt` attribute, a label indicating "missing alt attribute" is displayed with a red background and a black dashed outline.
+- **Display Landmark Regions** - Outlines and labels landmark regions with their role and label.
 - **Display Element Roles** - Outlines and labels interactive elements with their role.
-- **Display Heading Levels** - Outlines and labels all headings on the page.
-- **Reveal Viewport Tag** - Displays the viewport tag.
-- **Zoom Text 200%** - Zooms text-only on the page by 200%.
-- **Display Target Size** - Displays the current target size of an interactive element.
-- **Display Screen Reader Text** - Displays the hidden text that a screen reader would announce. It takes into consideration the precedence of aria-label, aria-labelledby, and aria-describedby.
+- **Display Heading Levels** - Outlines and labels all headings on the page. If a heading level is skipped (e.g., an H3 follows an H1), the label for the skipped heading will be displayed with a red background and a black dashed outline.
+- **Reveal Viewport Tag** - Displays the viewport tag. If the viewport tag is present but prevents pinch-to-zoom (i.e., contains `user-scalable=no` or `maximum-scale=1`), the displayed label will have a red background and a black dashed outline.
+- **Zoom Text 200%** - Zooms text-only on the page by 200%. It calculates and applies new font sizes and line heights based on a user-selected zoom level, injecting these styles with `!important` to override existing page styles. It also displays a label showing the current zoom percentage.
+- **Display Target Size** - Displays the current target size of an interactive element. If either the width or height of an interactive element is less than 24 pixels, the label will be displayed with a red background and a black dashed outline.
+- **Display Screen Reader Text** - Displays the hidden text that a screen reader would announce. It prioritizes `aria-label`, `aria-labelledby`, and `aria-describedby` attributes. If these are not present, it falls back to the element's `textContent`.
 - **Highlight Exclusive Text** - Scans the page for exclusive words (e.g - "See", "View", etc) and highlights them. You can also modify the list in the **NEW** "settings" page.
-- **Reveal Lang Attribute** - Displays the lang attribute for the pagae and any in-page elements.
+- **Reveal Lang Attribute** - Displays the lang attribute for the page and any in-page elements. If the `<html>` tag is missing a `lang` attribute, a message "No lang attribute on HTML tag." is displayed at the top of the page.
+- **Text Spacing** - Adjusts line height, word spacing, letter spacing, and paragraph spacing according to WCAG 2.1 AA guidelines by injecting CSS rules. It calculates these values dynamically based on the page's base font size.
+- **Tabbing Order** - Outlines and labels all tabbable elements on the page. If an element has a `tabIndex` greater than 0 (indicating a non-sequential tab order), its label will be displayed with a red background and a black dashed outline.
+- **Stop Animations** - Provides comprehensive control over motion on a webpage. It stops animated GIFs by replacing them with their first static frame, disables CSS animations and transitions by injecting overriding styles, pauses all video elements, and attempts to stop motion within same-origin iframes (or hides cross-origin iframes).
 
 ### Core Utility Limitations
 - **Zoom Text 200%** detects and inserts a new stylesheet that doubles the current font size. If the page contains elements with styles including !important, the text will not zoom.
 
 ## Beta Utilities
-- **Outline Embedded Text** - Scans all images on the page and attempts to determine if the image has embedded text.
+- **Outline Embedded Text** - Scans all images on the page and attempts to determine if the image has embedded text. If embedded text is found, the image is outlined with a blue border and a label "Embedded text" is added.
 - **Outline Event Listeners** - Outlines and labels all non-interactive elements in the page with events. This is useful for identifying elements that may not get keyboard or screen reader focus. 
 
 ### Beta Utility Limitations
