@@ -99,5 +99,56 @@ export async function stopAllMotion(isChecked) {
             else if (video.paused && !video.ended) video.play().catch(() => {});
         });
     }
+
+    // Pause/restore motion in same-origin iframes, hide cross-origin iframes
+    function toggleIframeMotion(isChecked) {
+        document.querySelectorAll('iframe').forEach(iframe => {
+            try {
+                const doc = iframe.contentDocument || iframe.contentWindow.document;
+                if (isChecked) {
+                    // Pause videos
+                    doc.querySelectorAll('video').forEach(v => v.pause());
+                    // Stop CSS animations
+                    let style = doc.getElementById('equa11y-stop-motion');
+                    if (!style) {
+                        style = doc.createElement('style');
+                        style.id = 'equa11y-stop-motion';
+                        style.textContent = `
+                            *, *::before, *::after {
+                                animation: none !important;
+                                transition: none !important;
+                                scroll-behavior: auto !important;
+                            }
+                            html { scroll-behavior: auto !important; }
+                            video, audio {
+                                animation: none !important;
+                                transition: none !important;
+                            }
+                        `;
+                        doc.head.appendChild(style);
+                    }
+                } else {
+                    // Restore CSS motion
+                    const style = doc.getElementById('equa11y-stop-motion');
+                    if (style) style.remove();
+                    // Play videos
+                    doc.querySelectorAll('video').forEach(v => {
+                        if (v.paused && !v.ended) v.play().catch(() => {});
+                    });
+                }
+                // Restore visibility if previously hidden
+                iframe.style.visibility = '';
+            } catch (e) {
+                // Cross-origin: hide or show iframe
+                if (isChecked) {
+                    iframe.dataset.equa11yHidden = 'true';
+                    iframe.style.visibility = 'hidden';
+                } else if (iframe.dataset.equa11yHidden) {
+                    iframe.style.visibility = '';
+                    delete iframe.dataset.equa11yHidden;
+                }
+            }
+        });
+    }
 }
 

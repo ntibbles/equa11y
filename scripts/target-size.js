@@ -1,5 +1,5 @@
 export function toggleTargetSize(isChecked) {
-    const interactiveRoles = ['button', 'a', '[type="checkbox"]', '[type="radio"]', '[type="slider"]', 'textbox', 'option', '[role="button"]', '[role="link"]'];
+    const interactiveRoles = ['button', 'a', '[type="checkbox"]', '[type="radio"]', '[type="slider"]', 'input[type="text"]', 'input[type="submit"]', 'textbox', 'option', '[role="button"]', '[role="link"]'];
     const roleList =  document.querySelectorAll(interactiveRoles.join(','));
     const clsList = ['equa11y-label'];
     const elList = ['equa11y-border', 'equa11y-size'];
@@ -21,7 +21,7 @@ export function toggleTargetSize(isChecked) {
                     }
 
                     element.classList.add(...elList);
-                    element.parentNode.insertBefore(label, element);
+                    element.appendChild(label);
                 }
             }
         });
