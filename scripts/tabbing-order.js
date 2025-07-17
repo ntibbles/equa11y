@@ -22,7 +22,7 @@ export function toggleTabbingOrder(isChecked) {
             ) {
                 const label = document.createElement('div');
                 let tabIndex = getTabIndex(element);
-                label.textContent = `${element.nodeName.toLowerCase()} : ${tabIndex}`;
+                label.textContent = `${tabIndex} : <${element.nodeName.toLowerCase()}>`;
                 label.classList.add(...clsList);
 
                  // Set the label's style based on the tabIndex
