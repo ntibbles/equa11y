@@ -1,13 +1,19 @@
 # Equa11y: Accessibility Testing Utilities
 The Equa11y extension is to help test a webpage for accessibility. It is designed to improve the efficiency of accessibility testing with various utilities.
 
-## What's New in Version 1.3!
+## What's New in Version 1.4!
 ### Enhancements
-- **Display Heading Levels** - Now account for the use of 'aria-level' and dynamic headings that are added/removed from the page 
+- **Tabbing Order** - Now highlights elements with a `tabIndex` greater than 0.
+- **Stop Animations** - Now stops animations in iframes.
+- **Pinch to Zoom** - Now detects if pinch to zoom is disabled.
+- **Text Spacing** - Now adjusts paragraph spacing.
+- **Text Zoom** - Now uses a slider for more granular control.
 - **Display Alt Text** - Now reveals when the alt attribute is missing
+- **Display Heading Levels** - Now account for the use of 'aria-level' and dynamic headings that are added/removed from the page 
+- **Display Screen Reader Text** - Now prioritizes `aria-label`, `aria-labelledby`, and `aria-describedby` attributes.
 
 ### UI
-All utilities are now broken into tabs by WCAG (Web Content Accessibility Guideline) principle:
+- All utilities are now broken into tabs by WCAG (Web Content Accessibility Guideline) principle:
 - Perceivable
 - Operable
 - Understandable
@@ -63,6 +69,20 @@ To load an unpacked extension in developer mode:
 Voila! 
 
 ## CHANGELOG
+
+### Version 1.4
+[Enhancements]
+- [Tabbing Order now highlights elements with a `tabIndex` greater than 0](https://github.com/ntibbles/equa11y/issues/90)
+- [Stop Animations now stops animations in iframes](https://github.com/ntibbles/equa11y/issues/91)
+- [Pinch to Zoom now detects if pinch to zoom is disabled](https://github.com/ntibbles/equa11y/issues/92)
+- [Text Spacing now adjusts paragraph spacing](https://github.com/ntibbles/equa11y/issues/93)
+- [Text Zoom now uses a slider for more granular control](https://github.com/ntibbles/equa11y/issues/75)
+- [Display Alt Text now reveals when the alt attribute is missing](https://github.com/ntibbles/equa11y/issues/88)
+- [Display Headings Levels now account for the use of 'aria-level' and dynamic headings that added/removed from the page](https://github.com/ntibbles/equa11y/issues/89)
+- [Display Screen Reader Text now prioritizes `aria-label`, `aria-labelledby`, and `aria-describedby` attributes.](https://github.com/ntibbles/equa11y/issues/87)
+
+[Bugfixes]
+- [Display SR Text fails with empty attributes](https://github.com/ntibbles/equa11y/issues/87)
 
 ### Version 1.3
 [Enhancements]
