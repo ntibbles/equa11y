@@ -1,8 +1,8 @@
 export function toggleZoom(isChecked) {
+    window.prerender = !window.prerender ? [] : window.prerender;
     let zoomLevel = 2;
     let zoomLabel = {};
     const body = document.body;
-    let prerender = [];
     let initialFontSize = null;
     let style = null;
     const head = document.head || document.getElementsByTagName('head')[0];
@@ -16,7 +16,6 @@ export function toggleZoom(isChecked) {
         if (!body.classList.contains('equa11y-zoom')) {
             chrome.storage.sync.get().then(result => {
                 zoomLevel = result['zoomSlider']?.slider || 2;
-                prerender = [];
                 const textElements = document.querySelectorAll("body *:not(style, script, noscript, iframe, link, embed, hr, br, img, video, canvas, footer, #equa11y_zoom)");
                 initialFontSize = getComputedInt(body, 'fontSize');
                 generateZoomLabel();
@@ -24,12 +23,6 @@ export function toggleZoom(isChecked) {
                 setFontSize();
                 body.classList.add('equa11y-zoom');
             });
-        } else {
-            // Already zoomed, just update
-            const textElements = document.querySelectorAll("body *:not(style, script, noscript, iframe, link, embed, hr, br, img, video, canvas, footer, #equa11y_zoom)");
-            prerender = [];
-            getFontSize(textElements);
-            setFontSize();
         }
     }
 
@@ -38,7 +31,7 @@ export function toggleZoom(isChecked) {
         document.getElementById('text_zoom_css')?.remove();
         body.classList.remove('equa11y-zoom');
         removeFontSize();
-        prerender = [];
+        window.prerender = [];
     }
 
     function generateZoomLabel() {
@@ -61,7 +54,7 @@ export function toggleZoom(isChecked) {
                 lineHeight: getComputedInt(element, 'line-height'),
                 fontSize: getComputedInt(element, 'fontSize')
             };
-            prerender.push(attr);
+            window.prerender.push(attr);
         });
     }
 
@@ -88,6 +81,7 @@ export function toggleZoom(isChecked) {
     function removeFontSize() {
         document.querySelectorAll('.equa11y-zoom-text').forEach(el => {
             // Restore original font size and line height if available
+            delete el.dataset.font;
             if (el.dataset.font) {
                 el.style['font-size'] = `${el.dataset.font}px`;
             } else {
@@ -96,7 +90,6 @@ export function toggleZoom(isChecked) {
             el.style['line-height'] = null;
             el.style['transition'] = null;
             el.classList.remove('equa11y-zoom-text');
-            delete el.dataset.font;
         });
         document.getElementById('text_zoom_css')?.remove();
     }
@@ -115,7 +108,7 @@ export function toggleZoom(isChecked) {
         if (!initialFontSize) initialFontSize = getComputedInt(body, 'fontSize');
         document.getElementById('text_zoom_css').textContent = `* { font-size: ${initialFontSize * zoomLevel}px !important; }`;
         document.getElementById('equa11y_zoom').innerHTML = `Text resized: ${Math.round(zoomLevel * 100)}%`;
-        prerender.forEach(el => {
+        window.prerender.forEach(el => {
             let { element, lineHeight, fontSize } = el;
             addStyle(element, 'line-height', lineHeight * zoomLevel);
             addStyle(element, 'font-size', fontSize * zoomLevel);
