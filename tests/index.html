@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>My Awesome Page</title>
+    <style>
+        body { background-color: #f0f0f0; }
+        img { width: 100px; height: 100px; }
+        .small-target { width: 20px; height: 20px; border: 1px solid black; display: inline-block; margin: 5px; }
+        .large-target { width: 50px; height: 50px; border: 1px solid black; display: inline-block; margin: 5px; }
+        .animated-div {
+            width: 50px;
+            height: 50px;
+            background-color: blue;
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Page</h1>
+    <img src="../tests/local-embedded.png" alt="test image">
+    <h1>Heading 1</h1>
+    <h3>Heading 3 (Skipped Level)</h3>
+    <h2>Heading 2</h2>
+    <header>Header Landmark</header>
+    <nav>Navigation Landmark</nav>
+    <main>Main Landmark</main>
+    <footer>Footer Landmark</footer>
+    <div role="region" aria-label="Custom Region">Custom Region Landmark</div>
+    <p lang="fr">Bonjour</p>
+    <span lang="es">Hola</span>
+    <p>Please see the attached document.</p>
+    <div>View more details here.</div>
+    <span>Look at this amazing content.</span>
+    <button class="small-target">Small Button</button>
+    <a href="#" class="large-target">Large Link</a>
+    <input type="checkbox" class="small-target">
+    <input type="radio" class="large-target">
+    <input type="text" class="small-target" value="Small Input">
+    <select class="large-target"><option>Option 1</option></select>
+    <div role="button" class="small-target">ARIA Small</div>
+    <div role="link" class="large-target">ARIA Large</div>
+    <input type="submit" value="Submit">
+    <img src="../tests/animated-gif.html" alt="animated gif" id="animated-gif">
+    <div class="animated-div"></div>
+    <video controls autoplay loop muted src="../tests/backflip-fail.gif" id="test-video"></video>
+</body>
+</html>

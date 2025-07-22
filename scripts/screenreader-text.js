@@ -1,5 +1,5 @@
 export function toggleScreenReaderTextDisplay(isChecked) {
-    const interactiveRoles = ['button', 'a', 'checkbox', 'radio', 'slider', 'textbox', 'combobox', 'menuitem', 'option', '[role="button"]', '[role="link"]'];
+    const interactiveRoles = ['button', 'a', 'input[type="checkbox"]', 'input[type="radio"]', 'slider', 'input[type="text"]', 'select', 'combobox', 'menuitem', 'option', '[role="button"]', '[role="link"]'];
     const ariaLabels = ['aria-label', 'aria-labelledby', 'aria-describedby'];
     const elementsInteractiveRoles = document.querySelectorAll(interactiveRoles.join(','));
     const elList = ['equa11y-border'];
@@ -11,22 +11,32 @@ export function toggleScreenReaderTextDisplay(isChecked) {
     function srText_checked() {
         elementsInteractiveRoles.forEach(element => {
             if(!element.querySelector('.equa11y-sr-text')) {
-                let ariaAttr = ariaLabels.map(aria => { 
-                    if(element.hasAttribute(aria) && aria !== 'aria-label') {
-                        return getAriaText(element.getAttribute(aria));
-                    }
-    
-                    if(aria === 'aria-label') {
-                        return element.getAttribute(aria);
-                    }
-                });
-    
-                let labelText = ariaAttr.toString().replace(/^\,+|\,+$/g, '');
+                let labelText = '';
+                let describedByText = '';
+
+                if (element.hasAttribute('aria-labelledby')) {
+                    labelText = getAriaText(element.getAttribute('aria-labelledby'));
+                } else if (element.hasAttribute('aria-label')) {
+                    labelText = element.getAttribute('aria-label');
+                } else if (element.tagName.toLowerCase() === 'input' && document.querySelector(`label[for="${element.id}"]`)) {
+                    labelText = document.querySelector(`label[for="${element.id}"]`).textContent;
+                } else if (element.hasAttribute('placeholder')) {
+                    labelText = element.getAttribute('placeholder');
+                } else {
+                    labelText = element.textContent;
+                }
+
+                if (element.hasAttribute('aria-describedby')) {
+                    describedByText = getAriaText(element.getAttribute('aria-describedby'));
+                }
+
+                const fullText = [labelText, describedByText].filter(Boolean).join(', ');
+
                 const srLabel = document.createElement('div');
-                srLabel.innerText = `${(labelText.length > 0) ? labelText : element.textContent}`;
+                srLabel.innerText = fullText;
                 srLabel.classList.add(...clsList);
                 element.classList.add(...elList);
-                element.prepend(srLabel);
+                element.appendChild(srLabel);
             }
         });
     }
