@@ -1,54 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Embedded Text</title>
-    <style>
-        .button {
-            border: 1px solid;
-            border-radius: 5px;
-            padding: 5px;
-            display: inline-block;
-        }
-        .tile {
-            border: 1px solid;
-            padding: 2em;
-        }
-    </style>
+    <title>SR Text Test</title>
 </head>
 <body>
-    <nav aria-label="primary">Nav</nav>
-    <div class="tile">
-        <h2 id="title1">Title 1</h2>
-        <p id="copy1">This is some copy.</p>
-        <button aria-label="aria button1">button 1</button>
-    </div>
-    <div class="tile">
-        <h2 id="title2">Title 2</h2>
-        <p id="copy2">This is some copy.</p>
-        <button aria-labelledby="title2 copy2">button 2</button>
-    </div>
-    <div class="tile">
-        <h2 id="title3">Title 3</h2>
-        <p id="copy3">This is some copy.</p>
-        <button aria-describedby="">button 3 empty</button>
-    </div>
-    <div class="tile">
-        <h2 id="title4">Title 4</h2>
-        <p id="copy4">This is some copy.</p>
-        <button>button 4</button>
-    </div>
-    <div class="tile">
-        <h2 id="title5">Title 5</h2>
-        <p id="copy5">This is some copy.</p>
-        <button aria-labelledby="title5" aria-describedby="copy5">button 5</button>
-    </div>
-    <footer>
-        <div id="footer">
-            This is the footer.
-        </div>
-        
-    </footer>
+    <button id="btn-1">Button with text</button>
+    <button id="btn-2" aria-label="aria label"></button>
+    <button id="btn-3" aria-labelledby="label-3"></button>
+    <div id="label-3">aria labelledby</div>
+    <button id="btn-4" aria-describedby="desc-4"></button>
+    <div id="desc-4">aria describedby</div>
+    <button id="btn-5" aria-label="aria label" aria-describedby="desc-5">described</button>
+    <div id="desc-5">aria describedby</div>
+    <button id="btn-6" aria-labelledby="label-6" aria-describedby="desc-6"></button>
+    <div id="label-6">aria labelledby</div>
+    <div id="desc-6">aria describedby</div>
+    <input type="text" id="input-1" placeholder="placeholder text">
+    <input type="text" id="input-2" aria-label="input aria label">
+    <input type="text" id="input-3" aria-labelledby="label-input-3">
+    <div id="label-input-3">input aria labelledby</div>
+    <label for="input-4">input label</label>
+    <input type="text" id="input-4">
 </body>
 </html>

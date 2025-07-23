@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Motion Elements Test</title>
+    <style>
+        /* CSS Animation */
+        .moving-box {
+            width: 100px;
+            height: 100px;
+            background: #4a90e2;
+            position: relative;
+            animation: moveRight 2s linear infinite alternate;
+        }
+        @keyframes moveRight {
+            from { left: 0; }
+            to { left: 300px; }
+        }
+        /* CSS Transition */
+        .transition-box {
+            width: 100px;
+            height: 100px;
+            background: #e94e77;
+            transition: transform 1s linear;
+        }
+        .transition-box:hover {
+            transform: rotate(20deg) scale(1.2);
+        }
+    </style>
+</head>
+<body>
+    <h1>Motion Elements Test Page</h1>
+    <section>
+        <h2>1. Video</h2>
+        <video width="320" height="240" controls autoplay loop muted>
+            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </section>
+    <section>
+        <h2>2. Animated GIF</h2>
+        <img src="backflip-fail.gif" alt="Animated GIF" width="200">
+    </section>
+    <section>
+        <h2>3. CSS Animation</h2>
+        <div class="moving-box"></div>
+    </section>
+    <section>
+        <h2>4. CSS Transition (hover me)</h2>
+        <div class="transition-box"></div>
+    </section>
+</body>
+</html> 

@@ -128,6 +128,9 @@ async function labelElement(tabId, nodeId, eventName) {
         {
             nodeId: nodeId
         }, function (html) {
+            // get the tag name from the HTML
+            const regex = /<([a-zA-Z0-9]+)[^>]*>/g;
+            let tag = regex.exec(html.outerHTML)[1];
             // Add a label
             chrome.debugger.sendCommand(
                 { tabId: tabId },
@@ -135,7 +138,7 @@ async function labelElement(tabId, nodeId, eventName) {
                 {
                     nodeId: nodeId,
                     outerHTML: `<div data-objectid="${nodeId}" style="outline: 2px solid blue; position: relative; display: inline-block;">
-                    <span style="position: absolute; top: 0; left: 0; background-color: blue; color: white; font-size: 1rem; padding: 2px 4px; z-index: 1000">${eventName}</span>
+                    <span style="position: absolute; top: 0; left: 0; background-color: blue; color: white; font-size: 1rem; padding: 2px 4px; z-index: 1000">${tag}: ${eventName}</span>
                     ${html.outerHTML}
                     </div>`
                 }
