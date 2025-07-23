@@ -5,9 +5,9 @@ The Equa11y extension is to help test a webpage for accessibility. It is designe
 ### Enhancements
 - **Tabbing Order** - Now highlights elements with a `tabIndex` greater than 0.
 - **Stop Animations** - Now stops animations in iframes.
-- **Pinch to Zoom** - Now detects if pinch to zoom is disabled.
+- **Reveal Viewport Tag** - Now detects if pinch to zoom is disabled.
 - **Text Spacing** - Now adjusts paragraph spacing.
-- **Text Zoom** - Now uses a slider for more granular control.
+- **Text Zoom** - Stability Updates
 - **Display Alt Text** - Now reveals when the alt attribute is missing
 - **Display Heading Levels** - Now account for the use of 'aria-level' and dynamic headings that are added/removed from the page 
 - **Display Screen Reader Text** - Now prioritizes `aria-label`, `aria-labelledby`, and `aria-describedby` attributes.
