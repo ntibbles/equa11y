@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,31 +14,35 @@
         }
     </style>
 </head>
+
 <body>
     <nav aria-label="primary">Nav</nav>
     <main>
-    <div id="content">
-        <h1>See Heading 1</h1>
-        <h3>View heading 3</h3>
-        <h4>heading 4 - aria 3</h4>
-        <h3>heading 3</h3>
-        <h2>heading 2</h2>
-        <h4>heading 4</h4>
-        <span id="toggle"><h5>heading 5 - add/remove</h5></span>
-        <p>This text contains the exclusive text of hear, look, and observe, and peek.</p>
-        <p>This word is in <span lang="fr">French.</span></p>
-        <button>Watch Video</button>
-        <a href="#" tabindex="3">Watch Video</a>
-        <div>This is text in a div.</div>
-        <div>This is text in a div.<span> with a span</span></div>
-        <button style="width: 24px; height: 24px; background-color: red;">i</button>
-        <label>
-            <input typ="text" />
-            This is a label
-        </label>
-        <br /><button id="headingToggle">Toggle Heading Visibility</button>
-    </div>
-   
+        <section>
+            <div id="content">
+                <h1>See Heading 1</h1>
+                <h3>View heading 3</h3>
+                <h4>heading 4 - aria 3</h4>
+                <h3>heading 3</h3>
+                <h2>heading 2</h2>
+                <h4>heading 4</h4>
+                <span id="toggle">
+                    <h5>heading 5 - add/remove</h5>
+                </span>
+                <p>This text contains the exclusive text of hear, look, and observe, and peek.</p>
+                <p>This word is in <span lang="fr">French.</span></p>
+                <button>Watch Video</button>
+                <a href="#" tabindex="3">Watch Video</a>
+                <div>This is text in a div.</div>
+                <div>This is text in a div.<span> with a span</span></div>
+                <button style="width: 24px; height: 24px; background-color: red;">i</button>
+                <label>
+                    <input typ="text" />
+                    This is a label
+                </label>
+                <br /><button id="headingToggle">Toggle Heading Visibility</button>
+            </div>
+        </section>
         <!-- <canvas id="contrast"></canvas> -->
         <img src="up-to-30.webp" />
         <img src="free-sample.webp" alt="Free Sample" />
@@ -46,20 +51,20 @@
         <img src="clearance.webp" alt="" />
         <img src="hp-tile.webp" alt="" />
         <img src="embedded-text.webp" alt="" />
-        <img src="distorted-image.webp" alt="" width="540"/>
-        <img src="women-text.png" alt=""/>
+        <img src="distorted-image.webp" alt="" width="540" />
+        <img src="women-text.png" alt="" />
     </main>
     <footer>
         <div id="footer">
             This is the footer.
         </div>
-        
+
     </footer>
     <script>
         const btn = document.getElementById('headingToggle');
         const container = document.getElementById('toggle');
         btn.addEventListener('click', () => {
-            if(container.children.length) {
+            if (container.children.length) {
                 container.innerHTML = '';
             } else {
                 container.innerHTML = "<h5>heading 5 - add/remove</h5><h4>heading 4 - add/remove</h4>";
@@ -67,4 +72,5 @@
         });
     </script>
 </body>
+
 </html>
