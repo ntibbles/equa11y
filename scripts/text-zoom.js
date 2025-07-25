@@ -1,31 +1,28 @@
 export function toggleZoom(isChecked) {
+    window.prerender = !window.prerender ? [] : window.prerender;
     let zoomLevel = 2;
     let zoomLabel = {};
     const body = document.body;
-    const prerender = [];
-    const initialFontSize = getComputedInt(body, 'fontSize');
-    const css = `* { font-size: ${initialFontSize * zoomLevel}px !important; }`;
+    let initialFontSize = null;
+    let style = null;
     const head = document.head || document.getElementsByTagName('head')[0];
-    const style = document.createElement('style');
-    style.id = 'text_zoom_css';
-    const port = chrome.runtime.connect({name: "text-zoom"});
-    port.postMessage({status: 'connected'});
+    const port = chrome.runtime.connect({ name: "text-zoom" });
+    port.postMessage({ status: 'connected' });
     port.onMessage.addListener(handleZoomChange);
-    const textElements = document.querySelectorAll("body *:not(style, script, noscript, iframe, link, embed, hr, br, img, video, canvas, footer, #equa11y_zoom)");
 
     isChecked ? textZoom_checked() : textZoom_unchecked();
 
     function textZoom_checked() {
-        if(!body.classList.contains('equa11y-zoom')) {
+        if (!body.classList.contains('equa11y-zoom')) {
             chrome.storage.sync.get().then(result => {
                 zoomLevel = result['zoomSlider']?.slider || 2;
+                const textElements = document.querySelectorAll("body *:not(style, script, noscript, iframe, link, embed, hr, br, img, video, canvas, footer, #equa11y_zoom)");
+                initialFontSize = getComputedInt(body, 'fontSize');
                 generateZoomLabel();
-                getFontSize();
+                getFontSize(textElements);
                 setFontSize();
                 body.classList.add('equa11y-zoom');
             });
-        } else {
-            getFontSize();
         }
     }
 
@@ -34,27 +31,30 @@ export function toggleZoom(isChecked) {
         document.getElementById('text_zoom_css')?.remove();
         body.classList.remove('equa11y-zoom');
         removeFontSize();
+        window.prerender = [];
     }
 
     function generateZoomLabel() {
-        if(!document.getElementById('equa11y_zoom')) {
+        if (!document.getElementById('equa11y_zoom')) {
             zoomLabel = document.createElement('div');
-            zoomLabel.innerHTML = `Text resized: ${Math.round(zoomLevel*100)}%`;
+            zoomLabel.innerHTML = `Text resized: ${Math.round(zoomLevel * 100)}%`;
             zoomLabel.className = 'equa11y-label';
             zoomLabel.id = 'equa11y_zoom';
-            zoomLabel.style.cssText = `position: fixed; font-size: 16px !important;`
+            zoomLabel.style.cssText = `position: fixed; font-size: 16px !important;`;
             body.prepend(zoomLabel);
+        } else {
+            document.getElementById('equa11y_zoom').innerHTML = `Text resized: ${Math.round(zoomLevel * 100)}%`;
         }
     }
 
-    function getFontSize() {
+    function getFontSize(textElements) {
         textElements.forEach((element) => {
             let attr = {
                 element,
                 lineHeight: getComputedInt(element, 'line-height'),
                 fontSize: getComputedInt(element, 'fontSize')
             };
-            prerender.push(attr);
+            window.prerender.push(attr);
         });
     }
 
@@ -68,43 +68,51 @@ export function toggleZoom(isChecked) {
             addStyle(element, 'font-size', fontSize * zoomLevel);
         });
 
-        style.appendChild(document.createTextNode(css));
+        // Remove any previous style
+        document.getElementById('text_zoom_css')?.remove();
+
+        // Create and append new style
+        style = document.createElement('style');
+        style.id = 'text_zoom_css';
+        style.appendChild(document.createTextNode(`* { font-size: ${initialFontSize * zoomLevel}px !important; }`));
         head.appendChild(style);
     }
 
     function removeFontSize() {
         document.querySelectorAll('.equa11y-zoom-text').forEach(el => {
-            el.style['font-size'] = null;
+            // Restore original font size and line height if available
+            delete el.dataset.font;
+            if (el.dataset.font) {
+                el.style['font-size'] = `${el.dataset.font}px`;
+            } else {
+                el.style['font-size'] = null;
+            }
             el.style['line-height'] = null;
             el.style['transition'] = null;
             el.classList.remove('equa11y-zoom-text');
         });
-        if(document.getElementById('text_zoom_css')) document.getElementById('text_zoom_css').textContent = '';
+        document.getElementById('text_zoom_css')?.remove();
     }
 
     function getComputedInt(element, attr) {
-        if(element.dataset.font) return element.dataset.font;
         const computedStyle = getComputedStyle(element);
         const style = computedStyle[attr];
-        
         return parseFloat(style);
     }
 
     function addStyle(el, name, value) {
-        return el.style.cssText += ` ${name}: ${value}px !important;`;
+        el.style.setProperty(name, `${value}px`, 'important');
     }
 
     function updateFontSize() {
-        document.getElementById('text_zoom_css').cssText = `* { font-size: ${initialFontSize * zoomLevel}px !important; }`;
-        document.getElementById('equa11y_zoom').innerHTML = `Text resized: ${Math.round(zoomLevel*100)}%`;
-        prerender.forEach(el => {
+        if (!initialFontSize) initialFontSize = getComputedInt(body, 'fontSize');
+        document.getElementById('text_zoom_css').textContent = `* { font-size: ${initialFontSize * zoomLevel}px !important; }`;
+        document.getElementById('equa11y_zoom').innerHTML = `Text resized: ${Math.round(zoomLevel * 100)}%`;
+        window.prerender.forEach(el => {
             let { element, lineHeight, fontSize } = el;
             addStyle(element, 'line-height', lineHeight * zoomLevel);
             addStyle(element, 'font-size', fontSize * zoomLevel);
         });
-        if(zoomLevel === 1) {
-            removeFontSize();
-        }
     }
 
     function handleZoomChange(msg) {

@@ -1,6 +1,6 @@
 export function toggleLandmarkOutlines(isChecked) {
     const landmarks = [
-        'section', 'header', 'nav', 'main', 'footer', 'aside', 'search', 'form',
+        'header', 'nav', 'main', 'footer', 'aside', 'search', 'form',
         '[role="region"]', '[role="complementary"]', '[role="contentinfo"]', '[role="search"]',
         '[role="main"]', '[role="contentinfo"]', '[role="banner"]', '[role="navigation"]'
     ];

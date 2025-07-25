@@ -11,6 +11,12 @@ export function revealViewportTag(isChecked) {
             viewportTextElement.className = 'equa11y-label';
             viewportTextElement.style.position = 'fixed';
             viewportTextElement.id = 'equa11y-label';
+
+            // Detect if pinch-to-zoom is prevented
+            if (viewportTag && /user-scalable\s*=\s*no/i.test(viewportTag.content) || /maximum-scale\s*=\s*1/i.test(viewportTag.content)) {
+                viewportTextElement.style.cssText = 'background-color: #AB1B18 !important;  outline: 2px dashed black;';
+            }
+
             document.body.prepend(viewportTextElement);
         }
     }
