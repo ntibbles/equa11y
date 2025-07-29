@@ -12,7 +12,7 @@ export function toggleScreenReaderTextDisplay(isChecked) {
             // Only skip if the element itself has aria-hidden="true"
             if (element.hasAttribute('aria-hidden') && element.getAttribute('aria-hidden') === 'true') return;
 
-            if(!element.querySelector('.equa11y-sr-text')) {
+            if(!element.classList.contains('equa11y-border')) {
                 let labelText = '';
                 let describedByText = '';
                 
@@ -32,8 +32,8 @@ export function toggleScreenReaderTextDisplay(isChecked) {
                     describedByText = getAriaText(element.getAttribute('aria-describedby'));
                 }
 
-                const fullText = [labelText, describedByText].filter(Boolean).join(', ');
-
+                let fullText = [labelText, describedByText].filter(Boolean).join(', ');
+                fullText = fullText.replace(/[\r\n]+/g, ' ').trim();
                 const srLabel = document.createElement('div');
                 srLabel.innerText = fullText;
                 srLabel.classList.add(...clsList);
