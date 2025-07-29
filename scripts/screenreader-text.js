@@ -65,6 +65,7 @@ export function toggleScreenReaderTextDisplay(isChecked) {
                 text += child.textContent;
             } else if (
                 child.nodeType === Node.ELEMENT_NODE &&
+                child.tagName.toLowerCase() !== 'script' &&
                 !(child.hasAttribute('aria-hidden') && child.getAttribute('aria-hidden') === 'true')
             ) {
                 text += getVisibleText(child);
