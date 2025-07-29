@@ -30,8 +30,8 @@ export function toggleInteractiveRoles(isChecked) {
                     roleLabel.classList.add(...clsList);
                   
                     el.classList.add(...elList);
-                    if (role === 'input[type="submit"]') {
-                        el.insertAdjacentElement('afterend', roleLabel);
+                    if (role === 'input[type="text"]' || role === 'input[type="submit"]' || role.startsWith('[type="')) {
+                        el.parentNode.insertAdjacentElement('afterbegin', roleLabel);
                     } else {
                         el.insertAdjacentElement('afterbegin', roleLabel);
                     }

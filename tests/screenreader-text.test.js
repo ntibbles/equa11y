@@ -21,8 +21,12 @@ describe('Screen Reader Text Feature', () => {
 
     async function getSrText(selector) {
         const element = await page.$(selector);
-        const srElement = await element.$('.equa11y-sr-text');
+        // Get the next sibling element after the selector
+        const srElement = await page.evaluateHandle(el => el.nextElementSibling, element);
         if (!srElement) return null;
+        // Check if the next sibling has the expected class
+        const hasClass = await page.evaluate(el => el && el.classList.contains('equa11y-sr-text'), srElement);
+        if (!hasClass) return null;
         return await page.evaluate(el => el.textContent, srElement);
     }
 

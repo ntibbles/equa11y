@@ -5,15 +5,17 @@ export function toggleScreenReaderTextDisplay(isChecked) {
     const elList = ['equa11y-border'];
     const clsList = ['equa11y-label', 'equa11y-sr-text'];
 
-    // List of common interactive roles and their corresponding elements
     isChecked ? srText_checked() : srText_unchecked();
 
     function srText_checked() {
         elementsInteractiveRoles.forEach(element => {
-            if(!element.querySelector('.equa11y-sr-text')) {
+            // Only skip if the element itself has aria-hidden="true"
+            if (element.hasAttribute('aria-hidden') && element.getAttribute('aria-hidden') === 'true') return;
+
+            if(!element.classList.contains('equa11y-border')) {
                 let labelText = '';
                 let describedByText = '';
-
+                
                 if (element.hasAttribute('aria-labelledby')) {
                     labelText = getAriaText(element.getAttribute('aria-labelledby'));
                 } else if (element.hasAttribute('aria-label')) {
@@ -23,28 +25,30 @@ export function toggleScreenReaderTextDisplay(isChecked) {
                 } else if (element.hasAttribute('placeholder')) {
                     labelText = element.getAttribute('placeholder');
                 } else {
-                    labelText = element.textContent;
+                    labelText = getVisibleText(element);
                 }
 
                 if (element.hasAttribute('aria-describedby')) {
                     describedByText = getAriaText(element.getAttribute('aria-describedby'));
                 }
 
-                const fullText = [labelText, describedByText].filter(Boolean).join(', ');
-
+                let fullText = [labelText, describedByText].filter(Boolean).join(', ');
+                fullText = fullText.replace(/[\r\n]+/g, ' ').trim();
                 const srLabel = document.createElement('div');
                 srLabel.innerText = fullText;
                 srLabel.classList.add(...clsList);
                 element.classList.add(...elList);
-                element.appendChild(srLabel);
+                element.insertAdjacentElement('afterend', srLabel);
             }
         });
     }
 
     function srText_unchecked() {
         document.querySelectorAll('.equa11y-sr-text').forEach(el => {
-            el.parentElement.classList.remove(...elList);
             el.remove();
+        });
+         document.querySelectorAll('.equa11y-border').forEach(el => {
+            el.classList.remove(...elList);
         });
     }
 
@@ -52,5 +56,21 @@ export function toggleScreenReaderTextDisplay(isChecked) {
         let idArr = id.split(' ');
         const ariaTextArr = idArr.map((elementId) => document.getElementById(elementId)?.innerText || '');
         return ariaTextArr.join(', ');
+    }
+
+    function getVisibleText(element) {
+        let text = '';
+        for (const child of element.childNodes) {
+            if (child.nodeType === Node.TEXT_NODE) {
+                text += child.textContent;
+            } else if (
+                child.nodeType === Node.ELEMENT_NODE &&
+                child.tagName.toLowerCase() !== 'script' &&
+                !(child.hasAttribute('aria-hidden') && child.getAttribute('aria-hidden') === 'true')
+            ) {
+                text += getVisibleText(child);
+            }
+        }
+        return text;
     }
 }

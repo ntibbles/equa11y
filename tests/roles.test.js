@@ -43,30 +43,42 @@ describe('Roles Feature', () => {
         const linkLabelText = await page.evaluate(el => el.textContent, linkLabel);
         expect(linkLabelText).toBe('link [a]');
 
-        const checkboxLabel = await page.$('input[type="checkbox"] .equa11y-roles');
+        const checkboxInput = await page.$('input[type="checkbox"]');
+        const checkboxParent = await page.evaluateHandle(el => el.parentNode, checkboxInput);
+        const checkboxLabel = await checkboxParent.$('.equa11y-roles');
         expect(checkboxLabel).not.toBeNull();
         const checkboxLabelText = await page.evaluate(el => el.textContent, checkboxLabel);
         expect(checkboxLabelText).toBe('checkbox');
 
-        const radioLabel = await page.$('input[type="radio"] .equa11y-roles');
+        // For radio input, get the parent then find the label
+        const radioInput = await page.$('input[type="radio"]');
+        const radioParent = await page.evaluateHandle(el => el.parentNode, radioInput);
+        const radioLabel = await radioParent.$('.equa11y-roles');
         expect(radioLabel).not.toBeNull();
         const radioLabelText = await page.evaluate(el => el.textContent, radioLabel);
         expect(radioLabelText).toBe('radio');
 
-        const textInputLabel = await page.$('input[type="text"] .equa11y-roles');
+        // For text input, get the parent then find the label
+        const textInput = await page.$('input[type="text"]');
+        const textInputParent = await page.evaluateHandle(el => el.parentNode, textInput);
+        const textInputLabel = await textInputParent.$('.equa11y-roles');
         expect(textInputLabel).not.toBeNull();
         const textInputLabelText = await page.evaluate(el => el.textContent, textInputLabel);
         expect(textInputLabelText).toBe('textbox');
+        // For submit input, get the parent then find the label
+        const submitInput = await page.$('input[type="submit"]');
+        const submitInputParent = await page.evaluateHandle(el => el.parentNode, submitInput);
+        const submitInputLabel = await submitInputParent.$('.equa11y-roles');
+        expect(submitInputLabel).not.toBeNull();
+        const submitInputLabelText = await page.evaluate(el => el.textContent, submitInputLabel);
+        expect(submitInputLabelText).toBe('submit');
 
+        // For select, get the parent then find the label
         const selectLabel = await page.$('select .equa11y-roles');
         expect(selectLabel).not.toBeNull();
         const selectLabelText = await page.evaluate(el => el.textContent, selectLabel);
         expect(selectLabelText).toBe('option');
 
-        const submitInputLabel = await page.$('input[type="submit"] + .equa11y-roles');
-        expect(submitInputLabel).not.toBeNull();
-        const submitInputLabelText = await page.evaluate(el => el.textContent, submitInputLabel);
-        expect(submitInputLabelText).toBe('submit');
 
         const ariaButtonLabel = await page.$('div[role="button"] .equa11y-roles');
         expect(ariaButtonLabel).not.toBeNull();
