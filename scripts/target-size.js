@@ -21,7 +21,7 @@ export function toggleTargetSize(isChecked) {
                     }
 
                     element.classList.add(...elList);
-                    element.appendChild(label);
+                    element.insertAdjacentElement('afterend', label);
                 }
             }
         });

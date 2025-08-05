@@ -14,7 +14,9 @@ export function toggleAltTextDisplay(isChecked) {
                 img.classList.add(...imgCls);
                 altTextElement.innerText = altText;
                 altTextElement.classList.add(...clsList);
-                img.parentNode.insertBefore(altTextElement, img);
+                img.parentNode.dataset.orgStyle = img.parentNode.style.cssText;
+                img.parentNode.style.cssText = (img.parentNode.style.cssText ? img.parentNode.style.cssText + '; ' : '') + 'overflow: visible !important; position: relative;';
+                img.insertAdjacentElement('afterend', altTextElement);
 
                 if(!img.hasAttribute('alt')) {
                     altTextElement.style.cssText = 'background-color: #AB1B18 !important;  outline: 2px dashed black;';
@@ -25,6 +27,7 @@ export function toggleAltTextDisplay(isChecked) {
 
     function altText_unchecked() {
         images.forEach(img => {
+            img.parentNode.style.cssText = img.parentNode.dataset.orgStyle || '';
             img.classList.remove(...imgCls);
         });
     
