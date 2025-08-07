@@ -1,5 +1,5 @@
 export function toggleHeadingOutline(isChecked = false) {
-    const headingTags = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
+    const headingTags = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6', '[role="heading"]'];
     const tagList = ['equa11y-border', 'equa11y-heading-label'];
     const clsList = ['equa11y-label', 'equa11y-headings'];
     const config = { childList: true, subtree: true };
@@ -64,6 +64,20 @@ export function toggleHeadingOutline(isChecked = false) {
             }
         }
     }
+    // Helper to get heading level from element (supports role="heading")
+    function getHeadingLevel(el) {
+        if (el.hasAttribute('aria-level')) {
+            return parseInt(el.getAttribute('aria-level'), 10);
+        }
+        if (el.tagName && /^H[1-6]$/.test(el.tagName)) {
+            return parseInt(el.tagName.replace('H', ''), 10);
+        }
+        if (el.getAttribute('role') === 'heading') {
+            // Try to infer level if aria-level missing (default to 2)
+            return el.hasAttribute('aria-level') ? parseInt(el.getAttribute('aria-level'), 10) : null;
+        }
+        return null;
+    }
 
     function findHeadingTags(nodeList) {
         const headings = []; // Array to store found heading elements
@@ -77,11 +91,12 @@ export function toggleHeadingOutline(isChecked = false) {
             // Check if the current node is an element
             if (node.nodeType === Node.ELEMENT_NODE) {
                 // If it's a heading tag, add it to the list
-                if (headingTags.includes(node.tagName)) {
-                    // Use aria-level if present, otherwise use tagName
-                    let currentLevel = node.hasAttribute('aria-level')
-                        ? parseInt(node.getAttribute('aria-level'), 10)
-                        : parseInt(node.tagName.replace("H", ""), 10);
+                if (headingTags.includes(node.tagName) || (node.getAttribute('role') === 'heading')) {
+                    // Determine the heading level
+                    let currentLevel = getHeadingLevel(node);
+                    if (!currentLevel) {
+                        continue; // Skip if level cannot be determined
+                    }
 
                     headings.push({ el: node });
 
