@@ -9,7 +9,8 @@
   "scripts": {
     "build": "copyfiles scripts/* deps/* deps/*/* screens/* screens/*/* screens/*/*/* screens/scripts/utils/* icons/* manifest.json extension.css about.html popup.html popup.js popup.css sw.js dist",
     "test": "jest",
-    "serve": "http-server -p 8080"
+    "serve": "http-server -p 8080",
+    "test-with-server": "http-server -p 8080 & jest"
   },
   "repository": {
     "type": "git",

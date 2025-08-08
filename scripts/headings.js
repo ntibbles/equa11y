@@ -9,6 +9,9 @@ export function toggleHeadingOutline(isChecked = false) {
 
     function heading_checked() {
         buildHeadingTree();
+        if (window.equa11y_observer) {
+            window.equa11y_observer.disconnect();
+        }
         window.equa11y_observer = window.equa11y_observer || new MutationObserver(headingChange);
         window.equa11y_observer.observe(document.body, config);
     }
