@@ -33,7 +33,6 @@ export function toggleAltTextDisplay(isChecked) {
     }
 
     function buildAltTextTree() {
-        console.log('Building alt text tree');
         images.forEach(img => {
             if(!img.classList.contains('equa11y-alt-container')) {
                 const altText = img.hasAttribute('alt') ? `alt="${img.alt}"` : 'missing alt attribute';
