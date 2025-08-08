@@ -70,6 +70,25 @@ Voila!
 
 ## CHANGELOG
 
+### Version 1.4.3
+[Enhancements]
+- Moved alt label and dynamic images support
+- Fixed issue with role='heading' on heading level
+
+### Version 1.4.2
+[Enhancements]
+- Ignore script text in sr-text
+- Improved displaying labels for forms
+- Improved visibility of alt text label
+
+[Bugfixes]
+- Fixed roles test
+- Fixed the label and account for aria-hidden
+
+### Version 1.4.1
+[Bugfixes]
+- Removed line breaks from sr-text labels
+
 ### Version 1.4
 [Enhancements]
 - [Tabbing Order now highlights elements with a `tabIndex` greater than 0](https://github.com/ntibbles/equa11y/issues/90)
