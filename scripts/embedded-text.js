@@ -1,0 +1,487 @@
+export function toggleEmbeddedTextDetection(isChecked) {
+    const images = document.querySelectorAll('img');
+    const clsList = ['equa11y-label'];
+    const imgCls = ['equa11y-border', 'equa11y-embedded-text'];
+    const config = { childList: true, subtree: true };
+    
+    let processedImages = new Set();
+    let isProcessing = false;
+    let abortController = null;
+    
+    // Timeout constants
+    const IMAGE_LOAD_TIMEOUT = 5000; // 5 seconds
+    const AI_PROCESSING_TIMEOUT = 10000; // 10 seconds
+    const MAX_IMAGES_PER_BATCH = 20; // Limit batch size
+
+    isChecked ? embeddedText_checked() : embeddedText_unchecked();
+
+    function embeddedText_checked() {
+        if (isProcessing) return;
+        isProcessing = true;
+        
+        // Show processing dialog
+        showProcessingDialog();
+        
+        processAllImages();
+        
+        // Create a MutationObserver to watch for changes in the DOM
+        if (window.equa11y_embedded_observer) {
+            window.equa11y_embedded_observer.disconnect();
+        }
+        window.equa11y_embedded_observer = new MutationObserver((mutations) => {
+            // Prevent infinite loops by checking if mutations are from our own changes
+            const hasRelevantMutations = mutations.some(mutation => {
+                return Array.from(mutation.addedNodes).some(node => {
+                    return node.nodeType === Node.ELEMENT_NODE && 
+                           node.tagName === 'IMG' && 
+                           !node.classList.contains('equa11y-embedded-text');
+                });
+            });
+            
+            if (hasRelevantMutations && !isProcessing) {
+                // Debounce the processing to avoid rapid successive calls
+                clearTimeout(window.equa11y_embedded_debounce);
+                window.equa11y_embedded_debounce = setTimeout(() => {
+                    processAllImages();
+                }, 1000);
+            }
+        });
+        window.equa11y_embedded_observer.observe(document.body, config);
+    }
+
+    function embeddedText_unchecked() {
+        isProcessing = false;
+        
+        // Abort any ongoing processing
+        if (abortController) {
+            abortController.abort();
+            abortController = null;
+        }
+        
+        // Disconnect observer and clear debounce timer
+        if (window.equa11y_embedded_observer) {
+            window.equa11y_embedded_observer.disconnect();
+        }
+        if (window.equa11y_embedded_debounce) {
+            clearTimeout(window.equa11y_embedded_debounce);
+        }
+        
+        // Remove all labels and borders
+        document.querySelectorAll('.equa11y-embedded-text').forEach(img => {
+            img.classList.remove(...imgCls);
+        });
+        
+        document.querySelectorAll('.equa11y-embedded-text-label').forEach(label => {
+            label.remove();
+        });
+        
+        // Close processing dialog
+        const dialog = document.querySelector('.equa11y-processing-dialog');
+        if (dialog) {
+            dialog.remove();
+        }
+        
+        processedImages.clear();
+    }
+
+    async function processAllImages() {
+        // Create abort controller for this processing session
+        abortController = new AbortController();
+        
+        // Limit the number of images to process to prevent hanging
+        const imagesToProcess = Array.from(images).slice(0, MAX_IMAGES_PER_BATCH);
+        let totalImages = imagesToProcess.length;
+        let processedCount = 0;
+        
+        updateProgress(processedCount, totalImages);
+        
+        try {
+            for (const img of imagesToProcess) {
+                // Check if processing was aborted
+                if (abortController.signal.aborted) {
+                    console.log('Image processing aborted');
+                    break;
+                }
+                
+                if (!processedImages.has(img.src) && img.src && !img.src.startsWith('data:')) {
+                    try {
+                        // Process with timeout
+                        const base64 = await Promise.race([
+                            convertImageToBase64(img),
+                            createTimeout(IMAGE_LOAD_TIMEOUT, 'Image load timeout')
+                        ]);
+                        
+                        if (base64 && !abortController.signal.aborted) {
+                            const detectedText = await Promise.race([
+                                detectEmbeddedText(base64, img),
+                                createTimeout(AI_PROCESSING_TIMEOUT, 'AI processing timeout')
+                            ]);
+                            
+                            if (detectedText && detectedText.trim() && !abortController.signal.aborted) {
+                                highlightImageWithText(img, detectedText);
+                            }
+                        }
+                    } catch (error) {
+                        if (error.message.includes('timeout')) {
+                            console.warn(`Timeout processing image: ${img.src}`);
+                        } else {
+                            console.warn(`Failed to process image: ${img.src}`, error);
+                        }
+                    }
+                    processedImages.add(img.src);
+                }
+                
+                processedCount++;
+                updateProgress(processedCount, totalImages);
+                
+                // Add small delay to prevent blocking the UI
+                await new Promise(resolve => setTimeout(resolve, 10));
+            }
+        } catch (error) {
+            console.error('Error in processAllImages:', error);
+        } finally {
+            isProcessing = false;
+            hideProcessingDialog();
+            abortController = null;
+        }
+    }
+    
+    function createTimeout(ms, message) {
+        return new Promise((_, reject) => {
+            setTimeout(() => reject(new Error(message)), ms);
+        });
+    }
+
+    function convertImageToBase64(img) {
+        return new Promise((resolve) => {
+            try {
+                // Skip images that are too large to prevent memory issues
+                const maxSize = 2000;
+                if (img.naturalWidth > maxSize || img.naturalHeight > maxSize) {
+                    console.warn(`Skipping large image: ${img.src} (${img.naturalWidth}x${img.naturalHeight})`);
+                    resolve(null);
+                    return;
+                }
+                
+                // Set crossorigin to handle CORS
+                const tempImg = new Image();
+                tempImg.crossOrigin = 'anonymous';
+                
+                // Set up timeout for image loading
+                const timeoutId = setTimeout(() => {
+                    console.warn(`Image load timeout: ${img.src}`);
+                    resolve(null);
+                }, IMAGE_LOAD_TIMEOUT);
+                
+                tempImg.onload = function() {
+                    clearTimeout(timeoutId);
+                    
+                    try {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        
+                        // Limit canvas size to prevent memory issues
+                        const maxCanvasSize = 1000;
+                        const width = Math.min(tempImg.naturalWidth || tempImg.width, maxCanvasSize);
+                        const height = Math.min(tempImg.naturalHeight || tempImg.height, maxCanvasSize);
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        
+                        ctx.drawImage(tempImg, 0, 0, width, height);
+                        
+                        const dataURL = canvas.toDataURL('image/png');
+                        resolve(dataURL);
+                    } catch (error) {
+                        console.warn('Canvas/CORS issue with image:', img.src, error);
+                        resolve(null);
+                    }
+                };
+                
+                tempImg.onerror = function(error) {
+                    clearTimeout(timeoutId);
+                    console.warn('Image load error:', img.src, error);
+                    resolve(null);
+                };
+                
+                // Start loading the image
+                tempImg.src = img.src;
+                
+            } catch (error) {
+                console.warn('Error setting up image conversion:', error);
+                resolve(null);
+            }
+        });
+    }
+
+    async function detectEmbeddedText(base64Image, imgElement) {
+        try {
+            // Try Chrome's built-in AI first (when available)
+            if (typeof LanguageModel !== 'undefined') {
+                return await detectWithChromeAI(base64Image, imgElement);
+            }
+            
+            // Fallback to a simple heuristic check
+            return await detectWithHeuristics(imgElement);
+            
+        } catch (error) {
+            console.warn('Text detection failed:', error);
+            return null;
+        }
+    }
+
+    async function detectWithChromeAI(base64Image, imgElement) {
+        try {
+            // Check if the Prompt API is available
+            const available = await LanguageModel.availability();
+            if (available === 'unavailable') {
+                console.log('Gemini Nano is not available on this device');
+                return null;
+            }
+
+            // Wait for model to be ready if it's downloading
+            if (available === 'downloadable' || available === 'downloading') {
+                console.log('Gemini Nano model is downloading...');
+                // You might want to show a different message to users about model download
+            }
+
+            // Create session with multimodal support (image input)
+            const session = await LanguageModel.create({
+                expectedInputs: [{ type: 'image' }],
+            });
+
+            // Convert base64 to blob for the API
+            const response = await fetch(base64Image);
+            const imageBlob = await response.blob();
+
+            // Prompt the model to extract text from the image
+            const result = await session.prompt([
+                {
+                    role: 'user',
+                    content: [
+                        {
+                            type: 'text',
+                            value: 'Extract all text content from this image. Return only the actual text found in the image, or respond with "No text detected" if no readable text is present. Focus on text that appears to be embedded or overlaid on the image.'
+                        },
+                        { 
+                            type: 'image', 
+                            value: imageBlob 
+                        }
+                    ]
+                }
+            ]);
+
+            // Clean up the session
+            session.destroy();
+            
+            // Return the result if text was found
+            if (result && result.trim() && result !== "No text detected") {
+                return `AI detected text: ${result.trim()}`;
+            }
+            
+            return null;
+            
+        } catch (error) {
+            console.warn('Gemini Nano text detection failed:', error);
+            // Check if it's a multimodal support issue
+            if (error.message && error.message.includes('multimodal')) {
+                console.log('This Chrome version may not support multimodal input. Falling back to heuristics.');
+            }
+            return null;
+        }
+    }
+
+    async function detectWithHeuristics(imgElement) {
+        // Simple heuristic: check if image has certain characteristics that suggest text
+        return new Promise((resolve) => {
+            try {
+                // Skip if image is too large or invalid
+                if (!imgElement || !imgElement.naturalWidth || !imgElement.naturalHeight) {
+                    resolve(null);
+                    return;
+                }
+                
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                if (!ctx) {
+                    resolve(null);
+                    return;
+                }
+                
+                // Use smaller canvas for faster processing
+                const maxSize = 100;
+                canvas.width = Math.min(imgElement.naturalWidth || imgElement.width, maxSize);
+                canvas.height = Math.min(imgElement.naturalHeight || imgElement.height, maxSize);
+                
+                // Set timeout for canvas operations
+                const timeoutId = setTimeout(() => {
+                    resolve(null);
+                }, 2000);
+                
+                try {
+                    ctx.drawImage(imgElement, 0, 0, canvas.width, canvas.height);
+                    
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const data = imageData.data;
+                    
+                    // Simple analysis: look for high contrast patterns that might indicate text
+                    let highContrastPixels = 0;
+                    let edgePixels = 0;
+                    const totalPixels = data.length / 4;
+                    
+                    // Sample every 4th pixel for performance
+                    for (let i = 0; i < data.length; i += 16) {
+                        const r = data[i];
+                        const g = data[i + 1];
+                        const b = data[i + 2];
+                        const brightness = (r + g + b) / 3;
+                        
+                        // Check for high contrast (very bright or very dark pixels)
+                        if (brightness < 60 || brightness > 180) {
+                            highContrastPixels++;
+                        }
+                        
+                        // Simple edge detection
+                        if (i + 16 < data.length) {
+                            const nextR = data[i + 16];
+                            const nextG = data[i + 17];
+                            const nextB = data[i + 18];
+                            const nextBrightness = (nextR + nextG + nextB) / 3;
+                            
+                            if (Math.abs(brightness - nextBrightness) > 50) {
+                                edgePixels++;
+                            }
+                        }
+                    }
+                    
+                    const sampledPixels = Math.floor(totalPixels / 4);
+                    const contrastRatio = highContrastPixels / sampledPixels;
+                    const edgeRatio = edgePixels / sampledPixels;
+                    
+                    clearTimeout(timeoutId);
+                    
+                    // If we have sufficient contrast and edges, it might contain text
+                    if (contrastRatio > 0.15 && edgeRatio > 0.1) {
+                        resolve('Potential embedded text detected (heuristic analysis)');
+                    } else {
+                        resolve(null);
+                    }
+                    
+                } catch (canvasError) {
+                    clearTimeout(timeoutId);
+                    console.warn('Canvas processing error:', canvasError);
+                    resolve(null);
+                }
+                
+            } catch (error) {
+                console.warn('Heuristics error:', error);
+                resolve(null);
+            }
+        });
+    }
+
+    function highlightImageWithText(img, text) {
+        if (img.classList.contains('equa11y-embedded-text')) {
+            return; // Already processed
+        }
+        
+        // Add border to image
+        img.classList.add(...imgCls);
+        
+        // Create label
+        const label = document.createElement('div');
+        label.textContent = `Embedded text: ${text.substring(0, 100)}${text.length > 100 ? '...' : ''}`;
+        label.classList.add(...clsList, 'equa11y-embedded-text-label');
+        label.style.cssText = 'position: relative; bottom: 0; left: 0; box-sizing: border-box; z-index: 10000; background-color: #FF6B35 !important; color: white !important;';
+        
+        // Position the label
+        img.parentNode.style.cssText = (img.parentNode.style.cssText ? img.parentNode.style.cssText + '; ' : '') + 'overflow: visible !important; position: relative;';
+        img.insertAdjacentElement('afterend', label);
+    }
+
+    function showProcessingDialog() {
+        const dialog = document.createElement('dialog');
+        dialog.className = 'equa11y-processing-dialog';
+        dialog.style.cssText = `
+            width: 300px;
+            text-align: center;
+            border-radius: 10px;
+            border: 2px solid #007bff;
+            background: white;
+            padding: 20px;
+            z-index: 10001;
+        `;
+        
+        const title = document.createElement('h2');
+        const hasAI = (typeof LanguageModel !== 'undefined');
+        title.textContent = hasAI ? 'AI Text Detection' : 'Detecting Embedded Text';
+        title.style.margin = '0 0 15px 0';
+        
+        const spinner = document.createElement('div');
+        spinner.className = 'lds-ring';
+        spinner.innerHTML = '<div></div><div></div><div></div><div></div>';
+        
+        const progressText = document.createElement('p');
+        progressText.className = 'equa11y-progress-text';
+        progressText.textContent = hasAI ? 'Initializing AI text detection...' : 'Initializing heuristic analysis...';
+        progressText.setAttribute('aria-live', 'polite');
+        
+        const abortButton = document.createElement('button');
+        abortButton.textContent = 'Stop Processing';
+        abortButton.style.cssText = `
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        `;
+        abortButton.onclick = () => {
+            if (abortController) {
+                abortController.abort();
+                progressText.textContent = 'Processing stopped by user';
+                abortButton.disabled = true;
+            }
+        };
+        
+        dialog.appendChild(title);
+        dialog.appendChild(spinner);
+        dialog.appendChild(progressText);
+        dialog.appendChild(abortButton);
+        
+        document.body.appendChild(dialog);
+        dialog.showModal();
+    }
+
+    function updateProgress(processed, total) {
+        const progressText = document.querySelector('.equa11y-progress-text');
+        if (progressText) {
+            if (total === 0) {
+                progressText.textContent = 'No images found';
+            } else {
+                const percentage = Math.round((processed / total) * 100);
+                const aiStatus = (typeof LanguageModel !== 'undefined') ? 
+                    'AI-powered' : 'Heuristic';
+                progressText.textContent = `${aiStatus} analysis: ${processed}/${total} (${percentage}%)`;
+            }
+        }
+    }
+
+    function hideProcessingDialog() {
+        setTimeout(() => {
+            const dialog = document.querySelector('.equa11y-processing-dialog');
+            if (dialog) {
+                const progressText = dialog.querySelector('.equa11y-progress-text');
+                if (progressText) {
+                    progressText.textContent = 'Analysis complete!';
+                }
+                setTimeout(() => {
+                    dialog.close();
+                    dialog.remove();
+                }, 2000);
+            }
+        }, 500);
+    }
+}

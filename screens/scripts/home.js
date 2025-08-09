@@ -13,6 +13,7 @@ import { toggleTargetSize } from "../../scripts/target-size.js";
 import { togglePageTitle } from "../../scripts/page-title.js";
 import { toggleTextSpacing } from "../../scripts/text-spacing.js";
 import { toggleTabbingOrder } from "../../scripts/tabbing-order.js";
+import { toggleEmbeddedTextDetection } from "../../scripts/embedded-text.js";
 import { tabController } from "./tab.js";
 import { dispatch, getTabId } from "./utils/helpers.js";
 
@@ -57,6 +58,21 @@ async function checkCORS() {
             document.getElementById('embeddedTextStatus').innerHTML = ' (<a href="https://github.com/ntibbles/equa11y/tree/main?tab=readme-ov-file#why-is-a-utility-not-available">Not Available</a>)';
         }
     });
+
+    // Check AI availability for the new AI text detection feature
+    chrome.scripting.executeScript({
+        target: { tabId: id },
+        function: checkAIAvailability
+    }).then(result => {
+        const aiStatus = document.getElementById('aiTextStatus');
+        if (result[0].result?.hasAI) {
+            aiStatus.innerHTML = ' (Gemini Nano Available)';
+            aiStatus.style.color = 'green';
+        } else {
+            aiStatus.innerHTML = ' (Heuristic Mode)';
+            aiStatus.style.color = 'orange';
+        }
+    });
 }
 
 function checkFirstImage() {
@@ -73,6 +89,21 @@ function checkFirstImage() {
             }).catch(() => {
                 resolve({ hasCors: true });
             });
+        }
+    });
+}
+
+function checkAIAvailability() {
+    return new Promise(async resolve => {
+        try {
+            if (typeof LanguageModel !== 'undefined') {
+                const available = await LanguageModel.availability();
+                resolve({ hasAI: available !== 'unavailable' });
+            } else {
+                resolve({ hasAI: false });
+            }
+        } catch (error) {
+            resolve({ hasAI: false });
         }
     });
 }
@@ -112,6 +143,7 @@ function getFunction(name) {
         case 'togglePageTitle': return togglePageTitle;
         case 'toggleTextSpacing': return toggleTextSpacing;
         case 'toggleTabbingOrder': return toggleTabbingOrder;
+        case 'toggleEmbeddedTextDetection': return toggleEmbeddedTextDetection;
         case 'serviceWorker': return 'serviceWorker';
     }
 }
