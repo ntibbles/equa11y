@@ -288,7 +288,7 @@ export function toggleEmbeddedTextDetection(isChecked) {
             
             // Return the result if text was found
             if (result && result.trim() && result !== "No text detected") {
-                return `AI detected text: ${result.trim()}`;
+                return `${result.trim()}`;
             }
             
             return null;
@@ -313,9 +313,9 @@ export function toggleEmbeddedTextDetection(isChecked) {
         
         // Create label
         const label = document.createElement('div');
-        label.textContent = `Embedded text: ${text.substring(0, 100)}${text.length > 100 ? '...' : ''}`;
+        label.textContent = `Text: ${text.substring(0, 100)}${text.length > 100 ? '...' : ''}`;
         label.classList.add(...clsList, 'equa11y-embedded-text-label');
-        label.style.cssText = 'position: relative; bottom: 0; left: 0; box-sizing: border-box; z-index: 10000; background-color: #FF6B35 !important; color: white !important;';
+        //label.style.cssText = 'position: relative; bottom: 0; left: 0; box-sizing: border-box; z-index: 10000; background-color: #FF6B35 !important; color: white !important;';
         
         // Position the label
         img.parentNode.style.cssText = (img.parentNode.style.cssText ? img.parentNode.style.cssText + '; ' : '') + 'overflow: visible !important; position: relative;';
