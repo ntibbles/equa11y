@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 const puppeteer = require('puppeteer');
 const fs = require('fs').promises;
 
@@ -13,7 +14,7 @@ describe('Embedded Text Detection Feature', () => {
         page = await browser.newPage();
         await page.goto('http://localhost:8080/tests/manual/embedded-text.html');
 
-        // Mock the AI API for testing (since Puppeteer won't have access to Chrome's built-in AI)
+        // Mock the AI API for testing
         await page.evaluateOnNewDocument(() => {
             window.LanguageModel = {
                 availability: async () => 'available',
@@ -61,12 +62,11 @@ describe('Embedded Text Detection Feature', () => {
             toggleEmbeddedTextDetection(true);
         });
 
-        // Wait for processing to complete (reduced timeout due to new limits)
+        // Wait for processing to complete
         await page.waitForTimeout(8000);
 
         // Check if any images have been marked with embedded text class
         const embeddedTextImages = await page.$$('.equa11y-embedded-text');
-        // We expect at least some images to be processed (even if no text is detected)
         expect(embeddedTextImages.length).toBeGreaterThanOrEqual(0);
     });
 
@@ -75,7 +75,7 @@ describe('Embedded Text Detection Feature', () => {
             toggleEmbeddedTextDetection(true); // Enable first
         });
 
-        // Wait for processing to complete (reduced timeout due to new limits)
+        // Wait for processing to complete
         await page.waitForTimeout(8000);
 
         await page.evaluate(() => {
@@ -103,7 +103,7 @@ describe('Embedded Text Detection Feature', () => {
             toggleEmbeddedTextDetection(true);
         });
 
-        // Wait for processing to complete (reduced timeout due to new limits)
+        // Wait for processing to complete
         await page.waitForTimeout(8000);
 
         // Should not throw errors and should complete processing

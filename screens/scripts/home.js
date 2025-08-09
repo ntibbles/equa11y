@@ -49,28 +49,20 @@ function checkSettings() {
 
 async function checkCORS() {
     const id = await getTabId();
-    chrome.scripting.executeScript({
-        target: { tabId: id },
-        function: checkFirstImage
-    }).then(result => {
-        if (result[0].result?.hasCors) {
-            document.getElementById('displayEmbedded').setAttribute('disabled', true);
-            document.getElementById('embeddedTextStatus').innerHTML = ' (<a href="https://github.com/ntibbles/equa11y/tree/main?tab=readme-ov-file#why-is-a-utility-not-available">Not Available</a>)';
-        }
-    });
-
-    // Check AI availability for the new AI text detection feature
+    
+    // Check AI availability for embedded text detection
     chrome.scripting.executeScript({
         target: { tabId: id },
         function: checkAIAvailability
     }).then(result => {
         const aiStatus = document.getElementById('aiTextStatus');
+        
         if (result[0].result?.hasAI) {
-            aiStatus.innerHTML = ' (Gemini Nano Available)';
+            aiStatus.innerHTML = ' (AI-powered)';
             aiStatus.style.color = 'green';
         } else {
-            aiStatus.innerHTML = ' (Heuristic Mode)';
-            aiStatus.style.color = 'orange';
+            aiStatus.innerHTML = ' (Tesseract-powered)';
+            aiStatus.style.color = 'blue';
         }
     });
 }
@@ -135,7 +127,6 @@ function getFunction(name) {
         case 'toggleHeadingOutline': return toggleHeadingOutline;
         case 'toggleInteractiveRoles': return toggleInteractiveRoles;
         case 'toggleZoom': return toggleZoom;
-        case 'processImages': return processImages;
         case 'grayscale' : return grayscale;
         case 'exclusiveText': return exclusiveText;
         case 'revealLang': return revealLang;
@@ -200,6 +191,28 @@ function restoreSlider() {
 async function loadScript(func, isChecked) {
     const list = await getUserList();
     const id = await getTabId();
+    
+    // Special handling for embedded text detection
+    if (func === toggleEmbeddedTextDetection) {
+        // First, check if AI is available
+        const aiCheck = await chrome.scripting.executeScript({
+            target: { tabId: id },
+            function: () => typeof LanguageModel !== 'undefined'
+        });
+        
+        const hasAI = aiCheck[0].result;
+        
+        if (!hasAI) {
+            // AI not available, use processImages from text-detection.js instead
+            await chrome.scripting.executeScript({
+                target: { tabId: id },
+                function: processImages,
+                args: [isChecked]
+            });
+            return;
+        }
+    }
+    
     chrome.scripting.executeScript({
         target: { tabId: id },
         function: func,

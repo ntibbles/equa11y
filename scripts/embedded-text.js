@@ -1,4 +1,6 @@
 export function toggleEmbeddedTextDetection(isChecked) {
+    // This function should only be called when AI is available
+    // The routing between AI and Tesseract is handled in home.js
     const images = document.querySelectorAll('img');
     const clsList = ['equa11y-label'];
     const imgCls = ['equa11y-border', 'equa11y-embedded-text'];
@@ -17,6 +19,14 @@ export function toggleEmbeddedTextDetection(isChecked) {
 
     function embeddedText_checked() {
         if (isProcessing) return;
+        
+        // Check if labels are already showing to prevent re-initialization
+        const existingLabels = document.querySelectorAll('.equa11y-embedded-text-label');
+        if (existingLabels.length > 0) {
+            console.log('Embedded text detection already active');
+            return;
+        }
+        
         isProcessing = true;
         
         // Show processing dialog
@@ -141,8 +151,10 @@ export function toggleEmbeddedTextDetection(isChecked) {
             console.error('Error in processAllImages:', error);
         } finally {
             isProcessing = false;
-            hideProcessingDialog();
             abortController = null;
+            
+            // Close the processing dialog when complete
+            hideProcessingDialog(true);
         }
     }
     
@@ -221,8 +233,8 @@ export function toggleEmbeddedTextDetection(isChecked) {
                 return await detectWithChromeAI(base64Image, imgElement);
             }
             
-            // Fallback to a simple heuristic check
-            return await detectWithHeuristics(imgElement);
+            // This script should only run if AI is available.
+            return null;
             
         } catch (error) {
             console.warn('Text detection failed:', error);
@@ -291,96 +303,6 @@ export function toggleEmbeddedTextDetection(isChecked) {
         }
     }
 
-    async function detectWithHeuristics(imgElement) {
-        // Simple heuristic: check if image has certain characteristics that suggest text
-        return new Promise((resolve) => {
-            try {
-                // Skip if image is too large or invalid
-                if (!imgElement || !imgElement.naturalWidth || !imgElement.naturalHeight) {
-                    resolve(null);
-                    return;
-                }
-                
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                
-                if (!ctx) {
-                    resolve(null);
-                    return;
-                }
-                
-                // Use smaller canvas for faster processing
-                const maxSize = 100;
-                canvas.width = Math.min(imgElement.naturalWidth || imgElement.width, maxSize);
-                canvas.height = Math.min(imgElement.naturalHeight || imgElement.height, maxSize);
-                
-                // Set timeout for canvas operations
-                const timeoutId = setTimeout(() => {
-                    resolve(null);
-                }, 2000);
-                
-                try {
-                    ctx.drawImage(imgElement, 0, 0, canvas.width, canvas.height);
-                    
-                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                    const data = imageData.data;
-                    
-                    // Simple analysis: look for high contrast patterns that might indicate text
-                    let highContrastPixels = 0;
-                    let edgePixels = 0;
-                    const totalPixels = data.length / 4;
-                    
-                    // Sample every 4th pixel for performance
-                    for (let i = 0; i < data.length; i += 16) {
-                        const r = data[i];
-                        const g = data[i + 1];
-                        const b = data[i + 2];
-                        const brightness = (r + g + b) / 3;
-                        
-                        // Check for high contrast (very bright or very dark pixels)
-                        if (brightness < 60 || brightness > 180) {
-                            highContrastPixels++;
-                        }
-                        
-                        // Simple edge detection
-                        if (i + 16 < data.length) {
-                            const nextR = data[i + 16];
-                            const nextG = data[i + 17];
-                            const nextB = data[i + 18];
-                            const nextBrightness = (nextR + nextG + nextB) / 3;
-                            
-                            if (Math.abs(brightness - nextBrightness) > 50) {
-                                edgePixels++;
-                            }
-                        }
-                    }
-                    
-                    const sampledPixels = Math.floor(totalPixels / 4);
-                    const contrastRatio = highContrastPixels / sampledPixels;
-                    const edgeRatio = edgePixels / sampledPixels;
-                    
-                    clearTimeout(timeoutId);
-                    
-                    // If we have sufficient contrast and edges, it might contain text
-                    if (contrastRatio > 0.15 && edgeRatio > 0.1) {
-                        resolve('Potential embedded text detected (heuristic analysis)');
-                    } else {
-                        resolve(null);
-                    }
-                    
-                } catch (canvasError) {
-                    clearTimeout(timeoutId);
-                    console.warn('Canvas processing error:', canvasError);
-                    resolve(null);
-                }
-                
-            } catch (error) {
-                console.warn('Heuristics error:', error);
-                resolve(null);
-            }
-        });
-    }
-
     function highlightImageWithText(img, text) {
         if (img.classList.contains('equa11y-embedded-text')) {
             return; // Already processed
@@ -414,8 +336,7 @@ export function toggleEmbeddedTextDetection(isChecked) {
         `;
         
         const title = document.createElement('h2');
-        const hasAI = (typeof LanguageModel !== 'undefined');
-        title.textContent = hasAI ? 'AI Text Detection' : 'Detecting Embedded Text';
+        title.textContent = 'Embedded Text Detection';
         title.style.margin = '0 0 15px 0';
         
         const spinner = document.createElement('div');
@@ -424,7 +345,7 @@ export function toggleEmbeddedTextDetection(isChecked) {
         
         const progressText = document.createElement('p');
         progressText.className = 'equa11y-progress-text';
-        progressText.textContent = hasAI ? 'Initializing AI text detection...' : 'Initializing heuristic analysis...';
+        progressText.textContent = 'Initializing AI text detection...';
         progressText.setAttribute('aria-live', 'polite');
         
         const abortButton = document.createElement('button');
@@ -443,6 +364,12 @@ export function toggleEmbeddedTextDetection(isChecked) {
                 abortController.abort();
                 progressText.textContent = 'Processing stopped by user';
                 abortButton.disabled = true;
+                
+                // Close dialog after a short delay
+                setTimeout(() => {
+                    isProcessing = false;
+                    hideProcessingDialog();
+                }, 1500);
             }
         };
         
@@ -462,26 +389,31 @@ export function toggleEmbeddedTextDetection(isChecked) {
                 progressText.textContent = 'No images found';
             } else {
                 const percentage = Math.round((processed / total) * 100);
-                const aiStatus = (typeof LanguageModel !== 'undefined') ? 
-                    'AI-powered' : 'Heuristic';
-                progressText.textContent = `${aiStatus} analysis: ${processed}/${total} (${percentage}%)`;
+                if (percentage === 100) {
+                    progressText.textContent = 'Analysis complete!';
+                } else {
+                    progressText.textContent = `AI analysis: ${processed}/${total} (${percentage}%)`;
+                }
             }
         }
     }
 
-    function hideProcessingDialog() {
+    function hideProcessingDialog(immediate = false) {
+        const initialDelay = immediate ? 0 : 500;
+        const completionDelay = immediate ? 1000 : 2000;
+        
         setTimeout(() => {
             const dialog = document.querySelector('.equa11y-processing-dialog');
             if (dialog) {
                 const progressText = dialog.querySelector('.equa11y-progress-text');
-                if (progressText) {
+                if (progressText && !progressText.textContent.includes('stopped')) {
                     progressText.textContent = 'Analysis complete!';
                 }
                 setTimeout(() => {
                     dialog.close();
                     dialog.remove();
-                }, 2000);
+                }, completionDelay);
             }
-        }, 500);
+        }, initialDelay);
     }
 }
