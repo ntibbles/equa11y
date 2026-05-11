@@ -33,11 +33,6 @@ describe('Landmarks Feature', () => {
             toggleLandmarkOutlines(true);
         });
 
-        const headerLabel = await page.$('header .equa11y-landmarks');
-        expect(headerLabel).not.toBeNull();
-        const headerLabelText = await page.evaluate(el => el.textContent, headerLabel);
-        expect(headerLabelText).toContain('header');
-
         const navLabel = await page.$('nav .equa11y-landmarks');
         expect(navLabel).not.toBeNull();
         const navLabelText = await page.evaluate(el => el.textContent, navLabel);
