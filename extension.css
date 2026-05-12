@@ -1,17 +1,6 @@
 /* CSS Layer for isolation (recommended for modern browsers) */
 @layer equa11y-extension {
 
-    /* Reset styles - scoped to extension elements only */
-    .equa11y-label *,
-    .equa11y-label *:before,
-    .equa11y-label *:after,
-    .equa11y-border *,
-    .equa11y-border *:before,
-    .equa11y-border *:after {
-        all: initial;
-        box-sizing: border-box !important;
-    }
-
     /* Label base styles */
     .equa11y-label:before,
     .equa11y-label {
@@ -28,12 +17,11 @@
     .equa11y-label * {
         background: blue !important;
         color: #fff !important;
-        display: inline !important;
+        display: inline-flex !important;
+        flex-wrap: wrap !important;
         font-size: 14px !important;
         font-family: Verdana, Geneva, Tahoma, sans-serif !important;
-        position: relative !important;
         font-weight: normal !important;
-        vertical-align: text-top !important;
     }
 
     /* Border styles */
