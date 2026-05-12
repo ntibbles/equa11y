@@ -49,7 +49,7 @@ export function toggleInteractiveRoles(isChecked) {
                     } else if (role === 'input[type="range"]') {
                         roleText = 'slider';
                     } else if (role === 'select') {
-                        roleText = 'listbox';
+                        roleText = 'select';
                     } else if (role.startsWith('[type="')) {
                         roleText = role.substring(7, role.indexOf('"]'));
                     } else if (role.startsWith('[role="')) {

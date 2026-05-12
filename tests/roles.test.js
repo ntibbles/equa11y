@@ -48,7 +48,7 @@ describe('Roles Feature', () => {
         const checkboxLabel = await checkboxParent.$('.equa11y-roles');
         expect(checkboxLabel).not.toBeNull();
         const checkboxLabelText = await page.evaluate(el => el.textContent, checkboxLabel);
-        expect(checkboxLabelText).toBe('checkbox');
+        expect(checkboxLabelText).toBe('input[type="checkbox"]');
 
         // For radio input, get the parent then find the label
         const radioInput = await page.$('input[type="radio"]');
@@ -56,7 +56,7 @@ describe('Roles Feature', () => {
         const radioLabel = await radioParent.$('.equa11y-roles');
         expect(radioLabel).not.toBeNull();
         const radioLabelText = await page.evaluate(el => el.textContent, radioLabel);
-        expect(radioLabelText).toBe('radio');
+        expect(radioLabelText).toBe('input[type="radio"]');
 
         // For text input, get the parent then find the label
         const textInput = await page.$('input[type="text"]');
@@ -77,7 +77,7 @@ describe('Roles Feature', () => {
         const selectLabel = await page.$('select .equa11y-roles');
         expect(selectLabel).not.toBeNull();
         const selectLabelText = await page.evaluate(el => el.textContent, selectLabel);
-        expect(selectLabelText).toBe('option');
+        expect(selectLabelText).toBe('select');
 
 
         const ariaButtonLabel = await page.$('div[role="button"] .equa11y-roles');
