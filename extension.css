@@ -45,6 +45,7 @@
     /* Heading skip indicator - namespaced class */
     .equa11y-headings.equa11y-skipped::after {
         content: ' ↓' !important;
+        color: #fff;
     }
 
     /* Spinner - namespaced */
