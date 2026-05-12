@@ -1,5 +1,5 @@
 export function toggleScreenReaderTextDisplay(isChecked) {
-    const interactiveRoles = ['button', 'a', 'input[type="checkbox"]', 'input[type="radio"]', 'slider', 'input[type="text"]', 'select', 'combobox', 'menuitem', 'option', '[role="button"]', '[role="link"]'];
+    const interactiveRoles = ['[tabindex="0"]', 'button', 'a', 'input[type="checkbox"]', 'input[type="radio"]', 'slider', 'input[type="text"]', 'select', 'combobox', 'menuitem', '[role="button"]', '[role="link"]'];
     const ariaLabels = ['aria-label', 'aria-labelledby', 'aria-describedby'];
     const elementsInteractiveRoles = document.querySelectorAll(interactiveRoles.join(','));
     const elList = ['equa11y-border'];
@@ -18,9 +18,9 @@ export function toggleScreenReaderTextDisplay(isChecked) {
                 
                 if (element.hasAttribute('aria-labelledby')) {
                     labelText = getAriaText(element.getAttribute('aria-labelledby'));
-                } else if (element.hasAttribute('aria-label')) {
+                } else if (element.hasAttribute('aria-label') && element.getAttribute('aria-label').trim() !== '') {
                     labelText = element.getAttribute('aria-label');
-                } else if (element.tagName.toLowerCase() === 'input' && document.querySelector(`label[for="${element.id}"]`)) {
+                } else if ((element.tagName.toLowerCase() === 'input' || element.tagName.toLowerCase() === 'select') && element.id && document.querySelector(`label[for="${element.id}"]`)) {
                     labelText = document.querySelector(`label[for="${element.id}"]`).textContent;
                 } else if (element.hasAttribute('placeholder')) {
                     labelText = element.getAttribute('placeholder');
@@ -28,17 +28,33 @@ export function toggleScreenReaderTextDisplay(isChecked) {
                     labelText = getVisibleText(element);
                 }
 
+                // --- NEW: Prepend the selected option text for <select> elements ---
+                if (element.tagName.toLowerCase() === 'select') {
+                    let selectedOptionText = '';
+                    if (element.selectedIndex > -1) {
+                        selectedOptionText = element.options[element.selectedIndex].text;
+                    }
+                    
+                    // If a label exists and is different from the option text, combine them
+                    if (selectedOptionText && labelText !== selectedOptionText) {
+                        labelText = `${selectedOptionText} ${labelText}`;
+                    }
+                }
+                // -------------------------------------------------------------------
+
                 if (element.hasAttribute('aria-describedby')) {
                     describedByText = getAriaText(element.getAttribute('aria-describedby'));
                 }
 
                 let fullText = [labelText, describedByText].filter(Boolean).join(', ');
                 fullText = fullText.replace(/[\r\n]+/g, ' ').trim();
-                const srLabel = document.createElement('div');
-                srLabel.innerText = fullText;
-                srLabel.classList.add(...clsList);
-                element.classList.add(...elList);
-                element.insertAdjacentElement('afterend', srLabel);
+                if(fullText !== '') {
+                    const srLabel = document.createElement('div');
+                    srLabel.innerText = fullText;
+                    srLabel.classList.add(...clsList);
+                    element.classList.add(...elList);
+                    element.insertAdjacentElement('afterend', srLabel);
+                }
             }
         });
     }
@@ -59,6 +75,13 @@ export function toggleScreenReaderTextDisplay(isChecked) {
     }
 
     function getVisibleText(element) {
+        if (element.tagName.toLowerCase() === 'select') {
+            if (element.selectedIndex > -1) {
+                return element.options[element.selectedIndex].text;
+            }
+            return '';
+        }
+        
         let text = '';
         for (const child of element.childNodes) {
             if (child.nodeType === Node.TEXT_NODE) {

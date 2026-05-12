@@ -226,7 +226,7 @@ export function processImages(isChecked) {
         dialogTitle.textContent = 'Scanning';
         dialogTitle.style.fontSize = '2rem';
 
-        dialogSpinner.className = "lds-ring";
+        dialogSpinner.className = "equa11y-lds-ring";
         dialogSpinner.innerHTML = "<div></div><div></div><div></div><div></div></div>";
 
         msg.textContent = 'Initializing';

@@ -40,7 +40,7 @@ export function toggleHeadingOutline(isChecked = false) {
 
             if (tag.isSkipped && label.style) {
                 label.style.cssText = 'background-color: #AB1B18 !important;  outline: 2px dashed black;';
-                label.classList.add('skipped');
+                label.classList.add('equa11y-skipped');
             }
         });
     }
