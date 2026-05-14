@@ -13,6 +13,7 @@ import { toggleTargetSize } from "../../scripts/target-size.js";
 import { togglePageTitle } from "../../scripts/page-title.js";
 import { toggleTextSpacing } from "../../scripts/text-spacing.js";
 import { toggleTabbingOrder } from "../../scripts/tabbing-order.js";
+import { toggleEmbeddedTextDetection } from "../../scripts/embedded-text.js";
 import { tabController } from "./tab.js";
 import { dispatch, getTabId } from "./utils/helpers.js";
 
@@ -48,13 +49,20 @@ function checkSettings() {
 
 async function checkCORS() {
     const id = await getTabId();
+    
+    // Check AI availability for embedded text detection
     chrome.scripting.executeScript({
         target: { tabId: id },
-        function: checkFirstImage
+        function: checkAIAvailability
     }).then(result => {
-        if (result[0].result?.hasCors) {
-            document.getElementById('displayEmbedded').setAttribute('disabled', true);
-            document.getElementById('embeddedTextStatus').innerHTML = ' (<a href="https://github.com/ntibbles/equa11y/tree/main?tab=readme-ov-file#why-is-a-utility-not-available">Not Available</a>)';
+        const aiStatus = document.getElementById('aiTextStatus');
+        
+        if (result[0].result?.hasAI) {
+            aiStatus.innerHTML = ' (AI-powered)';
+            aiStatus.style.color = 'green';
+        } else {
+            aiStatus.innerHTML = ' (Tesseract-powered)';
+            aiStatus.style.color = 'blue';
         }
     });
 }
@@ -73,6 +81,21 @@ function checkFirstImage() {
             }).catch(() => {
                 resolve({ hasCors: true });
             });
+        }
+    });
+}
+
+function checkAIAvailability() {
+    return new Promise(async resolve => {
+        try {
+            if (typeof LanguageModel !== 'undefined') {
+                const available = await LanguageModel.availability();
+                resolve({ hasAI: available !== 'unavailable' });
+            } else {
+                resolve({ hasAI: false });
+            }
+        } catch (error) {
+            resolve({ hasAI: false });
         }
     });
 }
@@ -104,7 +127,6 @@ function getFunction(name) {
         case 'toggleHeadingOutline': return toggleHeadingOutline;
         case 'toggleInteractiveRoles': return toggleInteractiveRoles;
         case 'toggleZoom': return toggleZoom;
-        case 'processImages': return processImages;
         case 'grayscale' : return grayscale;
         case 'exclusiveText': return exclusiveText;
         case 'revealLang': return revealLang;
@@ -112,6 +134,7 @@ function getFunction(name) {
         case 'togglePageTitle': return togglePageTitle;
         case 'toggleTextSpacing': return toggleTextSpacing;
         case 'toggleTabbingOrder': return toggleTabbingOrder;
+        case 'toggleEmbeddedTextDetection': return toggleEmbeddedTextDetection;
         case 'serviceWorker': return 'serviceWorker';
     }
 }
@@ -168,6 +191,28 @@ function restoreSlider() {
 async function loadScript(func, isChecked) {
     const list = await getUserList();
     const id = await getTabId();
+    
+    // Special handling for embedded text detection
+    if (func === toggleEmbeddedTextDetection) {
+        // First, check if AI is available
+        const aiCheck = await chrome.scripting.executeScript({
+            target: { tabId: id },
+            function: () => typeof LanguageModel !== 'undefined'
+        });
+        
+        const hasAI = aiCheck[0].result;
+        
+        if (!hasAI) {
+            // AI not available, use processImages from text-detection.js instead
+            await chrome.scripting.executeScript({
+                target: { tabId: id },
+                function: processImages,
+                args: [isChecked]
+            });
+            return;
+        }
+    }
+    
     chrome.scripting.executeScript({
         target: { tabId: id },
         function: func,
