@@ -261,7 +261,7 @@ export function toggleEmbeddedTextDetection(isChecked) {
 
             // Create session with multimodal support (image input)
             const session = await LanguageModel.create({
-                expectedInputs: [{ type: 'image' }],
+                expectedInputs: [{ type: 'image' }, { type: 'text', languages: ["en"] }]
             });
 
             // Convert base64 to blob for the API
