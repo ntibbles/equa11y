@@ -114,7 +114,6 @@ export function toggleEmbeddedTextDetection(isChecked) {
                 }
 
                 const extension = img.src.split('.').pop().substring(0, 3).toLowerCase();
-                console.log(`Processing image: ${img.src}, extension: ${extension} `);
                 
                 if (!processedImages.has(img.src) && img.src && !img.src.startsWith('data:') && ['jpg', 'jpe', 'png', 'gif', 'bmp', 'web'].includes(extension.toLowerCase())) {
                     try {
@@ -328,15 +327,6 @@ export function toggleEmbeddedTextDetection(isChecked) {
     function showProcessingDialog() {
         const dialog = document.createElement('dialog');
         dialog.className = 'equa11y-processing-dialog';
-        dialog.style.cssText = `
-            width: 300px;
-            text-align: center;
-            border-radius: 10px;
-            border: 2px solid #007bff;
-            background: white;
-            padding: 20px;
-            z-index: 10001;
-        `;
         
         const title = document.createElement('h2');
         title.textContent = 'Embedded Text Detection';

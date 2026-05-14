@@ -21,20 +21,6 @@ function getTabId() {
     })
 }
 
-function toggleBetaUtils(evt) {
-    let showBetaUtils = evt.target.checked;
-
-    getTabId().then(id => {
-        setState(id, evt, evt?.target.id);
-    });
-
-    if(showBetaUtils) {
-        document.body.classList.add('hide-beta');
-    } else {
-        document.body.classList.remove('hide-beta');
-    }
-}
-
 function changeDarkMode(evt) {
     switch (evt.target.value) {
         case 'true': 
@@ -173,7 +159,6 @@ function setEventListeners() {
             setState(id, evt, evt.target.id);
         });
     });
-    document.getElementById('showBeta').addEventListener('click', toggleBetaUtils);
 
     const darkMode = document.querySelectorAll('input[type="radio"]');
     for(let btn of darkMode) {
