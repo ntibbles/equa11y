@@ -4,14 +4,7 @@ const fs = require('fs').promises;
 // Helper HTML for interactive elements
 const html = `
 <html><body>
-  <button id="btn">Button</button>
-  <a href="#" id="link">Link</a>
-  <input type="checkbox" id="cb">
-  <input type="radio" id="radio">
-  <input type="text" id="text">
-  <input type="submit" id="submit">
-  <div role="button" id="rolebtn">Role Button</div>
-  <div role="link" id="rolelink">Role Link</div>
+  <button id="btn">Button</button><a href="#" id="link">Link</a><input type="checkbox" id="cb"><input type="radio" id="radio"><input type="text" id="text"><input type="submit" id="submit"><div role="button" id="rolebtn">Role Button</div><div role="link" id="rolelink">Role Link</div>
 </body></html>
 `;
 

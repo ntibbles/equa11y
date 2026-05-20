@@ -275,7 +275,7 @@ export function toggleEmbeddedTextDetection(isChecked) {
                     content: [
                         {
                             type: 'text',
-                            value: `You are an advanced AI agent specialized in Optical Character Recognition (OCR) and text extraction from images. Your primary task is to accurately extract all visible text content from images, regardless of the text format, style, or embedding method.`
+                            value: `You are an advanced AI agent specialized in Optical Character Recognition (OCR) and text extraction from images. Your primary task is to accurately extract all visible text content from images, regardless of the text format, style, or embedding method. If there is no text in the image, do not respond with "No text detected" or similar phrases; instead, return an empty string. Focus solely on extracting text and do not provide any additional commentary or information.`
                         },
                         { 
                             type: 'image', 
