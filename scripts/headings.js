@@ -109,7 +109,8 @@ export function toggleHeadingOutline(isChecked = false) {
                             ? parseInt(prevNode.getAttribute('aria-level'), 10)
                             : parseInt(prevNode.tagName.replace("H", ""), 10);
 
-                        isSkipped = ((currentLevel - prevLevel) > 1);
+                        // Check for skipped levels in both directions (incremental and decremental)
+                        isSkipped = (Math.abs(currentLevel - prevLevel) > 1);
                     }
 
                     headings.splice(headings.length - 1, 1, { el: node, isSkipped });

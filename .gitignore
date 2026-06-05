@@ -3,3 +3,7 @@ package-lock.json
 /dist
 /node_modules
 
+.slingshot/
+.vscode/
+dist.zip
+scripts/keep-alive.js

@@ -8,6 +8,10 @@ export function toggleTargetSize(isChecked) {
 
     function targetSize_checked() {
        roleList.forEach(element => {
+            // ignore links that are contained in text (inline)
+            const previous = element.previousSibling;
+            if ((previous && previous.nodeType === Node.TEXT_NODE) || (!previous && element.nextSibling && element.nextSibling.nodeType === Node.TEXT_NODE)) return;
+
             if(!element.classList.contains('equa11y-size')) {
                 const dimensions = getComputedDimensions(element);
                 // if dimensions are 0 don't add a label
