@@ -1,16 +1,14 @@
 # Equa11y: Accessibility Testing Utilities
 The Equa11y extension is to help test a webpage for accessibility. It is designed to improve the efficiency of accessibility testing with various utilities.
 
-## What's New in Version 1.4!
+## What's New in Version 1.5!
 ### Enhancements
-- **Tabbing Order** - Now highlights elements with a `tabIndex` greater than 0.
-- **Stop Animations** - Now stops animations in iframes.
-- **Reveal Viewport Tag** - Now detects if pinch to zoom is disabled.
-- **Text Spacing** - Now adjusts paragraph spacing.
-- **Text Zoom** - Stability Updates
-- **Display Alt Text** - Now reveals when the alt attribute is missing
-- **Display Heading Levels** - Now account for the use of 'aria-level' and dynamic headings that are added/removed from the page 
-- **Display Screen Reader Text** - Now prioritizes `aria-label`, `aria-labelledby`, and `aria-describedby` attributes.
+- **Images of Text** - Renamed from "Outline Embedded Text", this utility now uses AI for text detection with a fallback to Tesseract.
+- **Skipped Headings** - Now evaluates skipped headings incrementally.
+- **Element Roles** - Updated to prioritize ARIA roles over native roles.
+
+### UI
+- Removed the "Hide beta utilities" option from the Settings page.
 
 ### UI
 - All utilities are now broken into tabs by WCAG (Web Content Accessibility Guideline) principle:
@@ -23,7 +21,6 @@ And includes the success criteria for each test.
 
 **Settings** page allows you to do the following:
 - Set Dark Mode
-- Hide the beta utilities
 - Change the list of exclusive words
 - Increase the font size of the extension
 
@@ -46,11 +43,11 @@ And includes the success criteria for each test.
 - **Zoom Text 200%** detects and inserts a new stylesheet that doubles the current font size. If the page contains elements with styles including !important, the text will not zoom.
 
 ## Beta Utilities
-- **Outline Embedded Text** - Scans all images on the page and attempts to determine if the image has embedded text. If embedded text is found, the image is outlined with a blue border and a label "Embedded text" is added.
+- **Images of Text** - Scans all images on the page and uses AI to determine if the image has embedded text, with a fallback to Tesseract. If text is found, the image is outlined with a blue border and a label "Images of text" is added.
 - **Outline Event Listeners** - Outlines and labels all non-interactive elements in the page with events. This is useful for identifying elements that may not get keyboard or screen reader focus. 
 
 ### Beta Utility Limitations
-- **Outline Embedded Text** grayscales images and uses Tesseract to read the text. If the server prevents a reload of the images the graysacle will fail, reducing the accuracy of Tesseract. Make sure all images are loaded BEFORE running the utility. NOTE: Occasionally, the content script to load Tesseract doesn't load into the page. Refresh the page and try again. An issue has been logged: <a href="https://github.com/ntibbles/equa11y/issues/25">https://github.com/ntibbles/equa11y/issues/25</a>
+- **Images of Text** uses AI and Tesseract to read the text. If the server prevents a reload of the images the grayscale will fail, reducing the accuracy. Make sure all images are loaded BEFORE running the utility. NOTE: Occasionally, the content script doesn't load into the page. Refresh the page and try again. An issue has been logged: <a href="https://github.com/ntibbles/equa11y/issues/25">https://github.com/ntibbles/equa11y/issues/25</a>
 
 - **Outline Event Listeners** outlines non-interactive elements that have events bound to them. This utility uses Chromes Debug mode. Any limitations on the browser using debug mode (i.e. cancelling debug mode) will affect the functionality.
 
@@ -69,6 +66,22 @@ To load an unpacked extension in developer mode:
 Voila! 
 
 ## CHANGELOG
+
+### Version 1.5
+[Enhancements]
+- Renamed "Embedded Text" utility to "Images of Text" and integrated AI for text detection.
+- Updated skipped headings to be evaluated incrementally.
+- Updated element roles to prioritize ARIA roles over native roles.
+- Removed beta utils option from Settings.
+
+[Bugfixes]
+- Fixed issue #118: Ignore inline links.
+- Fixed issue #115: Removed CSS reset.
+- Fixed issue #113: Removed header from regions.
+- Fixed issue #112: Empty aria-label and option values.
+- Updated CSS for skipped headings.
+- Added namespace to spinner.
+- Fixed fallback to Tesseract.
 
 ### Version 1.4.3
 [Enhancements]

@@ -13,7 +13,6 @@ export function toggleEmbeddedTextDetection(isChecked) {
     // Timeout constants
     const IMAGE_LOAD_TIMEOUT = 5000; // 5 seconds
     const AI_PROCESSING_TIMEOUT = 20000; // 20 seconds
-    const MAX_IMAGES_PER_BATCH = 50; // Limit batch size
 
     isChecked ? embeddedText_checked() : embeddedText_unchecked();
 
@@ -97,6 +96,16 @@ export function toggleEmbeddedTextDetection(isChecked) {
     async function processAllImages() {
         // Create abort controller for this processing session
         abortController = new AbortController();
+        
+        let MAX_IMAGES_PER_BATCH = 50;
+        try {
+            const result = await chrome.storage.sync.get('imagesPerBatch');
+            if (result.imagesPerBatch) {
+                MAX_IMAGES_PER_BATCH = parseInt(result.imagesPerBatch, 10);
+            }
+        } catch (e) {
+            console.warn('Could not read imagesPerBatch from storage', e);
+        }
         
         // Limit the number of images to process to prevent hanging
         const imagesToProcess = Array.from(images).slice(0, MAX_IMAGES_PER_BATCH);
