@@ -6,9 +6,7 @@ The Equa11y extension is to help test a webpage for accessibility. It is designe
 - **Images of Text** - Renamed from "Outline Embedded Text", this utility now uses AI for text detection with a fallback to Tesseract.
 - **Skipped Headings** - Now evaluates skipped headings incrementally.
 - **Element Roles** - Updated to prioritize ARIA roles over native roles.
-
-### UI
-- Removed the "Hide beta utilities" option from the Settings page.
+- **UI** - Removed the "Hide beta utilities" option from the Settings page.
 
 ### UI
 - All utilities are now broken into tabs by WCAG (Web Content Accessibility Guideline) principle:
