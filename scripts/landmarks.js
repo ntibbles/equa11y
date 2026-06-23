@@ -1,8 +1,8 @@
 export function toggleLandmarkOutlines(isChecked) {
     const landmarks = [
-        'nav', 'main', 'footer', 'aside', 'search', 'form',
+        'nav', 'main', 'footer', 'aside', 'search', 'form', 'section',
         '[role="region"]', '[role="complementary"]', '[role="contentinfo"]', '[role="search"]',
-        '[role="main"]', '[role="contentinfo"]', '[role="banner"]', '[role="navigation"]'
+        '[role="main"]', '[role="banner"]', '[role="navigation"]'
     ];
     const elCls = ['equa11y-border', 'equa11y-landmark'];
     const clsList = ['equa11y-label', 'equa11y-landmarks'];
@@ -18,6 +18,14 @@ export function toggleLandmarkOutlines(isChecked) {
 
                 if (landmark.indexOf("role") > -1) {
                     landmark = landmark.substring(7, landmark.indexOf(']') - 1);
+                }
+
+                // Check if footer is nested within article, aside, main, nav, or section
+                if (element.tagName === 'FOOTER') {
+                    const parentElement = element.closest('article, aside, main, nav, section');
+                    if (parentElement) {
+                        return; // Ignore nested footer elements
+                    }
                 }
 
                 if(!element.classList.contains('equa11y-landmark')) {
