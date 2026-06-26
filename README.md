@@ -59,6 +59,11 @@ Voila!
 
 ## CHANGELOG
 
+### Version 1.5.1
+[Enhancements]
+- Improved Landmark detection to account for <footer> elements within other sematic elements.
+- Landmarks now identify <section> elements with labels.
+
 ### Version 1.5
 [Enhancements]
 - Renamed "Embedded Text" utility to "Images of Text" and integrated AI for text detection.

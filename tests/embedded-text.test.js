@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals';
+//import { jest } from '@jest/globals';
 const puppeteer = require('puppeteer');
 const fs = require('fs').promises;
 
