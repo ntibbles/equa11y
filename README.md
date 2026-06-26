@@ -61,8 +61,8 @@ Voila!
 
 ### Version 1.5.1
 [Enhancements]
-- Improved Landmark detection to account for <footer> elements within other sematic elements.
-- Landmarks now identify <section> elements with labels.
+- Improved Landmark detection to account for &lt;footer> elements within other sematic elements.
+- Landmarks now identify &lt;section> elements with labels.
 
 ### Version 1.5
 [Enhancements]
