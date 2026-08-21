@@ -24,6 +24,7 @@ export function toggleInteractiveRoles(isChecked) {
         'input[type="range"]', // Corrected from '[type="slider"]'
         'input[type="text"]',
         'input[type="submit"]',
+        'input[type="email"]',
         'textarea',
         'select',
         'option'
@@ -56,12 +57,14 @@ export function toggleInteractiveRoles(isChecked) {
                         roleText = role.substring(7, role.indexOf('"]'));
                     } else if (role === 'a') {
                         roleText = 'link [a]';
+                    } else if (role === 'input[type="email"]') {
+                        roleText = 'email';
                     }
                     roleLabel.textContent = roleText;
                     roleLabel.classList.add(...clsList);
                   
                     el.classList.add(...elList);
-                    if (role === 'input[type="text"]' || role === 'input[type="submit"]' || role.startsWith('[type="')) {
+                    if (role === 'input[type="text"]' || role === 'input[type="submit"]' || role === 'input[type="email"]' || role.startsWith('[type="')) {
                         el.parentNode.insertAdjacentElement('afterbegin', roleLabel);
                     } else {
                         el.insertAdjacentElement('afterbegin', roleLabel);

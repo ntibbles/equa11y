@@ -17,10 +17,22 @@
 
 <body>
     <nav aria-label="primary">Nav</nav>
+    <aside>
+                <p>Aside without footer</p>
+            </aside>
+             <aside>
+                <p>Aside with</p>
+                <footer>footer</footer>
+            </aside>
+            <section>
+                This is a random section.
+            </section>
     <main>
         <section>
             <div id="content">
+                
                 <h1>See Heading 1</h1>
+                <h3 style="display: none;">Hidden heading</h3>
                 <h3>View heading 3</h3>
                 <h4>heading 4 - aria 3</h4>
                 <h3>heading 3</h3>
@@ -30,7 +42,7 @@
                 <span id="toggle">
                     <h5>heading 5 - add/remove</h5>
                 </span>
-                <p>This text contains the exclusive text of hear, look, and observe, and peek.</p>
+                <p>This text contains a <a href="#">link</a> and the exclusive text of hear, look, and observe, and peek.</p>
                 <p>This word is in <span lang="fr">French.</span></p>
                 <button>Watch Video</button>
                 <a href="#" tabindex="3">Watch Video (button)</a>
@@ -45,7 +57,14 @@
                 </label>
                 <br /><button id="headingToggle">Toggle Heading Visibility</button>
                 <input type="checkbox" id="altTextToggle" />
+                <footer>Random footer</footer>
             </div>
+            <button id="btn">Button</button><a href="#" id="link">Link</a><input type="checkbox" id="cb"><input type="radio" id="radio">
+            <input type="text" id="text">
+            <input type="submit" id="submit">
+            <div role="button" id="rolebtn">Role Button</div>
+            <div role="link" id="rolelink">Role Link</div>
+            
         </section>
         <!-- <canvas id="contrast"></canvas> -->
         <img src="up-to-30.webp" />
@@ -58,12 +77,12 @@
         <img src="distorted-image.webp" alt="" width="540" />
         <img src="women-text.png" alt="" />
     </main>
-    <footer>
+    <div role="contentinfo">
         <div id="footer">
             This is the footer.
         </div>
 
-    </footer>
+   </div>
     <script>
         const btn = document.getElementById('headingToggle');
         const container = document.getElementById('toggle');

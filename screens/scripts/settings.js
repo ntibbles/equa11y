@@ -10,7 +10,15 @@ function init() {
     resetDarkMode();
     setEventListeners();
     handleFontSize();
+    getImagesPerBatch();
     document.getElementById('back').focus();
+}
+
+function getImagesPerBatch() {
+    chrome.storage.sync.get('imagesPerBatch').then((result) => {
+        const value = result['imagesPerBatch'] || 50;
+        document.getElementById('imagesPerBatch').value = value;
+    });
 }
 
 function getTabId() {
@@ -19,20 +27,6 @@ function getTabId() {
             resolve(tabs[0].id);
         });
     })
-}
-
-function toggleBetaUtils(evt) {
-    let showBetaUtils = evt.target.checked;
-
-    getTabId().then(id => {
-        setState(id, evt, evt?.target.id);
-    });
-
-    if(showBetaUtils) {
-        document.body.classList.add('hide-beta');
-    } else {
-        document.body.classList.remove('hide-beta');
-    }
 }
 
 function changeDarkMode(evt) {
@@ -106,10 +100,32 @@ function restoreState(tabId, checkbox) {
     });
 }
 
-function setStatus(status) {
-    const msg =  document.getElementById('statusMsg');
+function setStatus(status, elementId = 'statusMsg') {
+    const msg =  document.getElementById(elementId);
     msg.innerText = status.msg;
-    msg.classList.add(status.type);
+    msg.className = '';
+    if (status.type) msg.classList.add(status.type);
+}
+
+function setImagesPerBatch(evt) {
+    evt.preventDefault();
+    const el = document.getElementById('imagesPerBatch');
+    const value = el.value;
+    const store = {};
+
+    if (!value || value < 1) {
+        setStatus({msg: 'Value must be at least 1.', type: 'error'}, 'imagesPerBatchStatusMsg');
+        el.focus();
+        return;
+    }
+
+    store['imagesPerBatch'] = value;
+    chrome.storage.sync.set(store).then(() => {
+        setStatus({msg: 'Saved successfully!', type: 'success'}, 'imagesPerBatchStatusMsg');
+        setTimeout(() => {
+            setStatus({msg: '', type: ''}, 'imagesPerBatchStatusMsg');
+        }, 3000);
+    });
 }
 
 function handleFontSize() {
@@ -173,12 +189,13 @@ function setEventListeners() {
             setState(id, evt, evt.target.id);
         });
     });
-    document.getElementById('showBeta').addEventListener('click', toggleBetaUtils);
 
     const darkMode = document.querySelectorAll('input[type="radio"]');
     for(let btn of darkMode) {
         btn.addEventListener('change', changeDarkMode);
     }
+    
+    document.getElementById('imagesPerBatchForm').addEventListener('submit', setImagesPerBatch);
 }
 
 function getComputedFontSize() {
