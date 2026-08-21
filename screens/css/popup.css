@@ -44,7 +44,10 @@ nav {
 }
 
 footer {
-    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: row;
+    width: 100%;
 }
 
 .item-container {
@@ -105,6 +108,7 @@ input[type='range']{
 
 .equa11y-tabpanel {
     display: none;
+    width: 100%;
     border: 1px gray solid;
     border-radius: 5px;
 }
