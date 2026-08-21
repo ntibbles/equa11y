@@ -1,5 +1,7 @@
 .settings-screen {
-    margin-top: -20px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .settings-screen fieldset {
@@ -14,16 +16,31 @@
 }
 
 .settings-row {
+    margin: 5px 0 5px 0;
     display: flex;
+    flex-wrap: nowrap;
 }
 
 .settings-row .font-size {
-    margin-left: 20px;
+    margin-left: 15px;
 }
 
 .label-word-list {
     display: inline-block;
-    width: 60%;
+}
+
+header {
+    flex-direction: row;
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+    justify-content: space-between;
+}
+
+main {
+    flex-direction: row;
+    display: inline-flex;
+    flex-wrap: wrap;
 }
 
 ul {
@@ -38,7 +55,6 @@ li {
 
 .settings-screen h1 {
     margin: 0 0 0.3em 0;
-    display: inline-block;
     font-size: 1.5em;
 }
 
@@ -53,7 +69,6 @@ nav {
 
 .list-label {
     display: block;
-    margin: 10px 0;
 }
 
 #wordList {
