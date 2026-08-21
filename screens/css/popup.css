@@ -46,7 +46,7 @@ nav {
 footer {
     display: flex;
     justify-content: flex-end;
-    flex-direction: row;
+    flex-direction: column;
     width: 100%;
 }
 
