@@ -2,7 +2,6 @@
 body {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     padding: 10px 10px 0;
-    /* min-width: 94vw; */
     font-size: 0.9em;
     height: 100%;
 }
@@ -46,8 +45,9 @@ nav {
 footer {
     display: flex;
     justify-content: flex-end;
-    flex-direction: row;
+    flex-direction: column;
     width: 100%;
+    align-items: flex-end;
 }
 
 .item-container {
@@ -111,6 +111,7 @@ input[type='range']{
     width: 100%;
     border: 1px gray solid;
     border-radius: 5px;
+    margin-top: -2px;
 }
 
 .equa11y-instructions {
